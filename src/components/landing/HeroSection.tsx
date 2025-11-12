@@ -36,7 +36,7 @@ export const HeroSection = () => {
         className="flex justify-center mb-2"
       >
         <img
-          src="/clarioo-logo.png"
+          src={`${import.meta.env.BASE_URL}clarioo-logo.png`}
           alt="Clarioo Logo"
           className="h-64 md:h-80 lg:h-96 w-auto"
         />
