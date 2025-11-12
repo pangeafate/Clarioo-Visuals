@@ -48,7 +48,9 @@ const workflowCards = [
     },
     artifact: 'Requirements Document',
     ctaText: 'Try Now',
-    gradient: 'from-blue-500/10 to-purple-500/10'
+    bgGradient: 'from-blue-50 via-blue-50/50 to-white',
+    accentColor: 'text-brand-blue',
+    iconBg: 'bg-brand-blue/10'
   },
   {
     id: 2,
@@ -63,7 +65,9 @@ const workflowCards = [
     },
     artifact: 'Criteria Matrix PDF',
     ctaText: 'See Example',
-    gradient: 'from-purple-500/10 to-pink-500/10'
+    bgGradient: 'from-indigo-50 via-indigo-50/50 to-white',
+    accentColor: 'text-indigo-600',
+    iconBg: 'bg-indigo-100'
   },
   {
     id: 3,
@@ -78,7 +82,9 @@ const workflowCards = [
     },
     artifact: 'Vendor Matches',
     ctaText: 'Explore',
-    gradient: 'from-pink-500/10 to-red-500/10'
+    bgGradient: 'from-sky-50 via-sky-50/50 to-white',
+    accentColor: 'text-brand-blueLight',
+    iconBg: 'bg-sky-100'
   },
   {
     id: 4,
@@ -93,7 +99,9 @@ const workflowCards = [
     },
     artifact: 'Comparison Report',
     ctaText: 'View Matrix',
-    gradient: 'from-red-500/10 to-orange-500/10'
+    bgGradient: 'from-cyan-50 via-cyan-50/50 to-white',
+    accentColor: 'text-cyan-600',
+    iconBg: 'bg-cyan-100'
   },
   {
     id: 5,
@@ -108,7 +116,9 @@ const workflowCards = [
     },
     artifact: 'Email Templates',
     ctaText: 'Get Started',
-    gradient: 'from-orange-500/10 to-yellow-500/10'
+    bgGradient: 'from-blue-50 via-blue-50/50 to-white',
+    accentColor: 'text-brand-blueDark',
+    iconBg: 'bg-blue-100'
   }
 ];
 
@@ -169,7 +179,7 @@ export const CardCarousel = () => {
   }, [scrollPrev, scrollNext]);
 
   return (
-    <section className="px-4 py-16 bg-white">
+    <section className="px-4 py-16 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -210,70 +220,88 @@ export const CardCarousel = () => {
                 >
                   <motion.div
                     animate={{
-                      scale: index === selectedIndex ? 1.05 : 1,
-                      opacity: index === selectedIndex ? 1 : 0.7,
+                      scale: index === selectedIndex ? 1 : 0.95,
+                      opacity: index === selectedIndex ? 1 : 0.5,
                     }}
-                    transition={{ duration: 0.3 }}
-                    className={`
-                      bg-white rounded-2xl p-6 shadow-elevated-combined
-                      border border-gray-100 h-full
-                      ${index === selectedIndex ? 'ring-2 ring-brand-blue/30' : ''}
-                    `}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="h-full"
                   >
-                    {/* Card content */}
-                    <div className="space-y-4">
-                      {/* Step badge and icon */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-brand-blue">
-                          {card.step}
-                        </span>
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-brand-blue`}>
-                          {card.icon}
+                    <div
+                      className={`
+                        rounded-3xl overflow-hidden h-full
+                        ${index === selectedIndex ? 'shadow-2xl' : 'shadow-lg'}
+                        transition-all duration-300 flex flex-col
+                      `}
+                    >
+                      {/* Visual Mockup Area with Gradient Background */}
+                      <div className={`relative h-64 bg-gradient-to-br ${card.bgGradient} overflow-hidden`}>
+                        {/* Decorative background elements */}
+                        <div className="absolute inset-0">
+                          <div className={`absolute top-10 right-10 w-32 h-32 rounded-full ${card.iconBg} blur-3xl opacity-40`} />
+                          <div className={`absolute bottom-10 left-10 w-40 h-40 rounded-full ${card.iconBg} blur-3xl opacity-30`} />
+                        </div>
+
+                        {/* Icon mockup */}
+                        <div className="relative h-full flex items-center justify-center">
+                          <div className={`w-24 h-24 rounded-3xl bg-white shadow-2xl flex items-center justify-center ${card.accentColor} transform hover:scale-110 transition-transform duration-300`}>
+                            {card.icon}
+                          </div>
+                        </div>
+
+                        {/* Step badge */}
+                        <div className="absolute top-6 left-6">
+                          <div className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md">
+                            <span className={`text-sm font-bold ${card.accentColor}`}>
+                              {card.step}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Title */}
-                      <h3 className="text-xl font-bold text-neutral-navy">
-                        {card.title}
-                      </h3>
+                      {/* Card Content */}
+                      <div className="bg-white p-8 flex-1 flex flex-col">
+                        {/* Title */}
+                        <h3 className="text-2xl font-bold text-neutral-navy mb-3">
+                          {card.title}
+                        </h3>
 
-                      {/* Description */}
-                      <p className="text-sm text-neutral-slate leading-relaxed">
-                        {card.description}
-                      </p>
-
-                      {/* Process Flow */}
-                      <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-                        <div className="flex items-center gap-2 text-xs text-neutral-slate">
-                          <span className="font-medium">Input:</span>
-                          <span>{card.processFlow.input}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-brand-blue font-medium">
-                          <ArrowRight className="h-3 w-3" />
-                          <span>{card.processFlow.aiProcessing}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-neutral-slate">
-                          <span className="font-medium">Output:</span>
-                          <span>{card.processFlow.output}</span>
-                        </div>
-                      </div>
-
-                      {/* Artifact */}
-                      <div className="pt-2">
-                        <span className="text-xs text-neutral-slate">Deliverable:</span>
-                        <p className="text-sm font-semibold text-neutral-navy mt-1">
-                          📄 {card.artifact}
+                        {/* Description */}
+                        <p className="text-neutral-slate mb-6 leading-relaxed flex-1">
+                          {card.description}
                         </p>
-                      </div>
 
-                      {/* CTA Button */}
-                      <Button
-                        variant="outline"
-                        className="w-full mt-4 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white"
-                      >
-                        {card.ctaText}
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </Button>
+                        {/* Process Flow - Compact */}
+                        <div className="space-y-2 mb-6">
+                          <div className="flex items-center gap-2 text-sm text-neutral-slate">
+                            <span className="font-medium">Input:</span>
+                            <span className="text-xs">{card.processFlow.input}</span>
+                          </div>
+                          <div className={`flex items-center gap-2 text-sm font-semibold ${card.accentColor}`}>
+                            <ArrowRight className="h-4 w-4" />
+                            <span className="text-xs">{card.processFlow.aiProcessing}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-neutral-slate">
+                            <span className="font-medium">Output:</span>
+                            <span className="text-xs">{card.processFlow.output}</span>
+                          </div>
+                        </div>
+
+                        {/* Deliverable */}
+                        <div className="mb-6 pb-6 border-b border-gray-100">
+                          <p className="text-xs text-neutral-slate mb-1">Deliverable:</p>
+                          <p className="text-sm font-semibold text-neutral-navy">
+                            📄 {card.artifact}
+                          </p>
+                        </div>
+
+                        {/* CTA Button */}
+                        <Button
+                          className="w-full bg-gradient-to-r from-brand-blue to-brand-blueLight text-white hover:shadow-lg transition-all duration-300 rounded-xl h-12 text-base font-semibold"
+                        >
+                          {card.ctaText}
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </div>
                     </div>
                   </motion.div>
                 </div>
