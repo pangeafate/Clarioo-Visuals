@@ -1,0 +1,26 @@
+{
+  "vendor_invitation": {
+    "subject": "Partnership Opportunity: {{company_name}} Vendor Selection Process",
+    "body": "Dear {{vendor_name}} Team,\n\nMy name is {{user_name}} from {{company_name}}. We're currently evaluating solutions in the {{category}} space and your platform has been shortlisted as a strong candidate for our needs.\n\nWe're looking for a solution that meets the following key criteria:\n{{criteria_list}}\n\nWe'd love to learn more about how {{vendor_name}} could help us achieve our goals. Would you be available for a demo or discussion in the coming weeks?\n\nLooking forward to hearing from you.\n\nBest regards,\n{{user_name}}\n{{company_name}}"
+  },
+  "demo_request": {
+    "subject": "Demo Request: {{vendor_name}} for {{company_name}}",
+    "body": "Hello {{vendor_name}} Sales Team,\n\nI'm reaching out from {{company_name}} to request a product demonstration of {{vendor_name}}.\n\nOur team is evaluating {{category}} solutions and we're particularly interested in:\n{{top_criteria}}\n\nCould we schedule a 30-45 minute demo at your earliest convenience? We have {{team_size}} team members who would benefit from your solution.\n\nOur timeline: {{timeline}}\nOur budget range: {{budget}}\n\nPlease let me know your availability.\n\nThank you,\n{{user_name}}\n{{user_email}}\n{{company_name}}"
+  },
+  "pricing_inquiry": {
+    "subject": "Pricing Inquiry: {{vendor_name}} for {{team_size}} Users",
+    "body": "Hi {{vendor_name}} Team,\n\nWe're interested in {{vendor_name}} for our {{category}} needs at {{company_name}}.\n\nCould you please provide:\n1. Pricing for {{team_size}} users\n2. Contract terms and commitment period\n3. Implementation timeline and costs\n4. Available support options\n\nOur requirements:\n{{requirements_summary}}\n\nLooking forward to your response.\n\nBest,\n{{user_name}}\n{{company_name}}"
+  },
+  "follow_up": {
+    "subject": "Following Up: {{vendor_name}} Demo Discussion",
+    "body": "Hi {{vendor_name}} Team,\n\nI wanted to follow up on our recent evaluation of {{category}} solutions. We're still very interested in {{vendor_name}} and would like to move forward with the next steps.\n\nCould you provide:\n- Detailed pricing proposal for {{team_size}} users\n- Implementation timeline\n- Customer references (if available)\n- Trial period options\n\nWe're aiming to make a decision by {{decision_date}}.\n\nThank you,\n{{user_name}}\n{{company_name}}"
+  },
+  "trial_request": {
+    "subject": "Trial Account Request: {{vendor_name}}",
+    "body": "Hello,\n\nWe're interested in testing {{vendor_name}} for our {{category}} requirements at {{company_name}}.\n\nCould you set up a trial account for us? We'd like to evaluate:\n{{evaluation_criteria}}\n\nTeam size: {{team_size}}\nPreferred trial duration: 14-30 days\n\nPlease send access details to {{user_email}}.\n\nThanks,\n{{user_name}}"
+  },
+  "comparison_request": {
+    "subject": "Competitive Comparison: {{vendor_name}} vs Alternatives",
+    "body": "Dear {{vendor_name}},\n\nAs part of our vendor selection process, we're comparing {{vendor_name}} against other solutions in the {{category}} market.\n\nCould you help us understand:\n1. Your key differentiators vs {{competitor_1}} and {{competitor_2}}\n2. Unique features or capabilities\n3. Case studies from similar companies\n4. Migration support from current solution\n\nThis information will help us in making an informed decision.\n\nAppreciate your time,\n{{user_name}}\n{{company_name}}"
+  }
+}

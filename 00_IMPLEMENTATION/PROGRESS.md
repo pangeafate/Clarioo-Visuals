@@ -1,0 +1,749 @@
+# PROGRESS TRACKING - Vendora AI Visual Prototype
+
+## Executive Summary
+
+**Project**: Vendora AI Vendor Analyst - Visual Prototype
+**Status**: 🚀 Sprint 7 Active - Visual Design Enhancement (Phase 1 Complete)
+**Overall Completion**: 100% of core features + landing page (21/21 features + new landing experience)
+**Current Sprint**: Sprint 7 (SP_007) - 🟢 Phase 1 Complete, Moving to Phase 2
+**Last Updated**: November 12, 2024 (Evening Update)
+
+---
+
+## 🔧 Current Sprint Status
+
+### Sprint 7: Visual Design Enhancement & Mobile-First UI/UX
+**Duration**: November 12, 2024 - December 3, 2024 (2-3 weeks)
+**Status**: 🟢 Active - Phase 1 Complete, Phase 2/3 Partially Complete
+**Sprint Goal**: Transform prototype into design-led, mobile-first experience with Clearbit-inspired visual design system
+
+#### Sprint Objectives
+1. ✅ Implement 8-element landing page structure (6/8 elements complete: Hero, Toggle, Inputs, Viz, Carousel integrated)
+2. ✅ Establish single-page scrollable architecture (LandingPage.tsx created)
+3. ✅ Implement Clearbit-inspired visual design system (Tailwind config complete: gradients, shadows, animations)
+4. ✅ Create interactive card carousel (HubSpot-style, 5 workflow cards with auto-play + keyboard nav)
+5. 🔄 Optimize for mobile-first experience (Mobile-responsive layouts implemented, testing pending)
+
+#### Sprint Progress
+| Phase | Status | Progress | Notes |
+|-------|--------|----------|-------|
+| Phase 1: Foundation & Architecture | ✅ Complete | 100% | LandingPage.tsx, routing updated |
+| Phase 2: Visual Design System | ✅ Complete | 100% | Tailwind config with gradients, shadows, animations |
+| Phase 3: Interactive Elements | 🟢 Mostly Complete | 85% | Carousel ✅, Animations ✅, iPod nav 📅, Step indicator 📅 |
+| Phase 4: Mobile Optimization | 🔄 In Progress | 80% | Responsive classes applied, manual testing needed |
+| Phase 5: Polish & Documentation | 🔄 In Progress | 50% | Docs updating, visual testing partially complete |
+
+**Key Deliverables Completed**:
+- ✅ **LandingPage.tsx**: Main integration component with 6/8 elements
+- ✅ **HeroSection.tsx**: Gradient headline + value proposition badges (Elements 1 & 2)
+- ✅ **RegistrationToggle.tsx**: Sign In/Sign Up toggle with gradient buttons (Element 3)
+- ✅ **AnimatedInputs.tsx**: Registration-gated inputs with hypnotic animations (Element 5)
+- ✅ **ArtifactVisualization.tsx**: Workflow visualization with auto-rotation (Element 6)
+- ✅ **CardCarousel.tsx**: Interactive carousel with 5 workflow cards (Element 8)
+- ✅ **Tailwind Configuration**: Clearbit-inspired gradients, shadows, animations
+- ✅ **Routing Structure**: Public landing page (/) + protected dashboard (/dashboard)
+- ✅ **Dependencies**: Framer Motion 11.11.17 + Embla Carousel React 8.3.1
+- 🔄 **Documentation**: In progress (FEATURE_LIST, USER_STORIES updates pending)
+
+**Pending Elements**:
+- 📅 iPodNavigation.tsx (Element 4) - Quick-jump navigation to sections
+- 📅 VisualStepIndicator.tsx (Element 7) - Progress tracking for authenticated users
+
+**Sprint Plan**: [SP_007_Visual_Design_Enhancement_Mobile_First_UI_UX.md](./SPRINTS/SP_007_Visual_Design_Enhancement_Mobile_First_UI_UX.md)
+
+**Technical Achievements**:
+- **Animation System**: Pulse-glow (2s), Float (3s), Shimmer (4s) keyframes implemented
+- **Design Tokens**: Brand purple (#6366F1 → #8B5CF6), neutral warmBlack/warmGray
+- **Shadow System**: Multi-layer elevated-combined (10px + 4px) + button-glow (4px with purple tint)
+- **Auto-Play Carousel**: 4-second intervals with pause/play controls + keyboard navigation (arrow keys)
+- **Mobile-First**: Responsive breakpoints (md:768px) with stacked mobile layouts
+
+---
+
+## Sprint History
+
+### Sprint 7: Visual Design Enhancement & Mobile-First UI/UX (Current)
+**Period**: November 12, 2024 - December 3, 2024
+**Status**: 🚀 Active
+**Type**: UI/UX Enhancement
+
+#### Sprint Goals
+- Transform Auth.tsx into comprehensive 8-element landing page
+- Implement single-page scrollable architecture (no page navigation)
+- Create Clearbit-inspired visual design system (gradient-heavy, multi-layer shadows)
+- Build interactive card carousel showcasing 5 workflow steps
+- Optimize all layouts for mobile-first experience
+
+#### Rationale
+- Design-first philosophy from VISION.md
+- Mobile-first for 80-90% expected mobile traffic
+- Differentiate from "vanilla" enterprise software
+- Create delightful, shareable user experience
+
+---
+
+### Sprint 8: Service Layer and Type System Refactoring
+**Period**: November 12, 2024 (1 day)
+**Status**: ✅ Complete
+**Sprint Goal**: Eliminate duplicate code, consolidate types, extract business logic, and improve code quality following GL-RDD guidelines
+
+#### Sprint Objectives
+1. ✅ Create custom hooks for business logic (useVendorComparison, useVendorDiscovery, useExecutiveSummary)
+2. ✅ Create export utilities (exportHelpers.ts)
+3. ✅ Consolidate type definitions in `/src/types/` directory
+4. ✅ Extract business logic from components to hooks
+5. ✅ Establish Vitest testing framework with comprehensive test suite
+6. ✅ Refactor components to use new architecture (VendorTable, VendorSelection, ExecutiveSummary)
+
+#### Sprint Tasks
+| Task | Status | Priority | Est. Time | Notes |
+|------|--------|----------|-----------|-------|
+| Create SP_008 sprint plan | ✅ Complete | P0 | 2h | Detailed plan created |
+| Create mockHelpers.ts | 🔄 In Progress | P0 | 1h | Delay utilities |
+| Create dataTransformers.ts | 📅 Planned | P0 | 1h | Mapping/sorting |
+| Create storageService.ts | 📅 Planned | P0 | 1h | localStorage wrapper |
+| Create /src/types/ structure | 📅 Planned | P0 | 30min | Directory setup |
+| Consolidate Project types | 📅 Planned | P0 | 45min | Merge 3 duplicates |
+| Consolidate Vendor types | 📅 Planned | P0 | 45min | Merge 2 duplicates |
+| Consolidate Criteria types | 📅 Planned | P0 | 30min | Fix naming |
+| Refactor authService | 📅 Planned | P0 | 1h | Remove dupes, add docs |
+| Refactor projectService | 📅 Planned | P0 | 1.5h | Remove dupes, add docs |
+| Refactor aiService | 📅 Planned | P0 | 1h | Remove dupes, add docs |
+| Refactor dataService | 📅 Planned | P0 | 30min | Add documentation |
+| Update ProjectDashboard | 📅 Planned | P0 | 1h | Extract business logic |
+| Update CriteriaBuilder | 📅 Planned | P0 | 1h | Use storage service |
+| Update VendorDiscovery | 📅 Planned | P0 | 30min | Use centralized types |
+| Create utility tests | 📅 Planned | P0 | 2h | TDD approach |
+| Update service tests | 📅 Planned | P1 | 1h | Update mocks |
+| Update ARCHITECTURE.md | 📅 Planned | P1 | 30min | Add utility layer |
+| Update PROGRESS.md | ✅ Complete | P0 | 15min | Current sprint |
+| Update PROJECT_ROADMAP.md | 📅 Planned | P1 | 30min | Add SP_008 |
+
+#### Sprint Metrics
+- **Velocity**: ~8 hours actual (faster than estimated)
+- **Commitment**: Code quality improvements & test foundation
+- **Delivered**: 6/6 objectives complete ✅
+- **Test Coverage**: 81 tests, 100% passing
+- **Blockers**: None
+- **Actual Total Time**: ~8 hours
+
+---
+
+## Sprint History
+
+### Sprint 8: Service Layer and Type System Refactoring (Current)
+**Period**: November 12-15, 2024
+**Status**: 🟢 In Progress
+**Type**: Code Quality & Architecture Improvement
+
+#### Sprint Goals
+- Eliminate duplicate code across services (3 instances of delay simulation)
+- Consolidate scattered type definitions (82 types → centralized structure)
+- Extract business logic from components to services
+- Create centralized utility layer (`/src/utils/`)
+- Create storage service for localStorage operations
+- Add comprehensive JSDoc documentation to mock services
+- Establish test foundation following TDD principles
+
+#### Key Deliverables
+- `/src/utils/mockHelpers.ts` - Centralized delay and ID utilities
+- `/src/utils/dataTransformers.ts` - Data mapping and sorting logic
+- `/src/services/storageService.ts` - localStorage abstraction
+- `/src/types/` - Centralized type definitions (Project, Vendor, Criteria, Auth, Common)
+- Refactored services with removed duplicates
+- Updated components using centralized utilities and types
+- Test suite for all new utilities
+- Updated documentation (ARCHITECTURE.md, PROJECT_ROADMAP.md)
+
+#### Rationale
+- **GL-RDD Compliance**: Address documentation and code quality issues
+- **Maintainability**: Single source of truth for utilities and types
+- **Testability**: Centralized utilities are easier to test
+- **Handoff Readiness**: Clear mock service documentation for backend integration
+- **Reduced Technical Debt**: Fix issues before they compound
+
+---
+
+### Sprint 7: Visual Design Enhancement (Planned)
+**Period**: Pending (After SP_008)
+**Status**: 📋 Planned
+**Type**: UI/UX Enhancement
+
+#### Deferred Rationale
+- Component refactoring (originally SP_007) deferred in favor of service layer cleanup
+- Design enhancements will benefit from clean architecture foundation
+- Code quality improvements should precede visual polish
+
+---
+
+### Sprint 6: MVP to Visual Prototype Conversion (Completed)
+**Period**: November 12, 2024
+**Status**: ✅ Complete
+**Type**: Major Architecture Refactoring
+
+#### Rationale for Pivot
+- **Team Alignment**: Need visual demonstration for stakeholders
+- **Design Validation**: Confirm UX/UI before backend investment
+- **Reduced Complexity**: Lightweight prototype vs. full functional MVP
+- **Backend Handoff**: Clean separation makes integration easier later
+
+#### What Changed
+- **Removed**: Supabase, OpenAI, real authentication
+- **Added**: Mock services, JSON dummy data, archived folder
+- **Preserved**: All 21 visual features, component structure, UI/UX
+
+---
+
+### Pre-Sprint 6 Development (Baseline - Functional MVP)
+**Period**: Prior to November 12, 2024
+**Status**: ✅ Complete (Now Archived)
+**Note**: This was a cloned codebase with functional implementation
+
+#### Completed Functional Features (Now Mock-Only)
+1. **Authentication System** (Now Visual Demo)
+   - Email/password authentication → Mock (always succeeds)
+   - Session management → Simulated
+   - Protected routes → Visual only
+
+2. **Project Management** (Now Dummy Data)
+   - Project creation → Simulated
+   - Project dashboard → Shows JSON data
+   - State persistence → Ephemeral (resets on refresh)
+
+3. **5-Step Vendor Discovery Workflow** (Now Pre-Generated)
+   - Tech Input validation → UI only
+   - AI Criteria Builder → Returns JSON criteria
+   - AI Vendor Selection → Returns JSON vendors
+   - AI Vendor Comparison → Returns JSON comparison
+   - Vendor Invite system → Template-based
+
+4. **AI Integration** (Now Mock Responses)
+   - OpenAI GPT integration → Removed
+   - Intelligent matching → Pre-generated data
+   - Automated scoring → Pre-calculated scores
+
+5. **Data Management** (Now Simulated)
+   - Excel import/export → Import simulated, export functional
+   - Database integration → Removed
+   - JSONB storage → JSON files
+
+---
+
+## Feature Implementation Progress
+
+### Overall Statistics (Prototype Mode)
+| Metric | Count | Status |
+|--------|-------|--------|
+| **Total Features (Visual Demo)** | 21 | 100% |
+| **Backend Dependencies** | 0 | Removed |
+| **Mock Services** | 3 | To Be Created |
+| **JSON Data Files** | 5+ | To Be Created |
+| **Archived Code** | All | To Be Archived |
+
+### Feature Status Breakdown
+
+#### Core Platform (100% Visual Demo)
+| Feature | Status | Implementation | Notes |
+|---------|--------|---------------|-------|
+| Authentication System | 🎨 Mock Demo | Mock auth service | Always succeeds |
+| User Profile | 🎨 Visual Only | Dummy user data | No persistence |
+| Dashboard & Navigation | 🎨 Functional UI | Working | No backend |
+| Responsive Design | ✅ Fully Functional | Tailwind + shadcn | Unchanged |
+
+#### Project Management (100% Simulated)
+| Feature | Status | Implementation | Notes |
+|---------|--------|---------------|-------|
+| Project Creation | 🎨 Simulated | Mock service | No persistence |
+| Project List/Grid | 🎨 Shows Dummy Data | JSON projects | Resets on refresh |
+| Project Status Management | 🎨 UI Only | Visual changes only | No save |
+| Project Deletion | 🎨 Simulated | Appears to delete | Resets on refresh |
+
+#### AI Engine (100% Pre-Generated)
+| Feature | Status | Implementation | Notes |
+|---------|--------|---------------|-------|
+| Criteria Generation | 🎨 Pre-Generated | JSON criteria | By category |
+| Vendor Matching | 🎨 Pre-Selected | JSON vendors | By category |
+| Scoring Algorithm | 🎨 Pre-Calculated | JSON scores | Static data |
+| Comparison Matrix | 🎨 Pre-Generated | JSON comparison | Complete matrix |
+| Chat Interface | 🎨 UI Only | Visual feedback | No real AI |
+
+#### Vendor Discovery Workflow (100% Visual)
+| Step | Feature | Status | Implementation |
+|------|---------|--------|---------------|
+| 1 | Tech Input | 🎨 UI Functional | Form validation works |
+| 2 | Criteria Builder | 🎨 Mock AI | Returns JSON |
+| 3 | Vendor Selection | 🎨 Mock AI | Returns JSON |
+| 4 | Vendor Comparison | 🎨 Pre-Generated | JSON matrix |
+| 5 | Vendor Invite | 🎨 Templates | Pre-written emails |
+
+#### Data Management (Partial Function)
+| Feature | Status | Implementation | Notes |
+|---------|--------|---------------|-------|
+| Excel Import | 🎨 Simulated | Shows sample data | No real import |
+| Excel Export | ✅ Functional | Working | Can still export |
+| Data Persistence | ❌ None | Ephemeral | Resets on refresh |
+| File Storage | ❌ Not Needed | N/A | Prototype only |
+
+---
+
+## Technical Metrics (Prototype)
+
+### Code Quality
+| Metric | Current | Target | Status |
+|--------|---------|--------|--------|
+| **Test Coverage** | 81 tests (100% pass) | 80%+ (SP_008+) | ✅ Framework Established |
+| **Test Coverage Lines** | TBD | 80%+ | 🟢 Target Set |
+| **Test Coverage Branches** | TBD | 75%+ | 🟢 Target Set |
+| **TypeScript Coverage** | ~95% | 100% | 🟢 Maintained |
+| **Backend Dependencies** | 0 | 0 | ✅ Target Met |
+| **Build Errors** | 0 | 0 | ✅ Clean Build |
+| **Console Errors** | 0 | 0 | 🔄 To Verify |
+| **Bundle Size** | ~350KB | <500KB | ✅ Excellent |
+
+### Performance Metrics (Prototype)
+| Metric | Current | Target | Status |
+|--------|---------|--------|--------|
+| **Page Load Time** | <1s | <2s | ✅ Excellent |
+| **Time to Interactive** | <2s | <3s | ✅ Excellent |
+| **API Response Time** | Instant | N/A | ✅ No APIs |
+| **Bundle Size** | 350KB | <500KB | ✅ Great |
+
+### Infrastructure (Prototype)
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Frontend** | 🟢 Active | React + Vite |
+| **Backend** | 🗄️ Archived | No backend needed |
+| **Database** | 🗄️ Archived | JSON files only |
+| **Authentication** | 🎨 Mock | Always succeeds |
+| **AI Services** | 🗄️ Archived | Pre-generated data |
+
+---
+
+## Technical Debt Register
+
+### 🎨 Prototype Phase (No Debt - Intentional Simplifications)
+
+**Removed Concerns** (Archived for Future):
+- ~~No Test Coverage~~ - Not needed for prototype
+- ~~Missing Error Handling~~ - Happy path only
+- ~~No Performance Monitoring~~ - Not applicable
+- ~~State Management Complexity~~ - Simplified
+- ~~Missing Loading States~~ - Keep simple
+- ~~No Caching Strategy~~ - Not needed
+
+**Current Focus**:
+1. ✅ Clean visual demonstration
+2. ✅ Logical code organization
+3. ✅ Well-documented for handoff
+4. ✅ Easy backend integration path
+
+### 🔮 Future Functional Phase (When Converting Back)
+
+**High Priority** (After Prototype Validation):
+1. Restore backend integration (from `/archived/`)
+2. Implement real authentication
+3. Add error handling
+4. Implement test framework
+5. Add monitoring and logging
+
+**Medium Priority**:
+1. Performance optimization
+2. Caching strategy
+3. Rate limiting
+4. Analytics integration
+
+**Low Priority**:
+1. Dark mode
+2. Keyboard shortcuts
+3. Advanced animations
+
+---
+
+## Risk Register
+
+### Active Prototype Risks
+| Risk | Probability | Impact | Mitigation | Status |
+|------|------------|--------|------------|--------|
+| Stakeholder confusion about prototype nature | Medium | Medium | Clear documentation | 🟢 Mitigated |
+| Design changes needed | High | Low | Quick to iterate | 🟢 Acceptable |
+| Code restoration complexity | Low | Medium | Well-archived | 🟢 Mitigated |
+| Time to convert to functional | Medium | Medium | Clear integration plan | 🟢 Documented |
+
+### Resolved Risks (From Functional MVP)
+| Risk | Status | Resolution |
+|------|--------|------------|
+| Backend complexity | ✅ Resolved | Removed for prototype |
+| AI cost concerns | ✅ Resolved | No AI calls |
+| Scalability issues | ✅ Deferred | Address in functional phase |
+| Security vulnerabilities | ✅ Resolved | No backend to secure |
+
+---
+
+## Upcoming Milestones
+
+### Sprint 6 Completion (November 26, 2024)
+**Goals**:
+- [ ] Complete prototype conversion
+- [ ] All 21 features demonstrable
+- [ ] Documentation fully updated
+- [ ] Code properly archived
+- [ ] Build successful with 0 errors
+- [ ] Ready for stakeholder demo
+
+### Post-Sprint 6 (December 2024)
+**Activities**:
+- [ ] Stakeholder demonstration
+- [ ] Gather feedback on UX/UI
+- [ ] Identify design improvements
+- [ ] Validate feature priorities
+- [ ] Decide on functional implementation timeline
+
+### Functional Implementation (Q1 2025 - If Approved)
+**Phase 1**: Backend Foundation (8-10 weeks)
+- [ ] Supabase setup
+- [ ] Restore archived code
+- [ ] Real authentication
+- [ ] AI integration
+- [ ] Testing framework
+
+---
+
+## Prototype to Functional Conversion Plan
+
+### Conversion Readiness Checklist
+
+**Prerequisites**:
+- [ ] Prototype validated by stakeholders
+- [ ] Design feedback incorporated into prototype
+- [ ] UX improvements identified and prioritized
+- [ ] Budget approved for functional implementation
+- [ ] Development team resources allocated
+- [ ] Infrastructure setup planned
+
+**Conversion Steps** (12-week plan):
+1. **Weeks 1-2**: Infrastructure & Environment Setup
+2. **Weeks 3-4**: Database & Authentication Implementation
+3. **Weeks 5-8**: Replace Mock Services with Real APIs
+4. **Weeks 9-10**: AI Integration & Testing
+5. **Weeks 11-12**: QA, Performance Tuning, Soft Launch
+
+---
+
+## Definition of Done
+
+### Prototype Sprint Complete Criteria
+- [ ] All backend dependencies removed and archived
+- [ ] Mock services created and functional
+- [ ] JSON dummy data created for all features
+- [ ] All 21 features visually demonstrable
+- [ ] Application builds without errors
+- [ ] No console errors during demo
+- [ ] All documentation updated
+- [ ] Code reviewed and cleaned
+- [ ] Sprint retrospective conducted
+
+### Future Functional Sprint Criteria (Reference)
+- [ ] Code complete and reviewed
+- [ ] Unit tests written (>80% coverage)
+- [ ] Integration tests passing
+- [ ] Documentation updated
+- [ ] Deployed to staging
+- [ ] Product owner acceptance
+
+---
+
+## Team Velocity Tracking
+
+### Sprint Velocity (Prototype Phase)
+| Sprint | Type | Points | Velocity | Notes |
+|--------|------|--------|----------|-------|
+| Sprint 6 | Conversion | N/A | N/A | Architecture refactoring |
+
+**Note**: Traditional velocity metrics don't apply to prototype phase. Success measured by demonstration readiness.
+
+---
+
+## Communication & Reporting
+
+### Stakeholder Updates (Prototype Phase)
+- **Weekly**: Progress on prototype conversion
+- **Sprint End**: Demonstration of visual prototype
+- **Ad-hoc**: Design feedback sessions
+- **Post-Demo**: Functional implementation decision
+
+### Team Ceremonies (Adjusted for Prototype)
+- **Daily Check-in**: As needed (not daily)
+- **Sprint Planning**: Completed (SP_006)
+- **Sprint Review**: End of Week 2 (Prototype Demo)
+- **Retrospective**: Prototype learnings
+
+---
+
+## Key Decisions Log
+
+### November 12, 2024 - Pivot to Visual Prototype
+**Decision**: Convert functional MVP to visual prototype
+**Made By**: Product Team
+**Rationale**:
+- Focus on team alignment before backend investment
+- Validate UX/UI design with stakeholders
+- Reduce complexity and development time
+- Enable rapid design iteration
+
+**Impact**:
+- **Positive**: Faster to demonstrate, easier to modify, no backend costs
+- **Negative**: No real functionality, must convert back later
+- **Mitigation**: All code archived for restoration
+
+**Alternatives Considered**:
+1. ❌ Continue with functional MVP - Too complex, longer timeline
+2. ❌ Design mockups only - Not interactive enough
+3. ✅ Visual prototype with dummy data - Best balance
+
+---
+
+## Appendix
+
+### Reference Documents
+- [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md) - Prototype roadmap
+- [SP_006 Sprint Plan](./SPRINTS/SP_006_MVP_to_Visual_Prototype_Conversion.md) - Detailed plan
+- [ARCHITECTURE.md](../00_PLAN/ARCHITECTURE.md) - Prototype architecture
+- [FEATURE_LIST.md](../00_PLAN/FEATURE_LIST.md) - Feature details
+
+### Archived Code Location
+- `/archived/` - All removed functional code
+- `/archived/README.md` - Restoration instructions
+
+### Tools & Systems (Prototype)
+- **Project Management**: This document
+- **Version Control**: Git
+- **CI/CD**: Not needed (static site)
+- **Hosting**: Static hosting (Vercel, Netlify)
+- **Monitoring**: Not needed for prototype
+
+---
+
+## Document History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0.0 | 2024-10-26 | System | Initial progress tracking |
+| 2.0.0 | 2024-11-12 | System | Updated for prototype conversion (Sprint 6) |
+
+---
+
+*This document tracks progress for the **visual prototype** phase. Functional implementation tracking will resume when backend integration begins.*
+
+**Current Sprint**: Sprint 6 (SP_006) - Prototype Conversion
+**Status**: 🟡 In Progress (Planning)
+**Next Update**: End of Week 1 (November 19, 2024)
+**Last Updated**: November 12, 2024
+
+---
+
+## Sprint 7: Component Refactoring and Architecture Improvement
+
+**Period**: TBD (After SP_006 completion, estimated 3 weeks)  
+**Status**: 📋 Planning (Ready for execution)  
+**Type**: Major Architecture Refactoring & Code Quality Improvement  
+
+### Sprint Context
+Following component analysis completed November 12, 2024, Sprint 7 addresses architectural improvements identified in the codebase. This sprint follows GL-TDD and GL-RDD guidelines and positions the codebase for enhanced testability and maintainability.
+
+### Sprint Overview
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| **Sprint Duration** | 3 weeks | Estimated 25-32 hours dev time |
+| **Components to Refactor** | 8 | Exceeding 300 lines each |
+| **Lines of Code to Extract** | 4,138 | Across 8 components |
+| **Expected Reduction** | 30-40% | Through DRY principle |
+| **New Files to Create** | 23-28 | Services, hooks, components |
+| **Test Coverage Target** | 80%+ | Phase 1: 90%, Phase 2: 80%, Phase 3: 70% |
+| **Risk Level** | Medium | Refactoring existing features |
+
+### Identified Components for Refactoring
+
+| Component | Current Lines | Target Lines | Status |
+|-----------|--------------|-------------|--------|
+| CriteriaBuilder.tsx | 872 | ~100 (orchestrator) | 📋 Planned |
+| VendorTable.tsx | 785 | ~100 (orchestrator) | 📋 Planned |
+| sidebar.tsx | 761 | <300 (lower priority) | 📅 Deferred |
+| VendorSelection.tsx | 412 | <200 (split into 2-3) | 📋 Planned |
+| VendorInvite.tsx | 359 | <200 (split into 2-3) | 📋 Planned |
+| VendorDiscovery.tsx | 356 | <300 (monitoring) | 📅 Review |
+| ProjectDashboard.tsx | 341 | ~150 (orchestrator) | 📋 Planned |
+| chart.tsx | 363 | <300 (UI library, lower priority) | 📅 Review |
+
+### Refactoring Phases
+
+#### Phase 1: Service Layer Extraction (Days 1-2, 6-7 hours)
+**Goal**: Extract business logic into reusable, testable services  
+**Status**: 📋 Planning
+
+**Services to Create**:
+1. `vendorScorer.ts` - Eliminates duplicate scoring logic
+2. `criteriaImporter.ts` - Extract Excel file processing
+3. `vendorExporter.ts` - Extract export functionality
+4. `criteriaCalculator.ts` - Calculation utilities
+5. `criteriaExporter.ts` - Criteria export utilities
+6. `criteriaUtils.ts` - Color functions, type mappings
+7. `vendorUtils.ts` - Vendor transformations
+
+**Benefits**:
+- Duplicate code eliminated (90%+)
+- Logic testable without React
+- No browser API dependencies in components
+- Can be reused across components
+
+#### Phase 2: UI Component Extraction (Days 3-7, 12-15 hours)
+**Goal**: Split large components into focused, single-responsibility components  
+**Status**: 📋 Planning
+
+**CriteriaBuilder Extraction** (872 → 5 components):
+- ChatAssistant.tsx (150 lines)
+- CriteriaTable.tsx (200 lines)
+- ExcelImporter.tsx (120 lines)
+- CustomTypeManager.tsx (100 lines)
+- CriteriaBuilder.tsx orchestrator (100 lines)
+
+**VendorTable Extraction** (785 → 5 components):
+- VendorComparisonMatrix.tsx (250 lines)
+- VendorScoreCard.tsx (100 lines)
+- VendorFilterBar.tsx (100 lines)
+- VendorTable.tsx orchestrator (100 lines)
+- ExecutiveSummary.tsx (80 lines, already separate)
+
+**ProjectDashboard Extraction** (341 → 4 components):
+- ProjectList.tsx (100 lines)
+- CreateProjectDialog.tsx (80 lines)
+- EditProjectDialog.tsx (80 lines)
+- ProjectDashboard.tsx orchestrator (150 lines)
+
+#### Phase 3: State Management Extraction (Days 8-10, 5-7 hours)
+**Goal**: Create custom hooks to organize related state  
+**Status**: 📋 Planning
+
+**Hooks to Create**:
+1. `useCriteriaState.ts` - Combines 9 useState calls
+2. `useVendorState.ts` - Combines vendor state
+3. `useProjectManager.ts` - CRUD operations
+4. `useVendorFiltering.ts` - Filter/sort logic
+5. `useVendorDiscovery.ts` - Discovery workflow
+
+**Benefits**:
+- Related state grouped together
+- Logic testable independently
+- Easier to share across components
+- Cleaner component code
+
+### Phase 1 Detailed Planning
+
+#### vendorScorer.ts (1.5 hours)
+**What to Extract**:
+- calculateOverallScore() - Currently in VendorTable AND VendorInvite (DUPLICATE)
+- generateFallbackScores() - Fallback score generation
+- applyWeights() - Criteria weight application
+
+**Test Strategy**:
+- Create failing tests first (GL-TDD)
+- Test score calculation accuracy
+- Test weight application
+- Test edge cases (no criteria, etc.)
+
+**Expected Tests**: 10-15 test cases, 90%+ coverage
+
+#### criteriaImporter.ts (1.5 hours)
+**What to Extract**:
+- importCriteriaFromExcel() - Excel parsing with XLSX
+- validateCriteriaData() - Data validation
+- transformExcelData() - Data transformation
+
+**Test Strategy**:
+- Mock file uploads
+- Test validation logic
+- Test error handling
+- Test data transformation
+
+**Expected Tests**: 10-12 test cases, 90%+ coverage
+
+#### vendorExporter.ts (1.5 hours)
+**What to Extract**:
+- exportVendorsToExcel() - Excel generation
+- exportVendorsToCSV() - CSV generation
+- formatExportData() - Data formatting
+
+**Test Strategy**:
+- Test export format correctness
+- Test data inclusion/exclusion
+- Test error handling
+- Test empty data sets
+
+**Expected Tests**: 8-10 test cases, 90%+ coverage
+
+#### Supporting Services (1.5 hours)
+- criteriaUtils.ts - Color functions, type mappings
+- vendorUtils.ts - Vendor transformations
+- criteriaCalculator.ts - Calculation utilities
+- criteriaExporter.ts - Criteria export utilities
+
+### Definition of Done (SP_007)
+
+#### Phase 1 Complete
+- [ ] All 7 services created with >90% test coverage
+- [ ] All existing components updated to use services
+- [ ] VendorInvite updated to use vendorScorer service (eliminates duplication)
+- [ ] No duplicate code remains in services
+- [ ] Build passes with 0 errors
+- [ ] All service tests passing
+
+#### Phase 2 Complete
+- [ ] CriteriaBuilder reduced to <100 lines (orchestrator only)
+- [ ] VendorTable reduced to <100 lines (orchestrator only)
+- [ ] ProjectDashboard reduced to <150 lines (orchestrator only)
+- [ ] All extracted components created with >70% test coverage
+- [ ] All 20+ new components tested
+- [ ] All features working (no regressions)
+- [ ] Build passes with 0 errors
+- [ ] All component tests passing
+
+#### Phase 3 Complete
+- [ ] All 5 custom hooks created with >80% test coverage
+- [ ] All hooks tested independently
+- [ ] Components updated to use hooks
+- [ ] Component state cleaner and more organized
+- [ ] Build passes with 0 errors
+- [ ] Overall test coverage >80%
+
+#### Sprint Complete
+- [ ] All 3 phases delivered
+- [ ] Code reviewed and approved
+- [ ] Merged to main branch
+- [ ] Documentation updated
+- [ ] Architecture documentation reflects new structure
+- [ ] No regressions in functionality
+- [ ] Performance benchmarks verified (no regression)
+- [ ] Ready for Phase 1 backend integration
+
+### Next Steps After SP_007
+
+1. **Stakeholder Feedback** (December 2024)
+   - Demonstrate refactored codebase
+   - Show improved architecture
+   - Gather feedback on design and UX
+
+2. **Phase 1 Planning** (January 2025)
+   - Prepare backend infrastructure
+   - Plan mock service replacement strategy
+   - Allocate resources
+
+3. **Phase 1 Execution** (January - March 2025)
+   - Replace mock services with real APIs
+   - Implement authentication
+   - Integrate AI services
+   - Build comprehensive test suite
+
+---
+
+*Sprint 7 is positioned to significantly improve code quality, testability, and maintainability while maintaining all existing functionality.*
+
