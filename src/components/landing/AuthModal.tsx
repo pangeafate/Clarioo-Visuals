@@ -119,10 +119,10 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md rounded-2xl shadow-elevated-combined">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-brand-purple to-brand-purpleLight bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-brand-blue to-brand-blueLight bg-clip-text text-transparent">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </DialogTitle>
-          <DialogDescription className="text-neutral-warmGray">
+          <DialogDescription className="text-neutral-slate">
             {isSignUp
               ? 'Sign up to start discovering perfect vendors with AI'
               : 'Sign in to continue your vendor discovery journey'}
@@ -140,10 +140,10 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
               className="flex flex-col items-center justify-center py-8 space-y-4"
             >
               <CheckCircle className="h-16 w-16 text-green-500" />
-              <p className="text-lg font-semibold text-neutral-warmBlack">
+              <p className="text-lg font-semibold text-neutral-navy">
                 {isSignUp ? 'Account created successfully!' : 'Welcome back!'}
               </p>
-              <p className="text-sm text-neutral-warmGray">
+              <p className="text-sm text-neutral-slate">
                 Redirecting to dashboard...
               </p>
             </motion.div>
@@ -215,7 +215,7 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
                   className="rounded-xl h-12"
                 />
                 {isSignUp && (
-                  <p className="text-xs text-neutral-warmGray">
+                  <p className="text-xs text-neutral-slate">
                     Minimum 6 characters
                   </p>
                 )}
@@ -250,20 +250,20 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
               </Button>
 
               {/* Mode Switch */}
-              <div className="text-center text-sm text-neutral-warmGray">
+              <div className="text-center text-sm text-neutral-slate">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}
                 {' '}
                 <button
                   type="button"
                   onClick={handleModeSwitch}
-                  className="text-brand-purple font-semibold hover:underline"
+                  className="text-brand-blue font-semibold hover:underline"
                 >
                   {isSignUp ? 'Sign In' : 'Sign Up'}
                 </button>
               </div>
 
               {/* Prototype Notice */}
-              <div className="text-xs text-center text-neutral-warmGray bg-gray-50 p-3 rounded-xl">
+              <div className="text-xs text-center text-neutral-slate bg-gray-50 p-3 rounded-xl">
                 🎨 <strong>Prototype Mode:</strong> Any email/password will work for demonstration
               </div>
             </motion.form>
