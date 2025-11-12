@@ -13,13 +13,14 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 // SP_007: Updated routing structure for landing page
+// GitHub Pages deployment requires basename for subdirectory routing
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Routes>
             {/* SP_007: Public landing page - main entry point */}
             <Route path="/" element={<LandingPage />} />
