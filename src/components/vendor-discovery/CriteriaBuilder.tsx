@@ -355,6 +355,43 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaB
 
       {/* Criteria Management */}
       <div className="space-y-6 lg:col-span-2">
+        {/* AI-Generated Summary */}
+        {techRequest && (
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100">
+            <CardContent className="pt-6">
+              <div className="flex gap-3 mb-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Bot className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Based on your description, you need a <span className="font-semibold text-primary">{techRequest.category}</span> solution
+                    {techRequest.description && (
+                      <> that {techRequest.description.toLowerCase()}</>
+                    )}
+                    {techRequest.companyInfo && (
+                      <>. {techRequest.companyInfo}</>
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Would you like to add anything?</Label>
+                <Textarea
+                  placeholder="Any additional context, requirements, or specific challenges..."
+                  className="min-h-[80px] resize-none"
+                  disabled={isGenerating}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Current Criteria - Excel-like Table with Tabs */}
         <Card>
           <CardHeader>

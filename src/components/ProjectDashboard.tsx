@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Calendar, FolderOpen, Edit } from "lucide-react";
+import { Calendar, FolderOpen, Edit, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import * as projectService from "@/services/mock/projectService";
@@ -41,6 +41,8 @@ const ProjectDashboard = ({
     name: '',
     description: ''
   });
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -133,6 +135,38 @@ const ProjectDashboard = ({
       });
     }
   };
+
+  // 🎨 PROTOTYPE MODE: Using mock project service
+  const deleteProject = async () => {
+    if (!editingProject) return;
+
+    setIsDeleting(true);
+
+    try {
+      const { error } = await projectService.deleteProject(editingProject.id);
+
+      if (error) throw new Error(error.message);
+
+      // Remove project from list
+      setProjects(projects.filter(p => p.id !== editingProject.id));
+      setShowEditDialog(false);
+      setShowDeleteConfirm(false);
+      setEditingProject(null);
+
+      toast({
+        title: "Project deleted",
+        description: "Your project has been deleted successfully."
+      });
+    } catch (error) {
+      toast({
+        title: "Error deleting project",
+        description: "Could not delete the project. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   if (loading) {
     return <div className="min-h-screen bg-gradient-secondary flex items-center justify-center">
         <div className="text-center">
@@ -180,13 +214,56 @@ const ProjectDashboard = ({
               })} />
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowEditDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={updateProject}>
-                Update Project
-              </Button>
+            <DialogFooter className="flex flex-col gap-3">
+              {!showDeleteConfirm ? (
+                <div className="flex gap-2 w-full">
+                  <Button
+                    variant="destructive"
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="flex-1"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowEditDialog(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={updateProject}
+                    className="flex-1"
+                  >
+                    Update Project
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div className="text-sm text-muted-foreground text-center">
+                    Are you sure you want to delete this project?
+                  </div>
+                  <div className="flex gap-2 w-full">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      disabled={isDeleting}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={deleteProject}
+                      disabled={isDeleting}
+                      className="flex-1"
+                    >
+                      {isDeleting ? "Deleting..." : "Delete Project"}
+                    </Button>
+                  </div>
+                </>
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

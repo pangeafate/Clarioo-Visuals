@@ -6,9 +6,10 @@
 
 This document lists all features of the Vendora AI Visual Prototype. All features marked as "Demo Only" use mock services and dummy data for demonstration purposes. No backend connectivity or AI integration is active.
 
-**Current Mode**: Visual Prototype (Sprint 7)
+**Current Mode**: Visual Prototype (Sprint 7 + SP_011 Planning)
 **Purpose**: Team alignment and design validation
 **Backend Integration**: Planned for Q1 2025
+**Latest Sprint**: SP_011 - Registration-Free Access & Smart Navigation (Completed November 13, 2024)
 
 **📊 Gap Analysis**: See [GAP_ANALYSIS.md](../00_IMPLEMENTATION/GAP_ANALYSIS.md) for detailed mapping of user stories to implementation and identified gaps.
 
@@ -17,10 +18,10 @@ This document lists all features of the Vendora AI Visual Prototype. All feature
 ## Feature Categories
 
 1. **Core Platform** - Authentication, Navigation, Infrastructure (DEMO ONLY)
-2. **Project Management** - Project lifecycle and organization (DEMO ONLY)
+2. **Project Management** - Project lifecycle and organization (DEMO ONLY + SP_011 PLANNED)
 3. **AI Engine** - Artificial intelligence capabilities (MOCK DATA)
 4. **Vendor Discovery Workflow** - Five-step evaluation process (VISUAL DEMO)
-5. **UI/UX Enhancements** - Design features and interactions (PLANNED SP_007)
+5. **UI/UX Enhancements** - Design features and interactions (COMPLETED SP_007, PLANNED SP_011)
 6. **Data Management** - Import/Export, Storage (PARTIAL)
 7. **Collaboration** - Team features and sharing (NOT IN PROTOTYPE)
 8. **Integration** - External system connections (NOT IN PROTOTYPE)
@@ -301,11 +302,17 @@ projects (
 
 ## 4. Vendor Discovery Workflow Features (Visual Demo)
 
+**Recent Improvements (November 13, 2024):**
+- Fixed VendorDiscovery timeline width to static 220px on desktop
+- Prevents layout shift when step titles appear during workflow progression
+- Ensures consistent visual experience and smooth transitions between steps
+
 ### 4.1 Step 1: Technology Requirements Input
 **Status:** 🎨 Fully Functional (UI)
 **Priority:** P0
 **Implementation:**
 - `src/components/VendorDiscovery.tsx` (Step 1)
+- `src/components/vendor-discovery/TechInput.tsx` - **Nov 13: Label styling updated**
 
 **Removed:**
 - ~~`tech_requests` database table~~
@@ -313,12 +320,15 @@ projects (
 **Input Fields (All Working):**
 - Technology category (dropdown - functional)
 - Detailed description (textarea - functional)
-- Budget range (dropdown - functional)
-- Timeline/Urgency (dropdown - functional)
 - Company size (dropdown - functional)
 - Special requirements (textarea - functional)
 
 **Note:** Form validation works, but data not persisted
+
+**Recent Updates (November 13, 2024):**
+- TechInput label styling updated to match landing page aesthetic
+- Labels now use: text-lg font-semibold text-gray-800 mb-3 block
+- Consistent typography throughout application
 
 **Planned Enhancements (SP_007):**
 - Registration-gated input fields with animations
@@ -411,21 +421,24 @@ projects (
 ## 5. UI/UX Enhancement Features (Planned SP_007)
 
 ### 5.1 Landing Page Enhancements
-**Status:** 🟢 Phase 1 Complete (SP_007 - 6/8 elements implemented)
+**Status:** 🟢 Phase 1 Complete with Refinements (SP_007 - 6/8 elements implemented)
 **Priority:** P0
 **Source:** VISION MODIFIED.md Section 1 + User Specifications
 **Completed:** November 12, 2024
+**Refinements:** November 13, 2024
 **Implementation Files:**
 - ✅ `src/components/landing/LandingPage.tsx` - Main landing page integration component
-- ✅ `src/components/landing/HeroSection.tsx` - Hero with gradient title and value badges (Elements 1 & 2)
-- ✅ `src/components/landing/RegistrationToggle.tsx` - Sign In/Sign Up toggle (Element 3)
-- ✅ `src/components/landing/AnimatedInputs.tsx` - Registration-gated inputs with hypnotic animations (Element 5)
+- ✅ `src/components/landing/HeroSection.tsx` - Hero with gradient title (Elements 1 & 2) - **Refinement: unified subtitle styling, reduced spacing**
+- ✅ `src/components/landing/RegistrationToggle.tsx` - Sign In/Sign Up toggle (Element 3) - **Refinement: pulsating outline animation in Off position**
+- ✅ `src/components/landing/AnimatedInputs.tsx` - Registration-gated inputs with hypnotic animations (Element 5) - **Refinement: value badges moved here from HeroSection**
 - ✅ `src/components/landing/ArtifactVisualization.tsx` - Workflow visualization with auto-rotation (Element 6)
 - ✅ `src/components/landing/CardCarousel.tsx` - Interactive carousel with 5 workflow cards (Element 8)
 - 📅 `src/components/landing/iPodNavigation.tsx` - Planned (Element 4)
 - 📅 `src/components/landing/VisualStepIndicator.tsx` - Planned (Element 7)
 - ✅ `src/App.tsx` - Routing updated: `/` = landing, `/dashboard` = protected dashboard
 - ✅ `tailwind.config.ts` - Clearbit-inspired design system (gradients, shadows, animations)
+- ✅ `src/components/vendor-discovery/TechInput.tsx` - **Refinement: label styling updated to match landing page (text-lg font-semibold text-gray-800 mb-3 block)**
+- ✅ `src/components/VendorDiscovery.tsx` - **Refinement: timeline width fixed at 220px on desktop**
 
 **Landing Page Layout (Unregistered Users - Top to Bottom):**
 
@@ -651,15 +664,170 @@ projects (
 
 ---
 
-### 5.1.1 Implementation Summary (SP_007 - Phase 1 Complete)
+### 5.1.0 Landing Page Enhancements (SP_011 - Registration-Free Entry Point)
+
+**Status:** ✅ Completed (November 13, 2024)
+**Priority:** P0
+**Sprint:** SP_011 - Registration-Free Access & Smart Navigation
+**Implementation Date:** Post-SP_007
+**Source:** User research - reduce friction for new users, provide alternative entry paths
+
+**New Features (SP_011):**
+
+#### 5.1.0.1 View Toggle System
+**Status:** ✅ Completed (November 13, 2024)
+**Description:** Switch between Landing (marketing) and Projects (workflow) views
+**Implementation Files:**
+- `src/components/landing/LandingPage.tsx` - View state management
+- `src/components/landing/HeroSection.tsx` - Toggle button integration
+
+**Features:**
+- ✅ Two-state view system: 'landing' (marketing content) and 'projects' (project dashboard)
+- ✅ Toggle button in hero section: "View Projects →" / "← Back to Home"
+- ✅ Conditional rendering based on currentView state
+- ✅ Smooth transitions between views with framer-motion
+- ✅ Projects view shows ProjectDashboard without authentication requirement
+- ✅ Always-active input fields (removed authentication gate from AnimatedInputs)
+
+**Technical Implementation:**
+- View state managed at LandingPage component level
+- Clean separation between marketing and workflow views
+- No page reloads - instant view switching
+- Mobile-responsive toggle button placement
+
+#### 5.1.0.2 Quick Project Creation from Categories
+**Status:** ✅ Completed (November 13, 2024)
+**Description:** Dropdown selector with 15+ software categories for instant project creation
+**Implementation Files:**
+- `src/components/landing/CategoryDropdown.tsx` - NEW (120 lines)
+- `src/components/landing/ProjectConfirmationDialog.tsx` - NEW (80 lines)
+
+**Features:**
+- ✅ Dropdown with 15+ predefined software categories
+- ✅ Categories include: CRM, Marketing Automation, HR Management, Project Management, Data Analytics, E-commerce, Accounting, Customer Support, Sales, Legal, IT Management, Communication, Security, Collaboration, DevOps
+- ✅ Click category → confirmation dialog → project created with category pre-filled
+- ✅ Confirmation dialog prevents accidental project creation
+- ✅ Projects appear immediately in Projects view
+- ✅ Mobile-responsive dropdown design
+
+**Categories Implemented:**
+1. CRM Software
+2. Marketing Automation
+3. HR Management
+4. Project Management
+5. Data Analytics
+6. E-commerce Platform
+7. Accounting Software
+8. Customer Support
+9. Sales Enablement
+10. Legal Management
+11. IT Management
+12. Communication Tools
+13. Security Software
+14. Collaboration Platform
+15. DevOps Tools
+
+#### 5.1.0.3 Example-Based Project Creation
+**Status:** ✅ Completed (November 13, 2024)
+**Description:** Question mark icon with 4 clickable example projects for instant inspiration
+**Implementation Files:**
+- `src/components/landing/ExamplesBulletPopover.tsx` - NEW (110 lines)
+- `src/components/landing/ProjectConfirmationDialog.tsx` - Shared confirmation dialog
+
+**Features:**
+- ✅ Question mark icon positioned next to AnimatedInputs
+- ✅ Hover/click to reveal popover with 4 example projects
+- ✅ Each example includes: company type, category, one-line description
+- ✅ Click example → confirmation dialog → project created with example data
+- ✅ Projects appear immediately in Projects view
+
+**Example Projects Implemented:**
+1. **Mid-size Retailer** - POS System
+   - "We're a mid-size retailer looking to modernize our point-of-sale infrastructure"
+
+2. **SaaS Startup** - CRM Platform
+   - "Early-stage SaaS company needing a scalable CRM for sales team"
+
+3. **Enterprise Company** - Analytics Tool
+   - "Large enterprise seeking advanced analytics for data-driven decisions"
+
+4. **Nonprofit Organization** - Donor Management
+   - "Nonprofit looking for efficient donor management and fundraising software"
+
+**Design:**
+- Question mark icon with tooltip
+- Popover with compact example cards
+- Mobile-responsive layout
+- Consistent with landing page styling
+
+#### 5.1.0.4 Project Deletion with Confirmation
+**Status:** ✅ Completed (November 13, 2024)
+**Description:** Delete projects from Edit Project dialog with two-step confirmation
+**Implementation Files:**
+- `src/components/landing/EditProjectDialog.tsx` - Enhanced with delete functionality
+
+**Features:**
+- ✅ "Delete Project" button at bottom of Edit Project dialog
+- ✅ Two-step confirmation prevents accidental deletion
+- ✅ First confirmation: Browser confirm() prompt
+- ✅ Second confirmation: User must confirm again
+- ✅ Success toast notification after deletion
+- ✅ Project removed from Projects view immediately
+
+**User Flow:**
+1. User opens Edit Project dialog
+2. Clicks "Delete Project" button (red, destructive styling)
+3. Browser confirm prompt: "Are you sure you want to delete this project?"
+4. If confirmed, second prompt: "This action cannot be undone. Delete project?"
+5. If confirmed again, project deleted and toast shown
+6. Dialog closes automatically
+
+**Safety Features:**
+- Two-step confirmation prevents accidents
+- Clear warning messages
+- Destructive button styling (red)
+- Cannot be undone (clearly communicated)
+
+#### 5.1.0.5 Visual Consistency Improvements
+**Status:** ✅ Completed (November 13, 2024)
+**Description:** Unified typography, icon sizes, and styling across all landing components
+**Implementation Files:**
+- Multiple components updated for consistency
+
+**Improvements:**
+- ✅ Typography aligned across CategoryDropdown, ExamplesBulletPopover, and dialogs
+- ✅ Icon sizes standardized:
+  - Calendar icon: 16px (h-4 w-4)
+  - Zap/Package/Building icons: 20px (h-5 w-5)
+- ✅ Button styling consistent (gradient buttons, hover states)
+- ✅ Spacing and padding follow design system
+- ✅ Color scheme consistent with landing page palette (purple gradients)
+- ✅ Label styling consistent: text-lg font-semibold text-gray-800 mb-3
+- ✅ All components maintain mobile responsiveness
+
+**Benefits:**
+- Professional, polished appearance
+- Easier for users to understand UI patterns
+- Reduced cognitive load
+- Better brand consistency
+- Improved accessibility
+
+---
+
+### 5.1.1 Implementation Summary (SP_007 - Phase 1 Complete with Refinements)
 
 **Completed Components (November 12, 2024):**
 
 ✅ **HeroSection.tsx (Elements 1 & 2)**
 - Gradient headline: "Supercharge your software vendor's selection with AI assistant"
-- Value proposition badges: "90% automated", "No doubts", "<24 hours"
+- ~~Value proposition badges: "90% automated", "No doubts", "<24 hours"~~ **MOVED to AnimatedInputs.tsx on Nov 13**
 - Responsive typography: 36px mobile → 56px desktop
 - Framer Motion animations: fade-in on mount (600ms)
+- **Nov 13 Refinements:**
+  - Unified subtitle to single color/font (text-gray-500)
+  - Combined two subtitle paragraphs into single text block
+  - Reduced spacing for better visual balance
+  - Balanced top/bottom padding (py-16 md:py-20, removed min-h-[75vh])
 
 ✅ **RegistrationToggle.tsx (Element 3)**
 - Sign In/Sign Up toggle buttons with gradient styling
@@ -667,6 +835,9 @@ projects (
 - Shadow: `button-glow` (4px blur with purple tint)
 - Hover lift effect: -2px transform
 - Mobile-friendly: 140px min-width, 48px height touch targets
+- **Nov 13 Refinement:**
+  - Added pulsating outline animation when in Off position
+  - Visual cue to draw attention and encourage registration
 
 ✅ **AnimatedInputs.tsx (Element 5)**
 - Two side-by-side inputs (desktop) / stacked (mobile)
@@ -677,6 +848,9 @@ projects (
 - "Register to unlock" overlay with lock icon
 - Post-auth: smooth unlock (500ms), auto-focus on first input
 - Placeholders: "I work at Zapier in HR function" / "Looking for HR management software"
+- **Nov 13 Refinement:**
+  - Value proposition badges moved here from HeroSection (positioned above inputs)
+  - Badges: "⚡ 90% of routine work automated", "✓ No doubts in decisions", "🚀 <24 hours from start to selection"
 
 ✅ **ArtifactVisualization.tsx (Element 6)**
 - Three rotating workflow examples (4-second intervals)
@@ -728,6 +902,10 @@ projects (
 - **GL-RDD Compliance**: All components documented with prototype standards
 - **Mobile-First**: Responsive breakpoints (md:768px) implemented across all components
 - **Animation Performance**: CSS-based animations for smooth 60fps performance
+- **Deployment**: ✅ GitHub Pages (https://pangeafate.github.io/Clarioo-Visuals/) - Nov 13, 2024
+  - All assets loading correctly (HTTP 200)
+  - White screen issue resolved (see ERRORS.md ERROR-001)
+  - Production build verified with correct asset paths
 
 ---
 
@@ -1472,20 +1650,35 @@ All removed functional code is preserved in:
 |---------|------|---------|
 | 1.0 | Oct 2024 | Initial feature list documentation (functional MVP) |
 | 2.0 | Nov 12, 2024 | Updated for visual prototype conversion (Sprint 6) |
+| 2.1 | Nov 13, 2024 | Landing page refinements, deployment to GitHub Pages, workflow improvements |
 
 ---
 
 ## Document Status
 
-**Current Version**: 2.0.0
-**Project Phase**: 🎨 Visual Prototype
+**Current Version**: 2.1.0
+**Project Phase**: 🎨 Visual Prototype - Phase 1 Complete with Refinements
 **Total Features**: 31
 **Demo Features**: 21 (20 mock + 1 functional)
 **Prototype Completion**: 100% (visual demonstration)
 **Functional Completion**: 0% (backend pending)
+**Deployment**: ✅ Live on GitHub Pages
 
-**Last Updated**: November 12, 2024
-**Next Update**: After prototype stakeholder feedback
+**Last Updated**: November 13, 2024 (SP_011 Completed)
+**Recent Changes**:
+- **SP_011 COMPLETED**: All 5 features implemented and tested
+  - ✅ View Toggle System: Switch between Landing and Projects
+  - ✅ Quick Project Creation from Categories: 15+ software categories
+  - ✅ Example-Based Project Creation: 4 clickable examples
+  - ✅ Project Deletion with Confirmation: Two-step safety
+  - ✅ Visual Consistency Improvements: Unified design
+- Hero section spacing and subtitle refinements
+- Value proposition badges repositioned
+- RegistrationToggle pulsating animation added
+- VendorDiscovery timeline width fixed
+- TechInput label styling updated
+- Successfully deployed to GitHub Pages
+**Next Update**: After SP_012 planning or new feature request
 
 ---
 
