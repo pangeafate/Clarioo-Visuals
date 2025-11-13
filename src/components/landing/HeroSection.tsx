@@ -26,19 +26,19 @@ export const HeroSection = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="text-center px-4 py-12 md:py-16"
+      className="text-center px-4 py-12 md:py-16 relative"
     >
-      {/* Logo */}
+      {/* Logo - Upper Left Corner */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex justify-center mb-4"
+        className="absolute top-4 left-4"
       >
         <img
           src={`${import.meta.env.BASE_URL}logo.png`}
           alt="Clarioo Logo"
-          className="h-16 md:h-20 lg:h-24 w-auto"
+          className="h-4 md:h-5 lg:h-6 w-auto"
         />
       </motion.div>
 
@@ -50,6 +50,7 @@ export const HeroSection = () => {
           bg-gradient-to-r from-brand-blue to-brand-blueLight
           bg-clip-text text-transparent
           mb-6
+          mt-12 md:mt-16 lg:mt-20
           tracking-tight
           leading-tight
         "
@@ -60,19 +61,18 @@ export const HeroSection = () => {
 
       {/* Element 2: Subtitle */}
       <p className="text-lg md:text-xl text-neutral-slate max-w-3xl mx-auto leading-relaxed">
-        Discover, evaluate, and select the perfect vendors in minutes, not weeks.
-        Let AI guide you through intelligent vendor discovery with transparent, data-driven recommendations.
+        Discover and evaluate software based on your business needs and company context.
       </p>
 
       {/* Value proposition badges */}
       <div className="flex flex-wrap justify-center gap-3 mt-8">
-        <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-neutral-navy shadow-soft border border-gray-100">
+        <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
           ⚡ 90% of routine work automated
         </span>
-        <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-neutral-navy shadow-soft border border-gray-100">
+        <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
           ✓ No doubts in decisions
         </span>
-        <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-neutral-navy shadow-soft border border-gray-100">
+        <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
           🚀 &lt;24 hours from start to selection
         </span>
       </div>

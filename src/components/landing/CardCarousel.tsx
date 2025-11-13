@@ -197,13 +197,13 @@ export const CardCarousel = () => {
 
           {/* Value proposition badges */}
           <div className="flex flex-wrap justify-center gap-3">
-            <span className="px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium">
+            <span className="px-6 py-3 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium border border-brand-blue/20">
               ⚡ 90% of routine work automated
             </span>
-            <span className="px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium">
+            <span className="px-6 py-3 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium border border-brand-blue/20">
               ✓ No doubts in decisions
             </span>
-            <span className="px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium">
+            <span className="px-6 py-3 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-medium border border-brand-blue/20">
               🚀 &lt;24 hours from start to selection
             </span>
           </div>
