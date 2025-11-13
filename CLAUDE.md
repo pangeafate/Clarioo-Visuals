@@ -10,3 +10,4 @@
    10. If the work on the sprint will produce more than 1 file - create a “SP_ID_what is being done” folder under SPRINTS folder and put all files there  
 11. IMPORTANT: ALWAYS USE A DEDICATED SUB AGENT WHEN YOU WANT TO USE MCP, AND THEN FROM SUB AGENT PUSH ONLY RELEVANT INFORMATION TO THE MAIN AGENT
 12. IMPORTANT: Do not use Docker until the project is completed and its time to deploy.
+13. IMPORTANT: Don't push the changes to github unless I told you to in the current message

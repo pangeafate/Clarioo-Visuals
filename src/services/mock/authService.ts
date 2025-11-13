@@ -35,13 +35,44 @@ import type {
 // localStorage key for session persistence
 const SESSION_STORAGE_KEY = 'mock_auth_session';
 
+// Helper to validate session structure
+const isValidSession = (session: any): session is Session => {
+  if (!session || typeof session !== 'object') return false;
+  if (!session.user || typeof session.user !== 'object') return false;
+
+  // Check required user fields with correct names
+  const user = session.user;
+  const hasRequiredFields =
+    typeof user.id === 'string' &&
+    typeof user.email === 'string' &&
+    typeof user.name === 'string' &&  // Must be 'name', not 'full_name'
+    typeof user.role === 'string' &&
+    typeof user.status === 'string' &&
+    typeof user.created_at === 'string' &&
+    typeof user.updated_at === 'string';
+
+  return hasRequiredFields;
+};
+
 // Helper to get session from localStorage
 const getStoredSession = (): Session | null => {
   try {
     const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : null;
+    if (!stored) return null;
+
+    const session = JSON.parse(stored);
+
+    // Validate session structure and clear if invalid
+    if (!isValidSession(session)) {
+      console.warn('Invalid session structure detected, clearing localStorage');
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+      return null;
+    }
+
+    return session;
   } catch (error) {
     console.error('Failed to parse stored session:', error);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
     return null;
   }
 };

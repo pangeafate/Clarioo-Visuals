@@ -159,6 +159,19 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   }, [currentStep, techRequest, criteria, selectedVendors, isLoading, project.id, storageKey]);
 
   /**
+   * Auto-hide clicked step title after 3 seconds
+   * Note: Must be placed before early returns to satisfy Rules of Hooks
+   */
+  useEffect(() => {
+    if (clickedStepTitle) {
+      const timer = setTimeout(() => {
+        setClickedStepTitle(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [clickedStepTitle]);
+
+  /**
    * GAP-1 FIX: Save project state to localStorage
    * Replaces mock implementation with real persistence
    */
@@ -263,15 +276,17 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
     });
   };
 
-  const handleStepClick = async (stepId: Step) => {
+  const handleStepClick = async (stepId: Step, showTitleOnly: boolean = false) => {
     const stepIndex = steps.findIndex(step => step.id === stepId);
-    if (stepIndex <= currentStepIndex) {
-      // Show step title briefly
-      const step = steps.find(s => s.id === stepId);
-      if (step) {
-        setClickedStepTitle(step.title);
-      }
+    const step = steps.find(s => s.id === stepId);
 
+    // Always show title when any stage is clicked
+    if (step) {
+      setClickedStepTitle(step.title);
+    }
+
+    // Only navigate if step is accessible and not just showing title
+    if (!showTitleOnly && stepIndex <= currentStepIndex) {
       setCurrentStep(stepId);
       await saveProjectState(stepId, {
         techRequest,
@@ -280,16 +295,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
       });
     }
   };
-
-  // Auto-hide clicked step title after 3 seconds
-  useEffect(() => {
-    if (clickedStepTitle) {
-      const timer = setTimeout(() => {
-        setClickedStepTitle(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [clickedStepTitle]);
 
   return (
     <div className={isEmbedded ? "bg-gradient-secondary" : "min-h-screen bg-gradient-secondary"}>
@@ -322,15 +327,14 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                   <div key={step.id} className="flex items-center gap-3">
                     {/* Circle */}
                     <button
-                      onClick={() => isAccessible && handleStepClick(step.id as Step)}
-                      disabled={!isAccessible}
+                      onClick={() => handleStepClick(step.id as Step)}
                       className={`
                         relative flex items-center justify-center
                         w-12 h-12 rounded-full border-2 transition-all duration-300 flex-shrink-0
                         ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
                         ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
                         ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                        ${isAccessible ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}
+                        ${isAccessible ? 'cursor-pointer' : 'cursor-pointer opacity-50'}
                       `}
                     >
                       <StepIcon className="w-5 h-5" />
@@ -381,15 +385,14 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                   <div key={step.id} className="flex flex-col items-center">
                     {/* Circle */}
                     <button
-                      onClick={() => isAccessible && handleStepClick(step.id as Step)}
-                      disabled={!isAccessible}
+                      onClick={() => handleStepClick(step.id as Step)}
                       className={`
                         relative flex items-center justify-center
                         w-16 h-16 rounded-full border-2 transition-all duration-300
                         ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
                         ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
                         ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                        ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-not-allowed opacity-50'}
+                        ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-pointer opacity-50'}
                         z-10
                       `}
                     >
@@ -411,55 +414,54 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
 
           {/* Main Content Area */}
           <div className="flex-1 min-w-0">
-
-        {/* Step Content */}
-        <Card className="shadow-large">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {React.createElement(steps[currentStepIndex].icon, { className: "h-6 w-6" })}
-              {steps[currentStepIndex].title}
-            </CardTitle>
-            <CardDescription>
-              {steps[currentStepIndex].description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {currentStep === 'tech-input' && (
-              <TechInput onSubmit={handleTechSubmit} initialData={techRequest} projectId={project.id} />
-            )}
-            {currentStep === 'criteria' && techRequest && (
-              <CriteriaBuilder 
-                techRequest={techRequest} 
-                onComplete={handleCriteriaComplete}
-                initialCriteria={criteria}
-              />
-            )}
-            {currentStep === 'vendor-selection' && criteria.length > 0 && (
-              <VendorSelection 
-                criteria={criteria}
-                techRequest={techRequest!}
-                onComplete={handleVendorSelectionComplete}
-              />
-            )}
-            {currentStep === 'vendor-comparison' && selectedVendors.length > 0 && (
-              <VendorTable 
-                vendors={selectedVendors}
-                criteria={criteria}
-                techRequest={techRequest!}
-                onVendorsGenerated={handleVendorsGenerated}
-                onComplete={handleComparisonComplete}
-              />
-            )}
-            {currentStep === 'invite-pitch' && selectedVendors.length > 0 && (
-              <VendorInvite 
-                vendors={selectedVendors}
-                criteria={criteria}
-                techRequest={techRequest!}
-                projectName={project.name}
-              />
-            )}
-          </CardContent>
-        </Card>
+            {/* Step Content */}
+            <Card className="shadow-large">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  {React.createElement(steps[currentStepIndex].icon, { className: "h-6 w-6" })}
+                  {steps[currentStepIndex].title}
+                </CardTitle>
+                <CardDescription>
+                  {steps[currentStepIndex].description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {currentStep === 'tech-input' && (
+                  <TechInput onSubmit={handleTechSubmit} initialData={techRequest} projectId={project.id} />
+                )}
+                {currentStep === 'criteria' && techRequest && (
+                  <CriteriaBuilder
+                    techRequest={techRequest}
+                    onComplete={handleCriteriaComplete}
+                    initialCriteria={criteria}
+                  />
+                )}
+                {currentStep === 'vendor-selection' && criteria.length > 0 && (
+                  <VendorSelection
+                    criteria={criteria}
+                    techRequest={techRequest!}
+                    onComplete={handleVendorSelectionComplete}
+                  />
+                )}
+                {currentStep === 'vendor-comparison' && selectedVendors.length > 0 && (
+                  <VendorTable
+                    vendors={selectedVendors}
+                    criteria={criteria}
+                    techRequest={techRequest!}
+                    onVendorsGenerated={handleVendorsGenerated}
+                    onComplete={handleComparisonComplete}
+                  />
+                )}
+                {currentStep === 'invite-pitch' && selectedVendors.length > 0 && (
+                  <VendorInvite
+                    vendors={selectedVendors}
+                    criteria={criteria}
+                    techRequest={techRequest!}
+                    projectName={project.name}
+                  />
+                )}
+              </CardContent>
+            </Card>
 
             {/* Summary */}
             {techRequest && (
