@@ -27,7 +27,7 @@
  * @see /src/services/mock/authService.ts - Mock authentication service
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -123,6 +123,19 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
     resetForm();
     onModeChange(isSignUp ? 'signin' : 'signup');
   };
+
+  /**
+   * Reset modal state when it closes or opens
+   * Fixes: Modal getting stuck in "Welcome back! Loading..." state
+   * This ensures clean state on every modal open
+   */
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset all state when modal closes
+      resetForm();
+      setIsLoading(false);
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
