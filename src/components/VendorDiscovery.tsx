@@ -387,7 +387,22 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
         {/* Main Layout with Sticky Timeline */}
         <div className="relative flex gap-8">
           {/* Sticky Timeline Navigation - Left Side (Desktop Only) */}
-          <div className="hidden lg:block sticky top-24 self-start relative">
+          <div className="hidden lg:block sticky top-24 self-start">
+            {/* Step Title Display - Appears briefly when icon clicked (Desktop) */}
+            <AnimatePresence>
+              {clickedStepTitle && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-center pb-2 text-sm font-medium text-primary whitespace-nowrap"
+                >
+                  {clickedStepTitle}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <div className="flex flex-col items-center py-4">
               {steps.map((step, index) => {
                 const StepIcon = step.icon;
@@ -425,21 +440,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                 );
               })}
             </div>
-
-            {/* Step Title Display - Appears briefly when icon clicked (Desktop) */}
-            <AnimatePresence>
-              {clickedStepTitle && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute left-8 -translate-x-1/2 -top-12 py-2 text-sm font-medium text-primary whitespace-nowrap"
-                >
-                  {clickedStepTitle}
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Main Content Area */}
