@@ -43,10 +43,12 @@ export const HeroSection = ({ children }: HeroSectionProps) => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex justify-center mb-2"
+          className="flex justify-center mb-8"
         >
-          <div className="px-8 py-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
-            <span className="text-2xl md:text-3xl font-bold text-white">Clarioo</span>
+          <div className="px-8 py-4 bg-gradient-to-br from-gray-200 via-blue-200/90 to-purple-200/90 rounded-2xl">
+            <span className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 bg-clip-text text-transparent">
+              Clarioo
+            </span>
           </div>
         </motion.div>
 
@@ -70,6 +72,29 @@ export const HeroSection = ({ children }: HeroSectionProps) => {
         >
           Supercharge your software vendor's selection with AI assistant. Discover and evaluate software based on your business needs and company context.
         </motion.p>
+
+        {/* Explore Button with Text */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="flex items-center justify-center gap-2 pt-4"
+        >
+          <button
+            onClick={() => {
+              window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+              });
+            }}
+            className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-md hover:shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+          >
+            Explore &gt;
+          </button>
+          <span className="text-lg md:text-xl text-gray-600 font-medium">
+            software comparison and criteria templates
+          </span>
+        </motion.div>
 
         {/* Authentication Toggle (passed as children) */}
         {children && (

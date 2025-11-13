@@ -90,11 +90,14 @@ export const RegistrationToggle = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="flex flex-col items-center gap-3 px-4 mb-2"
+        className="flex flex-col items-center gap-3 px-4 mb-2 mt-16"
       >
         {/* Label */}
         <h3 className="text-lg font-semibold text-neutral-warmBlack">
-          Sign In / Sign Up
+          {isAuthenticated
+            ? "You're signed in! Click toggle to sign out."
+            : "Unlock full vendor discovery experience"
+          }
         </h3>
 
         {/* Simple iOS-Style Toggle Switch */}
@@ -144,13 +147,12 @@ export const RegistrationToggle = ({
           </button>
         </div>
 
-        {/* Helper Text */}
-        <p className="text-sm text-neutral-warmGray text-center max-w-md">
-          {isAuthenticated
-            ? "You're signed in! Click toggle to sign out."
-            : "Click toggle to sign in or create an account and unlock the full vendor discovery experience"
-          }
-        </p>
+        {/* Helper Text - only shown when not authenticated */}
+        {!isAuthenticated && (
+          <p className="text-sm text-neutral-warmGray text-center max-w-md">
+            Click toggle to sign in or create an account to use AI features
+          </p>
+        )}
       </motion.div>
 
       {/* Authentication Modal */}

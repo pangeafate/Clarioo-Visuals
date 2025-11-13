@@ -175,16 +175,8 @@ export const LandingPage = () => {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-gradient-hero-bg"
     >
-      {/* Hero Section - Elements 1, 2 & 3 (integrated) */}
-      <HeroSection>
-        {/* Registration Toggle - Element 3 (now inside hero) */}
-        <RegistrationToggle
-          isSignUp={isSignUp}
-          onToggle={setIsSignUp}
-          onOpenAuth={handleOpenAuth}
-          isAuthenticated={!!user}
-        />
-      </HeroSection>
+      {/* Hero Section - Elements 1 & 2 */}
+      <HeroSection />
 
       {/* Element 4 - iPod Navigation: Placeholder for future implementation */}
       {/* TODO: Add iPodNavigation component when ready
@@ -192,6 +184,14 @@ export const LandingPage = () => {
         <iPodNavigation sections={['Hero', 'Inputs', 'Process', 'Workflow']} />
       </section>
       */}
+
+      {/* Registration Toggle - Element 3 (moved above inputs) */}
+      <RegistrationToggle
+        isSignUp={isSignUp}
+        onToggle={setIsSignUp}
+        onOpenAuth={handleOpenAuth}
+        isAuthenticated={!!user}
+      />
 
       {/* Animated Inputs - Element 5 */}
       <AnimatedInputs
