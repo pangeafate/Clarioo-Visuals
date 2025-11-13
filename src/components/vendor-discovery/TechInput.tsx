@@ -4,9 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Lightbulb, Bot } from "lucide-react";
+import { ArrowRight, Bot } from "lucide-react";
 import type { TechRequest } from "../VendorDiscovery";
 import { useToast } from "@/hooks/use-toast";
 import aiSummariesData from "@/data/api/aiSummaries.json";
@@ -343,7 +341,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
 
         {/* Technology Category */}
         <div className="space-y-2">
-          <Label htmlFor="category">Technology Category *</Label>
+          <Label htmlFor="category">Doing a general research? then just pick up a category</Label>
           <Select
             value={formData.category}
             onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -366,19 +364,20 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
 
 
         {/* Quick Suggestions */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           <Label>Need inspiration? Try these examples:</Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="space-y-1.5 pl-1">
             {suggestions.map((suggestion, index) => (
-              <Card
-                key={index}
-                className="cursor-pointer hover:shadow-soft transition-all"
-                onClick={() => setAdditionalNotes(suggestion)}
-              >
-                <CardContent className="p-3">
-                  <p className="text-sm">{suggestion}</p>
-                </CardContent>
-              </Card>
+              <div key={index} className="flex items-start gap-2">
+                <span className="text-brand-blue text-xs mt-0.5">◆</span>
+                <button
+                  type="button"
+                  onClick={() => setAdditionalNotes(suggestion)}
+                  className="text-sm text-brand-blue hover:underline text-left transition-all"
+                >
+                  {suggestion}
+                </button>
+              </div>
             ))}
           </div>
         </div>
