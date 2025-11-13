@@ -434,7 +434,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute left-1/2 -translate-x-1/2 -top-12 py-2 text-sm font-medium text-primary whitespace-nowrap"
+                  className="absolute left-8 -translate-x-1/2 -top-12 py-2 text-sm font-medium text-primary whitespace-nowrap"
                 >
                   {clickedStepTitle}
                 </motion.div>
