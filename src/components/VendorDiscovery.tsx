@@ -430,11 +430,11 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
             <AnimatePresence>
               {clickedStepTitle && (
                 <motion.div
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
+                  exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute left-24 top-1/2 -translate-y-1/2 py-2 px-4 text-sm font-medium text-primary whitespace-nowrap"
+                  className="absolute right-20 top-1/2 -translate-y-1/2 py-2 px-4 text-sm font-medium text-primary whitespace-nowrap bg-white/90 backdrop-blur-sm rounded-lg shadow-md border border-primary/20"
                 >
                   {clickedStepTitle}
                 </motion.div>

@@ -154,6 +154,26 @@ export default {
 					'100%': {
 						backgroundPosition: '200% center'
 					}
+				},
+				'pulse-subtle': {
+					'0%, 100%': {
+						opacity: '0.6',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.8',
+						transform: 'scale(1.02)'
+					}
+				},
+				'pulse-blue': {
+					'0%, 100%': {
+						opacity: '0.85',
+						color: '#0066FF'
+					},
+					'50%': {
+						opacity: '1',
+						color: '#3399FF'
+					}
 				}
 			},
 			animation: {
@@ -163,6 +183,8 @@ export default {
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'shimmer': 'shimmer 4s ease-in-out infinite',
+				'pulse-subtle': 'pulse-subtle 3s ease-in-out infinite',
+				'pulse-blue': 'pulse-blue 2.5s ease-in-out infinite',
 			},
 			fontFamily: {
 				sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
