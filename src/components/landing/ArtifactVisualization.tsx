@@ -26,7 +26,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { FileText, Brain, CheckCircle2, MoveRight } from 'lucide-react';
+import { FileText, Brain, CheckCircle2, MoveRight, MoveDown } from 'lucide-react';
 
 const artifacts = [
   {
@@ -115,7 +115,7 @@ export const ArtifactVisualization = () => {
               </div>
             </motion.div>
 
-            {/* Arrow 1 - Modern Animated */}
+            {/* Arrow 1 - Horizontal (Desktop) */}
             <motion.div
               initial={{ x: -10, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -126,6 +126,19 @@ export const ArtifactVisualization = () => {
               className="hidden md:block"
             >
               <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+            </motion.div>
+
+            {/* Arrow 1 - Vertical (Mobile) */}
+            <motion.div
+              initial={{ y: -5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                y: { duration: 1, repeat: Infinity, repeatType: "reverse" },
+                opacity: { duration: 0.5 }
+              }}
+              className="block md:hidden -my-4"
+            >
+              <MoveDown className="h-8 w-12 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Processing Card - Circular */}
@@ -158,7 +171,7 @@ export const ArtifactVisualization = () => {
               </div>
             </motion.div>
 
-            {/* Arrow 2 - Modern Animated */}
+            {/* Arrow 2 - Horizontal (Desktop) */}
             <motion.div
               initial={{ x: -10, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -169,6 +182,19 @@ export const ArtifactVisualization = () => {
               className="hidden md:block"
             >
               <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+            </motion.div>
+
+            {/* Arrow 2 - Vertical (Mobile) */}
+            <motion.div
+              initial={{ y: -5, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                y: { duration: 1, repeat: Infinity, repeatType: "reverse" },
+                opacity: { duration: 0.5 }
+              }}
+              className="block md:hidden -my-4"
+            >
+              <MoveDown className="h-8 w-12 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Output Card - Circular */}
