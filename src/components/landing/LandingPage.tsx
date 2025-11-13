@@ -49,7 +49,7 @@ import { HeroSection } from './HeroSection';
 import { RegistrationToggle } from './RegistrationToggle';
 import { AnimatedInputs } from './AnimatedInputs';
 import { ArtifactVisualization } from './ArtifactVisualization';
-import { CardCarousel } from './CardCarousel';
+import { VerticalWorkflowStepper } from './VerticalWorkflowStepper';
 import ProjectDashboard from '../ProjectDashboard';
 import VendorDiscovery, { Project } from '../VendorDiscovery';
 import * as projectService from '@/services/mock/projectService';
@@ -214,8 +214,8 @@ export const LandingPage = () => {
             {/* Artifact Visualization - Element 6 (Pre-Auth Only - US-11.1) */}
             <ArtifactVisualization />
 
-            {/* Card Carousel - Element 8 */}
-            <CardCarousel />
+            {/* Vertical Workflow Stepper - Element 8 */}
+            <VerticalWorkflowStepper />
           </motion.div>
         )}
       </AnimatePresence>
