@@ -50,13 +50,17 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
       // Auto-detect category from tech needs
       const detectedCategory = landingTechNeeds ? detectCategory(landingTechNeeds) : '';
 
-      // Pre-fill form data
+      // Pre-fill form data with landing page inputs
       setFormData(prev => ({
         ...prev,
         companyInfo: landingCompanyInfo || prev.companyInfo,
-        description: landingTechNeeds || prev.description,
         category: detectedCategory || prev.category
       }));
+
+      // Pre-fill additional notes with tech needs
+      if (landingTechNeeds) {
+        setAdditionalNotes(landingTechNeeds);
+      }
 
       // Clear localStorage after loading (one-time use)
       localStorage.removeItem('landing_company_info');
@@ -72,6 +76,21 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
       console.log('✅ AI summary created and category auto-detected');
     }
   }, []); // Run once on mount
+
+  /**
+   * Sync local form state when initialData changes
+   * This handles navigation back to completed steps
+   * Ensures saved data is displayed when returning to this stage
+   */
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+      // Also sync additional notes if stored in companyInfo
+      if (initialData.companyInfo) {
+        setAdditionalNotes(initialData.companyInfo);
+      }
+    }
+  }, [initialData]);
 
   const techCategories = [
     'CRM Software',
@@ -136,12 +155,6 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
 
     if (!formData.category) {
       newErrors.category = 'Please select a technology category';
-    }
-    if (!formData.description.trim()) {
-      newErrors.description = 'Please describe what you\'re looking for';
-    }
-    if (formData.description.trim().length < 20) {
-      newErrors.description = 'Please provide more details (at least 20 characters)';
     }
 
     setErrors(newErrors);
@@ -244,34 +257,16 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
           )}
         </div>
 
-        {/* Description */}
-        <div className="space-y-2">
-          <Label htmlFor="description">Detailed Description *</Label>
-          <Textarea
-            id="description"
-            placeholder="Describe what you're looking for, specific features you need, current challenges, team size, etc."
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className={`min-h-[120px] ${errors.description ? 'border-destructive' : ''}`}
-          />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{formData.description.length} characters</span>
-            <span>Minimum 20 characters</span>
-          </div>
-          {errors.description && (
-            <p className="text-sm text-destructive">{errors.description}</p>
-          )}
-        </div>
 
         {/* Quick Suggestions */}
         <div className="space-y-3">
           <Label>Need inspiration? Try these examples:</Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {suggestions.map((suggestion, index) => (
-              <Card 
+              <Card
                 key={index}
                 className="cursor-pointer hover:shadow-soft transition-all"
-                onClick={() => setFormData({ ...formData, description: suggestion })}
+                onClick={() => setAdditionalNotes(suggestion)}
               >
                 <CardContent className="p-3">
                   <p className="text-sm">{suggestion}</p>

@@ -26,7 +26,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ArrowRight, FileText, Brain, CheckCircle2 } from 'lucide-react';
+import { FileText, Brain, CheckCircle2, MoveRight } from 'lucide-react';
 
 const artifacts = [
   {
@@ -95,32 +95,42 @@ export const ArtifactVisualization = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto_1fr] gap-6 items-center"
+            className="flex flex-col md:flex-row gap-8 items-center justify-center"
           >
-            {/* Input Card */}
+            {/* Input Card - Circular */}
             <motion.div
-              className="bg-white rounded-xl p-6 shadow-elevated-combined"
-              whileHover={{ y: -4, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
+              className="relative bg-white rounded-full w-56 h-56 shadow-elevated-combined flex items-center justify-center"
+              whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
             >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-4">
+              <div className="flex flex-col items-center text-center px-6">
+                <div className="w-16 h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-3">
                   {current.inputIcon}
                 </div>
-                <h3 className="font-semibold text-neutral-navy mb-2">
+                <h3 className="font-semibold text-neutral-navy mb-1 text-sm">
                   {current.input}
                 </h3>
-                <p className="text-sm text-neutral-slate">
+                <p className="text-xs text-neutral-slate">
                   What you provide
                 </p>
               </div>
             </motion.div>
 
-            {/* Arrow 1 */}
-            <ArrowRight className="h-8 w-8 text-brand-blue hidden md:block" />
-
-            {/* Processing Card */}
+            {/* Arrow 1 - Modern Animated */}
             <motion.div
-              className="bg-gradient-button rounded-xl p-6 shadow-button-glow min-w-[200px]"
+              initial={{ x: -10, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{
+                x: { duration: 1, repeat: Infinity, repeatType: "reverse" },
+                opacity: { duration: 0.5 }
+              }}
+              className="hidden md:block"
+            >
+              <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+            </motion.div>
+
+            {/* Processing Card - Circular */}
+            <motion.div
+              className="relative bg-gradient-button rounded-full w-56 h-56 shadow-button-glow flex items-center justify-center"
               animate={{
                 boxShadow: [
                   '0 4px 14px rgba(99,102,241,0.4)',
@@ -129,16 +139,17 @@ export const ArtifactVisualization = () => {
                 ]
               }}
               transition={{ duration: 2, repeat: Infinity }}
+              whileHover={{ scale: 1.05 }}
             >
-              <div className="flex flex-col items-center text-center text-white">
+              <div className="flex flex-col items-center text-center text-white px-6">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="mb-4"
+                  className="mb-3"
                 >
-                  <Brain className="h-8 w-8" />
+                  <Brain className="h-10 w-10" />
                 </motion.div>
-                <h3 className="font-semibold mb-2">
+                <h3 className="font-semibold mb-1">
                   {current.process}
                 </h3>
                 <p className="text-sm opacity-90">
@@ -147,22 +158,32 @@ export const ArtifactVisualization = () => {
               </div>
             </motion.div>
 
-            {/* Arrow 2 */}
-            <ArrowRight className="h-8 w-8 text-brand-blue hidden md:block" />
-
-            {/* Output Card */}
+            {/* Arrow 2 - Modern Animated */}
             <motion.div
-              className="bg-white rounded-xl p-6 shadow-elevated-combined"
-              whileHover={{ y: -4, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
+              initial={{ x: -10, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{
+                x: { duration: 1, repeat: Infinity, repeatType: "reverse" },
+                opacity: { duration: 0.5 }
+              }}
+              className="hidden md:block"
             >
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-4">
+              <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+            </motion.div>
+
+            {/* Output Card - Circular */}
+            <motion.div
+              className="relative bg-white rounded-full w-56 h-56 shadow-elevated-combined flex items-center justify-center"
+              whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
+            >
+              <div className="flex flex-col items-center text-center px-6">
+                <div className="w-16 h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-3">
                   {current.outputIcon}
                 </div>
-                <h3 className="font-semibold text-neutral-navy mb-2">
+                <h3 className="font-semibold text-neutral-navy mb-1 text-sm">
                   {current.output}
                 </h3>
-                <p className="text-sm text-neutral-slate">
+                <p className="text-xs text-neutral-slate">
                   What you get
                 </p>
               </div>

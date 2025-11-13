@@ -83,6 +83,17 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaB
     }
   }, [techRequest, initialCriteria]);
 
+  /**
+   * Sync local criteria state when initialCriteria changes
+   * This handles navigation back to completed steps
+   * Ensures saved criteria are displayed when returning to this stage
+   */
+  useEffect(() => {
+    if (initialCriteria && initialCriteria.length > 0) {
+      setCriteria(initialCriteria);
+    }
+  }, [initialCriteria]);
+
   // Handle chat message send
   const handleSendMessage = async () => {
     await sendMessage(userMessage, {

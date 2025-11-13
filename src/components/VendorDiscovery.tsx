@@ -22,6 +22,7 @@ export type Step = 'tech-input' | 'criteria' | 'vendor-selection' | 'vendor-comp
 interface WorkflowState {
   projectId: string;
   currentStep: Step;
+  maxStepReached: number; // Tracks the furthest step user has reached
   lastSaved: string; // ISO timestamp
   techRequest: TechRequest | null;
   criteria: Criteria[];
@@ -72,6 +73,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState<Step>('tech-input');
+  const [maxStepReached, setMaxStepReached] = useState<number>(0); // Track furthest step reached
   const [techRequest, setTechRequest] = useState<TechRequest | null>(null);
   const [criteria, setCriteria] = useState<Criteria[]>([]);
   const [selectedVendors, setSelectedVendors] = useState<Vendor[]>([]);
@@ -96,6 +98,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
 
           // Restore state
           setCurrentStep(state.currentStep);
+          setMaxStepReached(state.maxStepReached || 0); // Default to 0 if not set
           setTechRequest(state.techRequest);
           setCriteria(state.criteria);
           setSelectedVendors(state.selectedVendors);
@@ -174,11 +177,20 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   /**
    * GAP-1 FIX: Save project state to localStorage
    * Replaces mock implementation with real persistence
+   * GAP-2 FIX: Track maxStepReached for bidirectional navigation
    */
   const saveProjectState = async (step: Step, stepData: any) => {
+    // Calculate current step index
+    const currentIdx = steps.findIndex(s => s.id === step);
+
+    // Update maxStepReached if we've progressed further
+    const newMaxStep = Math.max(maxStepReached, currentIdx);
+    setMaxStepReached(newMaxStep);
+
     const state: WorkflowState = {
       projectId: project.id,
       currentStep: step,
+      maxStepReached: newMaxStep,
       lastSaved: new Date().toISOString(),
       techRequest: stepData.techRequest || techRequest,
       criteria: stepData.criteria || criteria,
@@ -191,6 +203,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
       console.log('✅ Project state saved (GAP-1):', {
         projectId: project.id,
         step,
+        maxStepReached: newMaxStep,
         hasVendors: state.selectedVendors.length,
         hasCriteria: state.criteria.length
       });
@@ -285,8 +298,9 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
       setClickedStepTitle(step.title);
     }
 
-    // Only navigate if step is accessible and not just showing title
-    if (!showTitleOnly && stepIndex <= currentStepIndex) {
+    // GAP-2 FIX: Only navigate if step is accessible (based on maxStepReached) and not just showing title
+    // This allows bidirectional navigation - users can go back and then forward again
+    if (!showTitleOnly && stepIndex <= maxStepReached) {
       setCurrentStep(stepId);
       await saveProjectState(stepId, {
         techRequest,
@@ -320,7 +334,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                 const StepIcon = step.icon;
                 const isActive = step.id === currentStep;
                 const isCompleted = index < currentStepIndex;
-                const isAccessible = index <= currentStepIndex;
+                const isAccessible = index <= maxStepReached; // GAP-2 FIX: Use maxStepReached for accessibility
                 const isLast = index === steps.length - 1;
 
                 return (
@@ -378,7 +392,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                 const StepIcon = step.icon;
                 const isActive = step.id === currentStep;
                 const isCompleted = index < currentStepIndex;
-                const isAccessible = index <= currentStepIndex;
+                const isAccessible = index <= maxStepReached; // GAP-2 FIX: Use maxStepReached for accessibility
                 const isLast = index === steps.length - 1;
 
                 return (
