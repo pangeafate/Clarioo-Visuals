@@ -305,7 +305,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
           <div className="relative border-2 border-primary/20 rounded-2xl p-6 bg-card/50 backdrop-blur-sm">
             <Bot className="h-12 w-12 text-primary mx-auto mb-4" />
             <p className="text-muted-foreground">
-              {headerText}
+              {highlightKeywords(headerText)}
             </p>
           </div>
         </div>
