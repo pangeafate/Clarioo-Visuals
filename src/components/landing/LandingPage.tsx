@@ -44,6 +44,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import { HeroSection } from './HeroSection';
 import { RegistrationToggle } from './RegistrationToggle';
 import { AnimatedInputs } from './AnimatedInputs';
@@ -51,9 +52,11 @@ import { ArtifactVisualization } from './ArtifactVisualization';
 import { CardCarousel } from './CardCarousel';
 import ProjectDashboard from '../ProjectDashboard';
 import VendorDiscovery, { Project } from '../VendorDiscovery';
+import * as projectService from '@/services/mock/projectService';
 
 export const LandingPage = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [isSignUp, setIsSignUp] = useState(true); // Default to Sign Up mode
   const [companyInput, setCompanyInput] = useState('');
   const [solutionInput, setSolutionInput] = useState('');
@@ -61,6 +64,7 @@ export const LandingPage = () => {
   // SP_010: Project workflow state management (pattern from Index.tsx)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
 
   // SP_010: Project selection handlers
   const handleSelectProject = (project: Project) => {
@@ -82,6 +86,75 @@ export const LandingPage = () => {
       const projectToSelect = inProgressProject || projects[0];
       setSelectedProject(projectToSelect);
       setProjectsLoaded(true);
+    }
+  };
+
+  /**
+   * Create new project from landing page inputs
+   * Uses company info and solution inputs to pre-fill project data
+   */
+  const handleCreateProject = async () => {
+    if (!companyInput.trim() || !solutionInput.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in both input fields before creating a project.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCreatingProject(true);
+
+    try {
+      const { data, error } = await projectService.createProject({
+        user_id: user?.id || 'user_demo_12345',
+        name: `${solutionInput.substring(0, 50)}...`, // Use solution as project name
+        description: `Company: ${companyInput}\n\nLooking for: ${solutionInput}`,
+        category: 'General',
+        status: 'draft',
+        workflow_state: {
+          current_step: 1,
+          completed_steps: []
+        }
+      });
+
+      if (error) throw new Error(error.message);
+      if (!data) throw new Error('No data returned');
+
+      // Map to Project interface
+      const newProject: Project = {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        status: data.status,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      // Select the new project and scroll to workflow
+      setSelectedProject(newProject);
+      setProjectsLoaded(false); // Reset to allow re-loading
+
+      // Scroll to workflow section
+      setTimeout(() => {
+        const workflowElement = document.getElementById('workflow-section');
+        if (workflowElement) {
+          workflowElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+
+      toast({
+        title: "Project created",
+        description: "Your project has been created successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error creating project",
+        description: "Could not create the project. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingProject(false);
     }
   };
 
@@ -127,6 +200,7 @@ export const LandingPage = () => {
         solutionInput={solutionInput}
         onCompanyChange={setCompanyInput}
         onSolutionChange={setSolutionInput}
+        onCreateProject={handleCreateProject}
       />
 
       {/* SP_010: PRE-AUTH ONLY - Marketing Content */}

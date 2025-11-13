@@ -31,6 +31,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AuthModal } from './AuthModal';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 interface RegistrationToggleProps {
   isSignUp: boolean;
@@ -45,29 +47,36 @@ export const RegistrationToggle = ({
   onOpenAuth,
   isAuthenticated = false
 }: RegistrationToggleProps) => {
+  const { signOut } = useAuth();
+  const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>(isSignUp ? 'signup' : 'signin');
 
   /**
-   * PROTOTYPE: Handle toggle interaction
-   * Opens modal and sets authentication mode
-   * Waits for animation to complete before showing modal
-   * Disabled when user is already authenticated
+   * Handle toggle interaction:
+   * - When logged OUT (gray/left): Opens auth modal for sign in/sign up
+   * - When logged IN (blue/right): Logs out the user
    */
-  const handleToggleClick = () => {
-    // Don't allow interaction if already authenticated
+  const handleToggleClick = async () => {
     if (isAuthenticated) {
-      return;
-    }
-
-    const newMode = !isSignUp ? 'signup' : 'signin';
-    onToggle(!isSignUp);
-    setAuthMode(newMode);
-
-    // Wait for toggle animation to complete (spring animation ~400ms)
-    setTimeout(() => {
+      // User is logged in - clicking logs them out
+      try {
+        await signOut();
+        toast({
+          title: "Signed out",
+          description: "You have been signed out successfully.",
+        });
+      } catch (error) {
+        toast({
+          title: "Error signing out",
+          description: "Could not sign out. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      // User is logged out - clicking opens auth modal
       setIsModalOpen(true);
-    }, 400);
+    }
   };
 
   const handleModeChange = (mode: 'signin' | 'signup') => {
@@ -91,22 +100,21 @@ export const RegistrationToggle = ({
         {/* Simple iOS-Style Toggle Switch */}
         <button
           onClick={handleToggleClick}
-          disabled={isAuthenticated}
           className={`
             relative w-[70px] h-[36px] rounded-full transition-all duration-300 ease-in-out
             focus:outline-none focus:ring-4 focus:ring-brand-blue/20
-            ${isAuthenticated || isSignUp
+            cursor-pointer
+            ${isAuthenticated
               ? 'bg-gradient-to-r from-brand-blue to-brand-blueLight'
               : 'bg-gray-200'
             }
-            ${isAuthenticated ? 'opacity-80 cursor-not-allowed' : 'cursor-pointer'}
           `}
-          aria-label={isAuthenticated ? 'Signed Up' : `Switch to ${isSignUp ? 'Sign In' : 'Sign Up'}`}
+          aria-label={isAuthenticated ? 'Click to Sign Out' : 'Click to Sign In or Sign Up'}
         >
           {/* Sliding Circle Knob */}
           <motion.div
             animate={{
-              x: isAuthenticated || isSignUp ? 38 : 2,
+              x: isAuthenticated ? 38 : 2,
             }}
             transition={{
               type: 'spring',
@@ -120,8 +128,8 @@ export const RegistrationToggle = ({
         {/* Helper Text */}
         <p className="text-sm text-neutral-warmGray text-center max-w-md">
           {isAuthenticated
-            ? "You're signed in! Input fields below are now unlocked."
-            : `Toggle to ${isSignUp ? 'sign in' : 'create an account'} and unlock the full vendor discovery experience`
+            ? "You're signed in! Click toggle to sign out."
+            : "Click toggle to sign in or create an account and unlock the full vendor discovery experience"
           }
         </p>
       </motion.div>

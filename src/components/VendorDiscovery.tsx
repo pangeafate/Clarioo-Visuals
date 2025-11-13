@@ -276,59 +276,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   return (
     <div className={isEmbedded ? "bg-gradient-secondary" : "min-h-screen bg-gradient-secondary"}>
       <div className={`container mx-auto px-4 ${isEmbedded ? "py-4" : "py-8"}`}>
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div className="flex items-center gap-4">
-            {!isEmbedded && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onBackToProjects}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Projects
-              </Button>
-            )}
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-                {project.name}
-              </h1>
-              {project.description && (
-                <p className="text-muted-foreground mt-1">
-                  {project.description}
-                </p>
-              )}
-            </div>
-          </div>
-          
-          {/* User Menu */}
-          <div className="flex items-center gap-3">
-            {/* GAP-1: Last Saved Indicator */}
-            {lastSaved && (
-              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-lg">
-                <Save className="h-3 w-3" />
-                <span>
-                  Last saved: {new Date(lastSaved).toLocaleTimeString()}
-                </span>
-              </div>
-            )}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User className="h-4 w-4" />
-              <span>{user?.email}</span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={signOut}
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">

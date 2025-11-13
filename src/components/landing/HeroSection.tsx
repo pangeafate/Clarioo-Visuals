@@ -67,13 +67,13 @@ export const HeroSection = () => {
       {/* Value proposition badges */}
       <div className="flex flex-wrap justify-center gap-3 mt-8">
         <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
-          ⚡ 90% of routine work automated
+          90% of routine work automated
         </span>
         <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
-          ✓ No doubts in decisions
+          Clear comparison criteria
         </span>
         <span className="px-6 py-3 bg-brand-blue/10 rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20">
-          🚀 &lt;24 hours from start to selection
+          Follows you business needs
         </span>
       </div>
     </motion.section>

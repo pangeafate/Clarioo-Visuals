@@ -35,6 +35,8 @@
 import { motion } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface AnimatedInputsProps {
   isAuthenticated: boolean;
@@ -42,6 +44,7 @@ interface AnimatedInputsProps {
   solutionInput: string;
   onCompanyChange: (value: string) => void;
   onSolutionChange: (value: string) => void;
+  onCreateProject?: () => void;
 }
 
 export const AnimatedInputs = ({
@@ -49,7 +52,8 @@ export const AnimatedInputs = ({
   companyInput,
   solutionInput,
   onCompanyChange,
-  onSolutionChange
+  onSolutionChange,
+  onCreateProject
 }: AnimatedInputsProps) => {
   /**
    * GAP-4 FIX: Save to localStorage on input change
@@ -139,6 +143,29 @@ export const AnimatedInputs = ({
         >
           Fill in your details to start discovering perfect vendors with AI assistance
         </motion.p>
+      )}
+
+      {/* New Project Button */}
+      {isAuthenticated && onCreateProject && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex justify-center mt-6"
+        >
+          <Button
+            onClick={onCreateProject}
+            disabled={!companyInput.trim() || !solutionInput.trim()}
+            className={`flex items-center gap-2 ${
+              !companyInput.trim() || !solutionInput.trim()
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
+                : ''
+            }`}
+          >
+            <Plus className="h-4 w-4" />
+            New Project
+          </Button>
+        </motion.div>
       )}
     </motion.section>
   );

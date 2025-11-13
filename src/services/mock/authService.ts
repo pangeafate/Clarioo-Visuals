@@ -8,7 +8,7 @@
  * - Always succeeds for any valid login/signup attempt
  * - Returns demo user and session data
  * - Simulates realistic network delays
- * - Ephemeral session storage (resets on page refresh)
+ * - Persists session to localStorage (survives page refresh)
  *
  * Integration Notes:
  * - When integrating Supabase, replace this service with supabase.auth methods
@@ -32,8 +32,35 @@ import type {
   UpdateUserRequest
 } from '@/types';
 
-// In-memory session storage (ephemeral - resets on refresh)
-let currentSession: Session | null = null;
+// localStorage key for session persistence
+const SESSION_STORAGE_KEY = 'mock_auth_session';
+
+// Helper to get session from localStorage
+const getStoredSession = (): Session | null => {
+  try {
+    const stored = localStorage.getItem(SESSION_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    console.error('Failed to parse stored session:', error);
+    return null;
+  }
+};
+
+// Helper to save session to localStorage
+const saveSession = (session: Session | null): void => {
+  try {
+    if (session) {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    } else {
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+  } catch (error) {
+    console.error('Failed to save session:', error);
+  }
+};
+
+// In-memory session storage with localStorage backup
+let currentSession: Session | null = getStoredSession();
 
 /**
  * Mock sign in - always succeeds with valid input
@@ -45,7 +72,7 @@ let currentSession: Session | null = null;
  * - Validates email format (must contain @)
  * - Validates required fields (email and password)
  * - Always succeeds with demo data if validation passes
- * - Stores session in memory (ephemeral)
+ * - Stores session in memory and localStorage (persistent)
  * - Simulates 800ms network delay
  *
  * @param email - User email (any valid email format accepted)
@@ -65,7 +92,7 @@ let currentSession: Session | null = null;
  * @remarks
  * - Replace with supabase.auth.signInWithPassword() for production
  * - Currently returns same demo user regardless of credentials
- * - Session persists only until page refresh
+ * - Session persists across page refreshes via localStorage
  * - No actual password verification in prototype
  */
 export const signIn = async (
@@ -98,6 +125,7 @@ export const signIn = async (
   };
 
   currentSession = session;
+  saveSession(session); // Persist to localStorage
 
   return {
     user: authData.user,
@@ -117,6 +145,7 @@ export const signIn = async (
  * - Always succeeds if validation passes
  * - Merges provided data with demo user data
  * - Creates active session immediately
+ * - Stores session in memory and localStorage (persistent)
  * - Simulates 1000ms network delay
  *
  * @param email - User email (must be valid format)
@@ -144,7 +173,7 @@ export const signIn = async (
  * - Replace with supabase.auth.signUp() for production
  * - No duplicate email checking in prototype
  * - No email verification in prototype
- * - Session persists only until page refresh
+ * - Session persists across page refreshes via localStorage
  */
 export const signUp = async (
   email: string,
@@ -193,6 +222,7 @@ export const signUp = async (
   };
 
   currentSession = session;
+  saveSession(session); // Persist to localStorage
 
   return {
     user,
@@ -205,11 +235,12 @@ export const signUp = async (
  * Mock sign out - always succeeds
  *
  * Purpose: Simulates user logout without backend.
- * Clears the ephemeral session from memory.
+ * Clears the session from memory and localStorage.
  *
  * Mock Behavior:
  * - Always succeeds
  * - Clears currentSession immediately
+ * - Removes session from localStorage
  * - Simulates 300ms network delay
  * - No server-side session invalidation
  *
@@ -223,13 +254,14 @@ export const signUp = async (
  *
  * @remarks
  * - Replace with supabase.auth.signOut() for production
- * - In prototype, simply clears memory (no API call)
- * - Session is already ephemeral (lost on page refresh)
+ * - In prototype, clears memory and localStorage (no API call)
+ * - Session persistence allows staying logged in across page refreshes
  */
 export const signOut = async (): Promise<{ error: AuthError | null }> => {
   await simulateDelay(300);
 
   currentSession = null;
+  saveSession(null); // Clear from localStorage
 
   return { error: null };
 };
@@ -241,7 +273,7 @@ export const signOut = async (): Promise<{ error: AuthError | null }> => {
  * Used for checking authentication status and accessing tokens.
  *
  * Mock Behavior:
- * - Returns currentSession from memory
+ * - Returns currentSession from memory (restored from localStorage on init)
  * - Always succeeds (no auth errors)
  * - Simulates 200ms network delay
  * - Returns null if no session exists
@@ -260,7 +292,8 @@ export const signOut = async (): Promise<{ error: AuthError | null }> => {
  *
  * @remarks
  * - Replace with supabase.auth.getSession() for production
- * - In prototype, reads from memory (not persistent)
+ * - In prototype, reads from memory (backed by localStorage)
+ * - Session persists across page refreshes
  * - Real implementation would verify token validity
  */
 export const getSession = async (): Promise<{
@@ -320,13 +353,13 @@ export const getUser = async (): Promise<{
  * Update user profile
  *
  * Purpose: Updates user profile information.
- * Changes are ephemeral in prototype (not persisted).
+ * Changes are persisted to localStorage in prototype.
  *
  * Mock Behavior:
  * - Requires active session
  * - Merges updates with existing user data
  * - Updates updated_at timestamp
- * - Changes persist only in memory
+ * - Saves changes to memory and localStorage
  * - Simulates 500ms network delay
  *
  * @param updates - Partial user object with fields to update
@@ -345,9 +378,9 @@ export const getUser = async (): Promise<{
  *
  * @remarks
  * - Replace with supabase.auth.updateUser() for production
- * - Changes are NOT persisted in prototype
+ * - Changes persist across page refreshes via localStorage
  * - Real implementation would save to database
- * - Lost on page refresh in prototype
+ * - No server-side validation in prototype
  */
 export const updateProfile = async (
   updates: Partial<User>
@@ -373,6 +406,8 @@ export const updateProfile = async (
     ...currentSession,
     user: updatedUser
   };
+
+  saveSession(currentSession); // Persist updated session to localStorage
 
   return {
     user: updatedUser,

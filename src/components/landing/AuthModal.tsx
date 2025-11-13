@@ -86,10 +86,10 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
           setError(response.error.message);
         } else {
           setSuccess(true);
-          // SP_010: Close modal after success animation - LandingPage will handle UI update
+          // Auto-dismiss after 1 second
           setTimeout(() => {
             onClose();
-          }, 1500);
+          }, 1000);
         }
       } else {
         const response = await signIn(email, password);
@@ -97,10 +97,10 @@ export const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProp
           setError(response.error.message);
         } else {
           setSuccess(true);
-          // SP_010: Close modal after success animation - LandingPage will handle UI update
+          // Auto-dismiss after 1 second
           setTimeout(() => {
             onClose();
-          }, 1500);
+          }, 1000);
         }
       }
     } catch (err) {
