@@ -78,28 +78,10 @@ export const AnimatedInputs = ({
       transition={{ duration: 0.5, delay: 0.4 }}
       className="px-4 py-12 max-w-5xl mx-auto"
     >
-      {/* Value proposition badges */}
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="flex flex-wrap justify-center gap-3 mb-8"
-      >
-        <span className="px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20 shadow-sm hover:shadow-md transition-shadow">
-          90% of routine work automated
-        </span>
-        <span className="px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20 shadow-sm hover:shadow-md transition-shadow">
-          Clear comparison criteria
-        </span>
-        <span className="px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-brand-blue border border-brand-blue/20 shadow-sm hover:shadow-md transition-shadow">
-          Follows your business needs
-        </span>
-      </motion.div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Input: Company Information */}
         <div className="relative">
-          <Label htmlFor="company-input" className="text-sm font-medium text-neutral-slate mb-2 block">
+          <Label htmlFor="company-input" className="text-lg font-semibold text-gray-800 mb-3 block">
             Tell me more about your company
           </Label>
 
@@ -125,7 +107,7 @@ export const AnimatedInputs = ({
 
         {/* Right Input: Solution Requirements */}
         <div className="relative">
-          <Label htmlFor="solution-input" className="text-sm font-medium text-neutral-slate mb-2 block">
+          <Label htmlFor="solution-input" className="text-lg font-semibold text-gray-800 mb-3 block">
             Tell me what solution you're looking for
           </Label>
 
@@ -150,18 +132,6 @@ export const AnimatedInputs = ({
           </div>
         </div>
       </div>
-
-      {/* Helper text */}
-      {isAuthenticated && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-sm text-neutral-slate text-center mt-4"
-        >
-          Fill in your details to start discovering perfect vendors with AI assistance
-        </motion.p>
-      )}
 
       {/* New Project Button */}
       {isAuthenticated && onCreateProject && (

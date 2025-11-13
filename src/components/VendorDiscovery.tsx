@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -368,40 +368,28 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
             </div>
           </div>
 
-          {/* Step Title Display - Appears briefly when icon clicked */}
-          <AnimatePresence>
-            {clickedStepTitle && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="text-center py-2 text-sm font-medium text-primary"
-              >
-                {clickedStepTitle}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Step Title Display - Appears briefly when icon clicked - Fixed height to prevent layout shift */}
+          <motion.div
+            animate={{ opacity: clickedStepTitle ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-center py-2 text-sm font-medium text-primary h-10 flex items-center justify-center"
+          >
+            {clickedStepTitle || '\u00A0'}
+          </motion.div>
         </div>
 
         {/* Main Layout with Sticky Timeline */}
         <div className="relative flex gap-8">
           {/* Sticky Timeline Navigation - Left Side (Desktop Only) */}
           <div className="hidden lg:block sticky top-24 self-start">
-            {/* Step Title Display - Appears briefly when icon clicked (Desktop) */}
-            <AnimatePresence>
-              {clickedStepTitle && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-center pb-2 text-sm font-medium text-primary whitespace-nowrap"
-                >
-                  {clickedStepTitle}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Step Title Display - Appears briefly when icon clicked (Desktop) - Fixed height to prevent layout shift */}
+            <motion.div
+              animate={{ opacity: clickedStepTitle ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-center pb-2 text-sm font-medium text-primary whitespace-nowrap h-8 flex items-center justify-center"
+            >
+              {clickedStepTitle || '\u00A0'}
+            </motion.div>
 
             <div className="flex flex-col items-center py-4">
               {steps.map((step, index) => {
