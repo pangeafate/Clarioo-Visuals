@@ -95,21 +95,21 @@ export const ArtifactVisualization = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col md:flex-row gap-8 items-center justify-center"
+            className="flex flex-col md:flex-row gap-3 xs:gap-4 sm:gap-6 md:gap-8 items-center justify-center"
           >
             {/* Input Card - Circular */}
             <motion.div
-              className="relative bg-white rounded-full w-56 h-56 shadow-elevated-combined flex items-center justify-center"
+              className="relative bg-white rounded-full w-32 xs:w-40 sm:w-48 md:w-56 h-32 xs:h-40 sm:h-48 md:h-56 shadow-elevated-combined flex items-center justify-center"
               whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
             >
-              <div className="flex flex-col items-center text-center px-6">
-                <div className="w-16 h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-3">
+              <div className="flex flex-col items-center text-center px-3 xs:px-4 sm:px-5 md:px-6">
+                <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
                   {current.inputIcon}
                 </div>
-                <h3 className="font-semibold text-neutral-navy mb-1 text-sm">
+                <h3 className="font-semibold text-neutral-navy mb-0.5 xs:mb-1 text-[10px] xs:text-xs sm:text-sm">
                   {current.input}
                 </h3>
-                <p className="text-xs text-neutral-slate">
+                <p className="text-[8px] xs:text-[9px] sm:text-xs text-neutral-slate">
                   What you provide
                 </p>
               </div>
@@ -125,7 +125,7 @@ export const ArtifactVisualization = () => {
               }}
               className="hidden md:block"
             >
-              <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+              <MoveRight className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Arrow 1 - Vertical (Mobile) */}
@@ -136,14 +136,14 @@ export const ArtifactVisualization = () => {
                 y: { duration: 1, repeat: Infinity, repeatType: "reverse" },
                 opacity: { duration: 0.5 }
               }}
-              className="block md:hidden -my-4"
+              className="block md:hidden -my-2 xs:-my-3 sm:-my-4"
             >
-              <MoveDown className="h-8 w-12 text-brand-blue" strokeWidth={2.5} />
+              <MoveDown className="h-5 w-8 xs:h-6 xs:w-10 sm:h-8 sm:w-12 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Processing Card - Rounded Square */}
             <motion.div
-              className="relative bg-gradient-button rounded-2xl w-44 h-44 shadow-button-glow flex items-center justify-center"
+              className="relative bg-gradient-button rounded-xl xs:rounded-2xl w-28 xs:w-32 sm:w-36 md:w-44 h-28 xs:h-32 sm:h-36 md:h-44 shadow-button-glow flex items-center justify-center"
               animate={{
                 boxShadow: [
                   '0 4px 14px rgba(99,102,241,0.4)',
@@ -154,18 +154,18 @@ export const ArtifactVisualization = () => {
               transition={{ duration: 2, repeat: Infinity }}
               whileHover={{ scale: 1.05 }}
             >
-              <div className="flex flex-col items-center text-center text-white px-6">
+              <div className="flex flex-col items-center text-center text-white px-2 xs:px-3 sm:px-4 md:px-6">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="mb-3"
+                  className="mb-1 xs:mb-2 sm:mb-2.5 md:mb-3"
                 >
-                  <Brain className="h-10 w-10" />
+                  <Brain className="h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10" />
                 </motion.div>
-                <h3 className="font-semibold mb-1">
+                <h3 className="font-semibold mb-0.5 xs:mb-1 text-[10px] xs:text-xs sm:text-sm md:text-base">
                   {current.process}
                 </h3>
-                <p className="text-sm opacity-90">
+                <p className="text-[8px] xs:text-[9px] sm:text-xs md:text-sm opacity-90">
                   AI at work
                 </p>
               </div>
@@ -181,7 +181,7 @@ export const ArtifactVisualization = () => {
               }}
               className="hidden md:block"
             >
-              <MoveRight className="h-10 w-10 text-brand-blue" strokeWidth={2.5} />
+              <MoveRight className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Arrow 2 - Vertical (Mobile) */}
@@ -192,24 +192,24 @@ export const ArtifactVisualization = () => {
                 y: { duration: 1, repeat: Infinity, repeatType: "reverse" },
                 opacity: { duration: 0.5 }
               }}
-              className="block md:hidden -my-4"
+              className="block md:hidden -my-2 xs:-my-3 sm:-my-4"
             >
-              <MoveDown className="h-8 w-12 text-brand-blue" strokeWidth={2.5} />
+              <MoveDown className="h-5 w-8 xs:h-6 xs:w-10 sm:h-8 sm:w-12 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Output Card - Circular */}
             <motion.div
-              className="relative bg-white rounded-full w-56 h-56 shadow-elevated-combined flex items-center justify-center"
+              className="relative bg-white rounded-full w-32 xs:w-40 sm:w-48 md:w-56 h-32 xs:h-40 sm:h-48 md:h-56 shadow-elevated-combined flex items-center justify-center"
               whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
             >
-              <div className="flex flex-col items-center text-center px-6">
-                <div className="w-16 h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-3">
+              <div className="flex flex-col items-center text-center px-3 xs:px-4 sm:px-5 md:px-6">
+                <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
                   {current.outputIcon}
                 </div>
-                <h3 className="font-semibold text-neutral-navy mb-1 text-sm">
+                <h3 className="font-semibold text-neutral-navy mb-0.5 xs:mb-1 text-[10px] xs:text-xs sm:text-sm">
                   {current.output}
                 </h3>
-                <p className="text-xs text-neutral-slate">
+                <p className="text-[8px] xs:text-[9px] sm:text-xs text-neutral-slate">
                   What you get
                 </p>
               </div>

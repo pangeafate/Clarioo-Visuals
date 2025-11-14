@@ -92,7 +92,7 @@ export const AnimatedInputs = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Input: Company Information */}
         <div className="relative">
-          <Label htmlFor="company-input" className="text-lg font-semibold text-gray-800 mb-3 block">
+          <Label htmlFor="company-input" className="text-xs xs:text-sm sm:text-lg font-semibold text-gray-800 mb-3 block">
             Tell me more about your company
           </Label>
 
@@ -102,14 +102,14 @@ export const AnimatedInputs = ({
               placeholder="e.g., We are a SaaS company with 50 employees looking to streamline our operations"
               value={companyInput}
               onChange={(e) => handleCompanyChange(e.target.value)}
-              className="relative rounded-xl h-24 px-4 text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
+              className="relative rounded-xl h-24 px-4 text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
             />
           </div>
         </div>
 
         {/* Right Input: Solution Requirements */}
         <div className="relative">
-          <Label htmlFor="solution-input" className="text-lg font-semibold text-gray-800 mb-3 block">
+          <Label htmlFor="solution-input" className="text-xs xs:text-sm sm:text-lg font-semibold text-gray-800 mb-3 block">
             Tell me what solution you're looking for
           </Label>
 
@@ -119,7 +119,7 @@ export const AnimatedInputs = ({
               placeholder="e.g., CRM system with email integration and mobile app support"
               value={solutionInput}
               onChange={(e) => handleSolutionChange(e.target.value)}
-              className="relative rounded-xl h-24 px-4 text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
+              className="relative rounded-xl h-24 px-4 text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
             />
           </div>
         </div>

@@ -4,16 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowRight, Search, MessageSquare, Table, CheckCircle, LogOut, User, ArrowLeft, Mail, Save } from "lucide-react";
+import { ArrowRight, CheckCircle, LogOut, User, ArrowLeft, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import CriteriaBuilder from "./vendor-discovery/CriteriaBuilder";
 import VendorSelection from "./vendor-discovery/VendorSelection";
 import VendorTable from "./vendor-discovery/VendorTable";
 import VendorInvite from "./vendor-discovery/VendorInvite";
+import { WorkflowNavigation, WORKFLOW_STEPS, type Step } from "./WorkflowNavigation";
 import criteriaData from '@/data/api/criteria.json';
-
-export type Step = 'criteria' | 'vendor-selection' | 'vendor-comparison' | 'invite-pitch';
 
 /**
  * GAP-1: Workflow State Persistence Structure
@@ -104,7 +103,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   const [selectedVendors, setSelectedVendors] = useState<Vendor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
-  const [clickedStepTitle, setClickedStepTitle] = useState<string | null>(null);
 
   const storageKey = `workflow_${project.id}`;
 
@@ -239,26 +237,13 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   }, [currentStep, maxStepReached, techRequest, criteria, selectedVendors, isLoading, project.id, storageKey]);
 
   /**
-   * Auto-hide clicked step title after 3 seconds
-   * Note: Must be placed before early returns to satisfy Rules of Hooks
-   */
-  useEffect(() => {
-    if (clickedStepTitle) {
-      const timer = setTimeout(() => {
-        setClickedStepTitle(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [clickedStepTitle]);
-
-  /**
    * GAP-1 FIX: Save project state to localStorage
    * Replaces mock implementation with real persistence
    * GAP-2 FIX: Track maxStepReached for bidirectional navigation
    */
   const saveProjectState = async (step: Step, stepData: any) => {
     // Calculate current step index
-    const currentIdx = steps.findIndex(s => s.id === step);
+    const currentIdx = WORKFLOW_STEPS.findIndex(s => s.id === step);
 
     // Update maxStepReached if we've progressed further
     const newMaxStep = Math.max(maxStepReached, currentIdx);
@@ -295,15 +280,8 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
     }
   };
 
-  const steps = [
-    { id: 'criteria', title: 'Criteria Building', icon: MessageSquare, description: 'AI helps build evaluation criteria' },
-    { id: 'vendor-selection', title: 'Vendor Discovery', icon: Search, description: 'Find relevant vendors' },
-    { id: 'vendor-comparison', title: 'Vendor Comparison', icon: Table, description: 'Compare vendors in detail' },
-    { id: 'invite-pitch', title: 'Invite to Pitch', icon: Mail, description: 'Invite vendors to present their solutions' },
-  ];
-
-  const currentStepIndex = steps.findIndex(step => step.id === currentStep);
-  const progress = ((currentStepIndex + 1) / steps.length) * 100;
+  const currentStepIndex = WORKFLOW_STEPS.findIndex(step => step.id === currentStep);
+  const progress = ((currentStepIndex + 1) / WORKFLOW_STEPS.length) * 100;
 
   // Show loading while state is being loaded
   if (isLoading) {
@@ -355,84 +333,26 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
     });
   };
 
-  const handleStepClick = async (stepId: Step, showTitleOnly: boolean = false) => {
-    const stepIndex = steps.findIndex(step => step.id === stepId);
-    const step = steps.find(s => s.id === stepId);
-
-    // Always show title when any stage is clicked
-    if (step) {
-      setClickedStepTitle(step.title);
-    }
-
-    // GAP-2 FIX: Only navigate if step is accessible (based on maxStepReached) and not just showing title
+  const handleStepClick = async (stepId: Step) => {
+    // GAP-2 FIX: Navigation handled by WorkflowNavigation component
     // This allows bidirectional navigation - users can go back and then forward again
-    if (!showTitleOnly && stepIndex <= maxStepReached) {
-      setCurrentStep(stepId);
-      await saveProjectState(stepId, {
-        techRequest,
-        criteria,
-        selectedVendors
-      });
-    }
+    setCurrentStep(stepId);
+    await saveProjectState(stepId, {
+      techRequest,
+      criteria,
+      selectedVendors
+    });
   };
 
   return (
     <div className={isEmbedded ? "bg-gradient-secondary" : "min-h-screen bg-gradient-secondary"}>
       <div className={`container mx-auto px-4 ${isEmbedded ? "py-4" : "py-8"}`}>
-        {/* Horizontal Timeline - Both Mobile and Desktop */}
-        <div className="sticky top-0 bg-gradient-secondary z-40 -mx-4 px-4 pb-4 pt-2 mb-6">
-          <div className="overflow-x-auto">
-            <div className="flex items-center justify-center gap-3 pb-4 min-w-max">
-              {steps.map((step, index) => {
-                const StepIcon = step.icon;
-                const isActive = step.id === currentStep;
-                const isCompleted = index < currentStepIndex;
-                const isAccessible = index <= maxStepReached;
-                const isLast = index === steps.length - 1;
-
-                return (
-                  <div key={step.id} className="flex items-center gap-3">
-                    {/* Circle */}
-                    <button
-                      onClick={() => handleStepClick(step.id as Step)}
-                      className={`
-                        relative flex items-center justify-center
-                        w-12 h-12 lg:w-14 lg:h-14 rounded-full border-2 transition-all duration-300 flex-shrink-0
-                        ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
-                        ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
-                        ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                        ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-pointer opacity-50'}
-                      `}
-                    >
-                      <StepIcon className="w-5 h-5 lg:w-6 lg:h-6" />
-                    </button>
-
-                    {/* Connecting Line */}
-                    {!isLast && (
-                      <div className={`
-                        h-0.5 w-12 lg:w-16
-                        ${index < currentStepIndex ? 'bg-primary' : 'bg-gray-200'}
-                      `} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Step Title Display - Appears briefly when icon clicked */}
-          <motion.div
-            animate={{ opacity: clickedStepTitle ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            className={`
-              text-center py-2 text-sm font-medium text-primary flex items-center justify-center
-              transition-all duration-300 overflow-hidden
-              ${clickedStepTitle ? 'max-h-10' : 'max-h-0 py-0'}
-            `}
-          >
-            {clickedStepTitle || '\u00A0'}
-          </motion.div>
-        </div>
+        {/* Universal Workflow Navigation */}
+        <WorkflowNavigation
+          currentStep={currentStep}
+          maxStepReached={maxStepReached}
+          onStepClick={handleStepClick}
+        />
 
         {/* Main Content Area */}
         <div className="relative">
@@ -441,11 +361,11 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
             <Card className="shadow-large">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  {React.createElement(steps[currentStepIndex].icon, { className: "h-6 w-6" })}
-                  {steps[currentStepIndex].title}
+                  {React.createElement(WORKFLOW_STEPS[currentStepIndex].icon, { className: "h-6 w-6" })}
+                  {WORKFLOW_STEPS[currentStepIndex].title}
                 </CardTitle>
                 <CardDescription>
-                  {steps[currentStepIndex].description}
+                  {WORKFLOW_STEPS[currentStepIndex].description}
                 </CardDescription>
               </CardHeader>
               <CardContent>
