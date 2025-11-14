@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send } from "lucide-react";
+import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Download } from "lucide-react";
 import { AccordionSection } from "./AccordionSection";
 import { CriterionEditSidebar } from "./CriterionEditSidebar";
 import * as XLSX from 'xlsx';
@@ -25,6 +25,7 @@ import { useCriteriaGeneration } from "@/hooks/useCriteriaGeneration";
 import { useCriteriaChat } from "@/hooks/useCriteriaChat";
 import { storageService } from "@/services/storageService";
 import aiSummariesData from "@/data/api/aiSummaries.json";
+import { SPACING } from '@/styles/spacing-config';
 
 interface CriteriaBuilderProps {
   techRequest: TechRequest;
@@ -515,7 +516,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
         {/* AI Chat Interface */}
         {techRequest && (
           <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100">
-            <CardContent className="pt-6 flex flex-col">
+            <CardContent className={`${SPACING.vendorDiscovery.chat.card} flex flex-col`}>
               {/* Chat History - Dynamic Height Container */}
               <div
                 ref={chatContainerRef}
@@ -525,7 +526,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                 <div className="space-y-4 pr-4">
                   {chatMessages.map((message) => (
                     <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`flex gap-2 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`flex gap-2 flex-1 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${message.role === 'user' ? 'bg-primary' : 'bg-primary/10'}`}>
                           {message.role === 'user' ? (
                             <User className="h-5 w-5 text-primary-foreground" />
@@ -533,7 +534,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                             <Bot className="h-5 w-5 text-primary" />
                           )}
                         </div>
-                        <div className={`p-3 rounded-lg ${
+                        <div className={`${SPACING.vendorDiscovery.chat.message} rounded-lg flex-1 ${
                           message.role === 'user'
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-white border border-blue-100'
@@ -553,7 +554,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Bot className="h-5 w-5 text-primary" />
                         </div>
-                        <div className="bg-white border border-blue-100 p-3 rounded-lg">
+                        <div className={`bg-white border border-blue-100 ${SPACING.vendorDiscovery.chat.typing} rounded-lg`}>
                           <div className="flex gap-1">
                             <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                             <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
@@ -601,13 +602,13 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
 
         {/* SP_012: Current Criteria - Accordion View */}
         <Card>
-          <CardHeader>
+          <CardHeader className={SPACING.vendorDiscovery.criteria.header}>
             <CardTitle className="flex items-center justify-between">
               Evaluation Criteria ({criteria.length})
               <Badge variant="secondary">{criteria.filter(c => c.importance === 'high').length} High Priority</Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className={`space-y-2 ${SPACING.vendorDiscovery.criteria.content}`}>
             {/* Feature Section */}
             <AccordionSection
               title="Feature"
@@ -667,14 +668,14 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                 onClick={() => setIsCreatingCategory(true)}
                 className="w-full border border-dashed border-gray-300 rounded-lg bg-white hover:border-primary hover:bg-primary/5 transition-all"
               >
-                <div className="px-4 py-3 flex items-center justify-center gap-2 text-muted-foreground hover:text-primary group">
-                  <Plus className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                  <span className="font-medium">Add New Category</span>
+                <div className={`${SPACING.vendorDiscovery.accordion.header} flex items-center justify-center gap-1.5 xs:gap-2 text-muted-foreground hover:text-primary group`}>
+                  <Plus className="h-4 w-4 xs:h-5 xs:w-5 group-hover:scale-110 transition-transform" />
+                  <span className="font-semibold text-sm xs:text-base">Add New Category</span>
                 </div>
               </button>
             ) : (
               <div className="border rounded-lg bg-white border-l-4 border-l-purple-400">
-                <div className="px-4 py-3 flex items-center gap-2">
+                <div className={`${SPACING.vendorDiscovery.criteria.addCategory} flex items-center gap-2`}>
                   <Input
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
@@ -942,43 +943,47 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
         </Card>
         )}
 
-        {/* Upload Excel File */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Upload className="h-5 w-5" />
-              Upload Criteria from Excel
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                <Label htmlFor="excel-upload" className="cursor-pointer">
-                  <div className="text-sm font-medium mb-1">
-                    Upload Excel Spreadsheet
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    Expected columns: Criterion, Importance, Type
-                  </div>
-                </Label>
-                <input
-                  id="excel-upload"
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleFileUpload}
-                  disabled={isUploading}
-                  className="hidden"
-                />
-              </div>
-              {isUploading && (
-                <div className="text-center text-sm text-muted-foreground">
-                  Processing Excel file...
-                </div>
-              )}
+        {/* Download Criteria List Button */}
+        <div className="flex justify-center mb-4">
+          <Button
+            variant="outline"
+            onClick={() => {
+              // TODO: Implement download functionality
+              console.log('Download criteria list');
+            }}
+            className="gap-2 min-w-[240px]"
+          >
+            <Download className="h-4 w-4" />
+            Download Criteria List
+          </Button>
+        </div>
+
+        {/* Upload Criteria Button */}
+        <div className="flex flex-col items-center gap-2">
+          <Label
+            htmlFor="excel-upload"
+            className="cursor-pointer inline-flex h-10 min-w-[240px] items-center justify-center gap-2 rounded-md border border-dashed border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <Upload className="h-4 w-4" />
+            Upload Criteria
+          </Label>
+          <div className="text-xs text-muted-foreground text-center">
+            Accepted file types: Word, PDF, Excel
+          </div>
+          <input
+            id="excel-upload"
+            type="file"
+            accept=".xlsx,.xls,.doc,.docx,.pdf"
+            onChange={handleFileUpload}
+            disabled={isUploading}
+            className="hidden"
+          />
+          {isUploading && (
+            <div className="text-center text-sm text-muted-foreground">
+              Processing file...
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
 
         <div className="flex justify-end">
           <Button

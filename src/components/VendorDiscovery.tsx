@@ -13,6 +13,7 @@ import VendorTable from "./vendor-discovery/VendorTable";
 import VendorInvite from "./vendor-discovery/VendorInvite";
 import { WorkflowNavigation, WORKFLOW_STEPS, type Step } from "./WorkflowNavigation";
 import criteriaData from '@/data/api/criteria.json';
+import { SPACING } from '@/styles/spacing-config';
 
 /**
  * GAP-1: Workflow State Persistence Structure
@@ -368,7 +369,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                   {WORKFLOW_STEPS[currentStepIndex].description}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className={SPACING.vendorDiscovery.container}>
                 {currentStep === 'criteria' && techRequest && (
                   <CriteriaBuilder
                     techRequest={techRequest}

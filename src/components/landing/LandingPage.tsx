@@ -77,9 +77,23 @@ export const LandingPage = () => {
 
   // SP_011: View toggle handler
   const handleViewToggle = () => {
-    setCurrentView(currentView === 'landing' ? 'project' : 'landing');
-    // Scroll to top when switching views
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const newView = currentView === 'landing' ? 'project' : 'landing';
+    setCurrentView(newView);
+
+    // When switching to project view, scroll to ProjectDashboard section
+    if (newView === 'project') {
+      setTimeout(() => {
+        const projectsSection = document.getElementById('projects-section');
+        if (projectsSection) {
+          projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          console.log('projects-section not found in DOM');
+        }
+      }, 600);
+    } else {
+      // Scroll to top when switching to landing view
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // SP_010: Project selection handlers

@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Bot } from 'lucide-react';
 import { SignalAntenna } from './SignalAntenna';
 import type { Criteria } from '../VendorDiscovery';
+import { SPACING } from '@/styles/spacing-config';
 
 export interface CriterionCardProps {
   criterion: Criteria;
@@ -36,9 +37,9 @@ export interface CriterionCardProps {
 export const CriterionCard: React.FC<CriterionCardProps> = ({ criterion, onEdit }) => {
   return (
     <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-2 xs:p-3 sm:p-4">
+      <CardContent className={SPACING.vendorDiscovery.criterion.content}>
         {/* Header: Name, Priority, AI Button */}
-        <div className="flex items-start justify-between gap-2 xs:gap-3 sm:gap-4 mb-1.5 xs:mb-2">
+        <div className={`flex items-start justify-between ${SPACING.vendorDiscovery.criterion.headerGap} mb-1.5 xs:mb-2`}>
           <h4 className="font-semibold text-sm xs:text-base flex-1 leading-snug">
             {criterion.name}
           </h4>
@@ -52,10 +53,10 @@ export const CriterionCard: React.FC<CriterionCardProps> = ({ criterion, onEdit 
               variant="ghost"
               size="icon"
               onClick={() => onEdit(criterion)}
-              className="h-7 w-7 xs:h-8 xs:w-8"
+              className={SPACING.vendorDiscovery.criterion.iconButton}
               title="Edit with AI"
             >
-              <Bot className="h-3.5 w-3.5 xs:h-4 xs:w-4" />
+              <Bot className={SPACING.vendorDiscovery.criterion.icon} />
             </Button>
           </div>
         </div>

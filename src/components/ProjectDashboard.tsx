@@ -177,7 +177,7 @@ const ProjectDashboard = ({
   }
   return <div className="bg-gradient-secondary">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div id="projects-section" className="mb-8 scroll-mt-4">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-blue to-brand-blueLight bg-clip-text text-transparent">
             My Projects
           </h1>

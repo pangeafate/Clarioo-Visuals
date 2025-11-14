@@ -29,6 +29,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Check } from 'lucide-react';
 import { SOFTWARE_CATEGORIES } from '@/data/categories';
 import { ProjectConfirmationDialog } from './ProjectConfirmationDialog';
+import { SPACING } from '@/styles/spacing-config';
 
 interface CategorySelectorProps {
   onCreateProject: (title: string, description: string) => Promise<void>;
@@ -107,18 +108,18 @@ export const CategorySelector = ({
       >
         {/* Outer Gradient Outline Wrapping Both Containers */}
         <div
-          className={`rounded-full p-[2px] inline-flex ${
+          className={`rounded-full ${SPACING.landing.categorySelector.outline} inline-flex ${
             isComponentDisabled
               ? 'bg-gray-300'
               : 'bg-gradient-to-r from-purple-600 to-blue-600'
           }`}
         >
           {/* Two-Container Design - Touching Pills */}
-          <div className="flex items-center whitespace-nowrap">
+          <div className="flex items-center">
             {/* Left Container: Text */}
-            <div className="bg-white rounded-l-full px-2 xs:px-3 sm:px-6 py-2 xs:py-2.5 sm:py-4">
+            <div className={`bg-white rounded-l-full ${SPACING.landing.categorySelector.textContainer} flex items-center`}>
               <span
-                className={`text-xs xs:text-sm sm:text-lg font-semibold ${
+                className={`text-xs xs:text-sm sm:text-lg font-semibold leading-none ${
                   isComponentDisabled
                     ? 'text-gray-400'
                     : 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent'
@@ -132,7 +133,7 @@ export const CategorySelector = ({
             <button
               onClick={() => !isComponentDisabled && setIsOpen(!isOpen)}
               disabled={isComponentDisabled}
-              className={`flex items-center justify-center gap-1 xs:gap-1.5 sm:gap-2 px-2 xs:px-3 sm:px-6 py-2 xs:py-2.5 sm:py-4 rounded-r-full font-semibold text-xs xs:text-sm sm:text-lg text-white transition-all ${
+              className={`flex items-center justify-center gap-1 xs:gap-1.5 sm:gap-2 ${SPACING.landing.categorySelector.buttonContainer} rounded-r-full font-semibold text-xs xs:text-sm sm:text-lg text-white leading-none transition-all ${
                 isComponentDisabled
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
@@ -174,7 +175,7 @@ export const CategorySelector = ({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.2, delay: index * 0.02 }}
                     onClick={() => handleCategorySelect(cat.id)}
-                    className="w-full px-6 py-4 flex items-start gap-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-colors border-b border-gray-50 last:border-0 text-left"
+                    className={`w-full ${SPACING.landing.categorySelector.panel} flex items-start gap-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-colors border-b border-gray-50 last:border-0 text-left`}
                   >
                     {/* Check Icon Placeholder */}
                     <div className="w-5 h-5 mt-0.5 flex-shrink-0">

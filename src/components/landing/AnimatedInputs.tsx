@@ -39,6 +39,7 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { CategorySelector } from './CategorySelector';
 import { ExamplesBulletPopover } from './ExamplesBulletPopover';
+import { SPACING } from '@/styles/spacing-config';
 
 interface AnimatedInputsProps {
   isAuthenticated: boolean; // SP_011: Kept for backward compatibility, but inputs always active
@@ -87,9 +88,9 @@ export const AnimatedInputs = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="px-4 py-12 max-w-5xl mx-auto"
+      className={`${SPACING.landing.inputs.section} max-w-5xl mx-auto`}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${SPACING.landing.inputs.grid}`}>
         {/* Left Input: Company Information */}
         <div className="relative">
           <Label htmlFor="company-input" className="text-xs xs:text-sm sm:text-lg font-semibold text-gray-800 mb-3 block">
@@ -102,7 +103,7 @@ export const AnimatedInputs = ({
               placeholder="e.g., We are a SaaS company with 50 employees looking to streamline our operations"
               value={companyInput}
               onChange={(e) => handleCompanyChange(e.target.value)}
-              className="relative rounded-xl h-24 px-4 text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
+              className={`relative rounded-xl h-24 ${SPACING.landing.inputs.input} text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border`}
             />
           </div>
         </div>
@@ -119,7 +120,7 @@ export const AnimatedInputs = ({
               placeholder="e.g., CRM system with email integration and mobile app support"
               value={solutionInput}
               onChange={(e) => handleSolutionChange(e.target.value)}
-              className="relative rounded-xl h-24 px-4 text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
+              className={`relative rounded-xl h-24 ${SPACING.landing.inputs.input} text-xs xs:text-sm sm:text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border`}
             />
           </div>
         </div>
