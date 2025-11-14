@@ -7,13 +7,12 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowRight, Search, MessageSquare, Table, CheckCircle, LogOut, User, ArrowLeft, Mail, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import TechInput from "./vendor-discovery/TechInput";
 import CriteriaBuilder from "./vendor-discovery/CriteriaBuilder";
 import VendorSelection from "./vendor-discovery/VendorSelection";
 import VendorTable from "./vendor-discovery/VendorTable";
 import VendorInvite from "./vendor-discovery/VendorInvite";
 
-export type Step = 'tech-input' | 'criteria' | 'vendor-selection' | 'vendor-comparison' | 'invite-pitch';
+export type Step = 'criteria' | 'vendor-selection' | 'vendor-comparison' | 'invite-pitch';
 
 /**
  * GAP-1: Workflow State Persistence Structure
@@ -72,7 +71,7 @@ export interface VendorDiscoveryProps {
 const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: VendorDiscoveryProps) => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState<Step>('tech-input');
+  const [currentStep, setCurrentStep] = useState<Step>('criteria');
   const [maxStepReached, setMaxStepReached] = useState<number>(0); // Track furthest step reached
   const [techRequest, setTechRequest] = useState<TechRequest | null>(null);
   const [criteria, setCriteria] = useState<Criteria[]>([]);
@@ -88,6 +87,10 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
    * - Restores previous workflow progress if it exists
    * - Shows toast notification when restored
    * - Ensures seamless continuation across sessions
+   *
+   * GAP-5 FIX: Initialize techRequest from project data if not in localStorage
+   * - Creates techRequest from project.description and project.name
+   * - Enables Criteria Builder to work for newly created projects
    */
   useEffect(() => {
     const loadWorkflowState = () => {
@@ -96,8 +99,14 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
         if (savedState) {
           const state: WorkflowState = JSON.parse(savedState);
 
+          // GAP-5: Handle legacy data with 'tech-input' step (removed in this update)
+          // If currentStep is 'tech-input', default to 'criteria' instead
+          const validatedStep = state.currentStep === 'tech-input'
+            ? 'criteria'
+            : state.currentStep;
+
           // Restore state
-          setCurrentStep(state.currentStep);
+          setCurrentStep(validatedStep);
           setMaxStepReached(state.maxStepReached || 0); // Default to 0 if not set
           setTechRequest(state.techRequest);
           setCriteria(state.criteria);
@@ -112,14 +121,40 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
           });
 
           console.log('✅ Workflow state loaded from localStorage (GAP-1)', {
-            currentStep: state.currentStep,
+            currentStep: validatedStep,
+            wasLegacyTechInput: state.currentStep === 'tech-input',
             hasRequest: !!state.techRequest,
             criteriaCount: state.criteria.length,
             vendorCount: state.selectedVendors.length
           });
+        } else {
+          // GAP-5: No saved state - initialize techRequest from project data
+          // Parse project description to extract category and companyInfo
+          const initialRequest: TechRequest = {
+            category: 'General', // Default category
+            description: project.name || '',
+            companyInfo: project.description || ''
+          };
+
+          setTechRequest(initialRequest);
+
+          console.log('✅ Initialized techRequest from project data (GAP-5)', {
+            projectId: project.id,
+            projectName: project.name,
+            hasDescription: !!project.description
+          });
         }
       } catch (error) {
         console.error('Failed to load workflow state:', error);
+
+        // GAP-5: On error, still initialize techRequest from project data
+        const initialRequest: TechRequest = {
+          category: 'General',
+          description: project.name || '',
+          companyInfo: project.description || ''
+        };
+        setTechRequest(initialRequest);
+
         toast({
           title: "⚠️ Could not restore workflow",
           description: "Starting fresh workflow",
@@ -220,7 +255,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   };
 
   const steps = [
-    { id: 'tech-input', title: 'Technology Exploration', icon: Search },
     { id: 'criteria', title: 'Criteria Building', icon: MessageSquare, description: 'AI helps build evaluation criteria' },
     { id: 'vendor-selection', title: 'Vendor Discovery', icon: Search, description: 'Find relevant vendors' },
     { id: 'vendor-comparison', title: 'Vendor Comparison', icon: Table, description: 'Compare vendors in detail' },
@@ -241,16 +275,6 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
       </div>
     );
   }
-
-  const handleTechSubmit = async (request: TechRequest) => {
-    setTechRequest(request);
-    setCurrentStep('criteria');
-    await saveProjectState('criteria', { 
-      techRequest: request, 
-      criteria, 
-      selectedVendors 
-    });
-  };
 
   const handleCriteriaComplete = async (newCriteria: Criteria[]) => {
     setCriteria(newCriteria);
@@ -314,28 +338,15 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   return (
     <div className={isEmbedded ? "bg-gradient-secondary" : "min-h-screen bg-gradient-secondary"}>
       <div className={`container mx-auto px-4 ${isEmbedded ? "py-4" : "py-8"}`}>
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-muted-foreground">
-              Step {currentStepIndex + 1} of {steps.length}
-            </span>
-            <span className="text-sm font-medium text-primary">
-              {Math.round(progress)}%
-            </span>
-          </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-
-        {/* Mobile Timeline - Horizontal Sticky at Top */}
-        <div className="lg:hidden sticky top-0 bg-gradient-secondary z-40 -mx-4 px-4 pb-2 pt-2">
+        {/* Horizontal Timeline - Both Mobile and Desktop */}
+        <div className="sticky top-0 bg-gradient-secondary z-40 -mx-4 px-4 pb-4 pt-2 mb-6">
           <div className="overflow-x-auto">
-            <div className="flex items-center gap-3 pb-4 min-w-max">
+            <div className="flex items-center justify-center gap-3 pb-4 min-w-max">
               {steps.map((step, index) => {
                 const StepIcon = step.icon;
                 const isActive = step.id === currentStep;
                 const isCompleted = index < currentStepIndex;
-                const isAccessible = index <= maxStepReached; // GAP-2 FIX: Use maxStepReached for accessibility
+                const isAccessible = index <= maxStepReached;
                 const isLast = index === steps.length - 1;
 
                 return (
@@ -345,20 +356,20 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                       onClick={() => handleStepClick(step.id as Step)}
                       className={`
                         relative flex items-center justify-center
-                        w-12 h-12 rounded-full border-2 transition-all duration-300 flex-shrink-0
+                        w-12 h-12 lg:w-14 lg:h-14 rounded-full border-2 transition-all duration-300 flex-shrink-0
                         ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
                         ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
                         ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                        ${isAccessible ? 'cursor-pointer' : 'cursor-pointer opacity-50'}
+                        ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-pointer opacity-50'}
                       `}
                     >
-                      <StepIcon className="w-5 h-5" />
+                      <StepIcon className="w-5 h-5 lg:w-6 lg:h-6" />
                     </button>
 
                     {/* Connecting Line */}
                     {!isLast && (
                       <div className={`
-                        h-0.5 w-12
+                        h-0.5 w-12 lg:w-16
                         ${index < currentStepIndex ? 'bg-primary' : 'bg-gray-200'}
                       `} />
                     )}
@@ -368,7 +379,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
             </div>
           </div>
 
-          {/* Step Title Display - Appears briefly when icon clicked - Collapses in mobile, fixed in desktop */}
+          {/* Step Title Display - Appears briefly when icon clicked */}
           <motion.div
             animate={{ opacity: clickedStepTitle ? 1 : 0 }}
             transition={{ duration: 0.3 }}
@@ -382,60 +393,9 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
           </motion.div>
         </div>
 
-        {/* Main Layout with Sticky Timeline */}
-        <div className="relative flex gap-8">
-          {/* Sticky Timeline Navigation - Left Side (Desktop Only) */}
-          <div className="hidden lg:block lg:w-[220px] lg:flex-shrink-0 sticky top-24 self-start">
-            {/* Step Title Display - Appears briefly when icon clicked (Desktop) - Fixed height to prevent layout shift */}
-            <motion.div
-              animate={{ opacity: clickedStepTitle ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-center pb-2 text-sm font-medium text-primary whitespace-nowrap h-8 flex items-center justify-center"
-            >
-              {clickedStepTitle || '\u00A0'}
-            </motion.div>
-
-            <div className="flex flex-col items-center py-4">
-              {steps.map((step, index) => {
-                const StepIcon = step.icon;
-                const isActive = step.id === currentStep;
-                const isCompleted = index < currentStepIndex;
-                const isAccessible = index <= maxStepReached; // GAP-2 FIX: Use maxStepReached for accessibility
-                const isLast = index === steps.length - 1;
-
-                return (
-                  <div key={step.id} className="flex flex-col items-center">
-                    {/* Circle */}
-                    <button
-                      onClick={() => handleStepClick(step.id as Step)}
-                      className={`
-                        relative flex items-center justify-center
-                        w-16 h-16 rounded-full border-2 transition-all duration-300
-                        ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
-                        ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
-                        ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                        ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-pointer opacity-50'}
-                        z-10
-                      `}
-                    >
-                      <StepIcon className="w-7 h-7" />
-                    </button>
-
-                    {/* Connecting Line */}
-                    {!isLast && (
-                      <div className={`
-                        w-0.5 h-24
-                        ${index < currentStepIndex ? 'bg-primary' : 'bg-gray-200'}
-                      `} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Main Content Area */}
-          <div className="flex-1 min-w-0">
+        {/* Main Content Area */}
+        <div className="relative">
+          <div className="w-full">
             {/* Step Content */}
             <Card className="shadow-large">
               <CardHeader>
@@ -448,14 +408,12 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {currentStep === 'tech-input' && (
-                  <TechInput onSubmit={handleTechSubmit} initialData={techRequest} projectId={project.id} />
-                )}
                 {currentStep === 'criteria' && techRequest && (
                   <CriteriaBuilder
                     techRequest={techRequest}
                     onComplete={handleCriteriaComplete}
                     initialCriteria={criteria}
+                    projectId={project.id}
                   />
                 )}
                 {currentStep === 'vendor-selection' && criteria.length > 0 && (

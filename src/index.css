@@ -120,3 +120,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom pulse border animation - bypassing Tailwind to ensure exact timing */
+@keyframes customPulseBorder {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(139, 92, 246, 0.15), 0 0 8px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.25), 0 0 16px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.custom-pulse-border {
+  animation: customPulseBorder 1.8s ease-in-out infinite !important;
+}

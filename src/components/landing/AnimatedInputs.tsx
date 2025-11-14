@@ -2,14 +2,14 @@
  * AnimatedInputs Component - Landing Page Element 5
  *
  * @prototype Visual demonstration component
- * @purpose Two inactive input fields with hypnotic animations (registration-gated)
+ * @purpose Two active input fields with category dropdown and examples (SP_011: registration-free)
  *
- * FEATURES (SP_007):
- * - Element 5: Two input fields showing "Register to unlock"
+ * FEATURES (SP_011):
+ * - Element 5: Two always-active input fields (registration removed)
  * - Side-by-side on desktop (≥768px), stacked on mobile
- * - Hypnotic animations: pulsing glow (2s), floating (3s), shimmer (4s)
- * - Post-registration: smooth unlock animation, auto-focus
- * - Visual cue: "Register to unlock" with lock icon
+ * - CategoryDropdown: Quick project creation from categories (disabled when inputs have values)
+ * - ExamplesBulletPopover: Inspiration examples with question mark icon
+ * - "+ New Project" button: Creates project from input values
  *
  * FIXED (GAP-4): Landing input persistence
  * - Saves input to localStorage on every change
@@ -18,33 +18,37 @@
  *
  * DESIGN SPECS:
  * - Border radius: rounded-xl (20px)
- * - Shadow: elevated-combined when inactive
- * - Animations: pulse-glow, float, shimmer (defined in Tailwind)
- * - Gradient shimmer overlay at 4s cycle
+ * - Shadow: soft shadow for inputs
+ * - Clean, accessible UI
  *
  * BEHAVIOR:
- * - Inactive: Shows placeholder examples, disabled, animated
- * - Active: After registration, input fields unlock with smooth transition
- * - Auto-focus: First input field gets focus post-registration
+ * - Input fields always enabled (no registration gate)
+ * - CategoryDropdown disables when user types in any input
  * - Auto-save: Saves to localStorage on every keystroke
+ * - "+ New Project" creates project from input values
  *
- * @see SP_007 Sprint Plan - Phase 3, Task 3.2 (Hypnotic Input Animations)
+ * @see SP_011 Sprint Plan - Phase 3 (CategoryDropdown & ExamplesBulletPopover Integration)
+ * @see SP_007 Sprint Plan - Phase 3, Task 3.2 (Hypnotic Input Animations - DEPRECATED)
  * @see SP_009 Sprint Plan - Phase 2 (GAP-4: Landing Input Connection)
  */
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { CategorySelector } from './CategorySelector';
+import { ExamplesBulletPopover } from './ExamplesBulletPopover';
 
 interface AnimatedInputsProps {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean; // SP_011: Kept for backward compatibility, but inputs always active
   companyInput: string;
   solutionInput: string;
   onCompanyChange: (value: string) => void;
   onSolutionChange: (value: string) => void;
   onCreateProject?: () => void;
+  // SP_011: New prop for category/example project creation
+  onCreateCategoryProject?: (title: string, description: string) => Promise<void>;
 }
 
 export const AnimatedInputs = ({
@@ -53,8 +57,15 @@ export const AnimatedInputs = ({
   solutionInput,
   onCompanyChange,
   onSolutionChange,
-  onCreateProject
+  onCreateProject,
+  onCreateCategoryProject
 }: AnimatedInputsProps) => {
+  // SP_011: Calculate if user has typed in any input field
+  const hasInputValues = companyInput.trim().length > 0 || solutionInput.trim().length > 0;
+
+  // New logic for button visibility and state
+  const hasAnyInput = companyInput.length > 0 || solutionInput.length > 0;
+  const hasEnoughCharacters = companyInput.length > 10 || solutionInput.length > 10;
   /**
    * GAP-4 FIX: Save to localStorage on input change
    * Data will be loaded in TechInput.tsx when user starts workflow
@@ -85,22 +96,13 @@ export const AnimatedInputs = ({
             Tell me more about your company
           </Label>
 
-          <div className={`relative ${!isAuthenticated ? 'animate-pulse-glow animate-float' : ''}`}>
+          <div className="relative">
             <Textarea
               id="company-input"
-              placeholder={isAuthenticated ? "e.g., We are a SaaS company with 50 employees looking to streamline our operations" : "I work at Zapier in HR function"}
-              disabled={!isAuthenticated}
+              placeholder="e.g., We are a SaaS company with 50 employees looking to streamline our operations"
               value={companyInput}
               onChange={(e) => handleCompanyChange(e.target.value)}
-              autoFocus={isAuthenticated}
-              className={`
-                relative rounded-xl h-24 px-4 text-base resize-none
-                ${!isAuthenticated
-                  ? 'bg-white/60 backdrop-blur-sm cursor-not-allowed shadow-elevated-combined border-brand-blue/30'
-                  : 'bg-white shadow-soft border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20'
-                }
-                transition-all duration-500
-              `}
+              className="relative rounded-xl h-24 px-4 text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
             />
           </div>
         </div>
@@ -111,48 +113,70 @@ export const AnimatedInputs = ({
             Tell me what solution you're looking for
           </Label>
 
-          <div className={`relative ${!isAuthenticated ? 'animate-pulse-glow animate-float' : ''}`}
-            style={{ animationDelay: '0.5s' }}
-          >
+          <div className="relative">
             <Textarea
               id="solution-input"
-              placeholder={isAuthenticated ? "e.g., CRM system with email integration and mobile app support" : "Looking for HR management software"}
-              disabled={!isAuthenticated}
+              placeholder="e.g., CRM system with email integration and mobile app support"
               value={solutionInput}
               onChange={(e) => handleSolutionChange(e.target.value)}
-              className={`
-                relative rounded-xl h-24 px-4 text-base resize-none
-                ${!isAuthenticated
-                  ? 'bg-white/60 backdrop-blur-sm cursor-not-allowed shadow-elevated-combined border-brand-blue/30'
-                  : 'bg-white shadow-soft border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20'
-                }
-                transition-all duration-500
-              `}
+              className="relative rounded-xl h-24 px-4 text-base resize-none bg-white shadow-soft border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-purple-500/20 transition-[border-color] duration-300 custom-pulse-border"
             />
           </div>
         </div>
       </div>
 
-      {/* New Project Button */}
-      {isAuthenticated && onCreateProject && (
+      {/* New Project Button - Space reserved with larger margin when hidden */}
+      {onCreateProject && (
+        <div className={`flex justify-center ${hasAnyInput ? 'mt-6' : 'mt-9'}`}>
+          <AnimatePresence mode="wait">
+            {hasAnyInput && (
+              <motion.div
+                key="button-visible"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Button
+                  onClick={onCreateProject}
+                  disabled={!hasEnoughCharacters}
+                  className={`flex items-center gap-2 transition-all duration-300 ${
+                    !hasEnoughCharacters
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
+                      : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
+                  }`}
+                >
+                  <Plus className="h-4 w-4" />
+                  New Project
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* SP_011: Category Selector and Examples */}
+      {onCreateCategoryProject && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex justify-center mt-6"
+          transition={{ delay: 0.6 }}
+          className="mt-8 space-y-4"
         >
-          <Button
-            onClick={onCreateProject}
-            disabled={!companyInput.trim() || !solutionInput.trim()}
-            className={`flex items-center gap-2 ${
-              !companyInput.trim() || !solutionInput.trim()
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
-                : ''
-            }`}
-          >
-            <Plus className="h-4 w-4" />
-            New Project
-          </Button>
+          {/* Category Selector - Centered */}
+          <div className="flex justify-center">
+            <CategorySelector
+              onCreateProject={onCreateCategoryProject}
+              hasInputValues={hasInputValues}
+            />
+            {/* Commented out: Question mark icon
+            <div>
+              <ExamplesBulletPopover
+                onCreateProject={onCreateCategoryProject}
+              />
+            </div>
+            */}
+          </div>
         </motion.div>
       )}
     </motion.section>

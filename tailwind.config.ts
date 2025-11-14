@@ -139,6 +139,14 @@ export default {
 						boxShadow: '0 0 24px rgba(0, 102, 255, 0.4)'
 					}
 				},
+				'pulse-border': {
+					'0%, 100%': {
+						boxShadow: '0 0 4px rgba(139, 92, 246, 0.15), 0 0 8px rgba(59, 130, 246, 0.1)'
+					},
+					'50%': {
+						boxShadow: '0 0 8px rgba(139, 92, 246, 0.25), 0 0 16px rgba(59, 130, 246, 0.15)'
+					}
+				},
 				'float': {
 					'0%, 100%': {
 						transform: 'translateY(0)'
@@ -181,6 +189,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				// Clearbit-inspired subtle animations
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'pulse-border': 'pulse-border 1.8s ease-in-out infinite', // 33 pulses/min = 1.8s per pulse (50% slower)
 				'float': 'float 3s ease-in-out infinite',
 				'shimmer': 'shimmer 4s ease-in-out infinite',
 				'pulse-subtle': 'pulse-subtle 3s ease-in-out infinite',

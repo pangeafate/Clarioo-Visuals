@@ -3,7 +3,7 @@
  * Uses mock AI service instead of OpenAI
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,21 +15,23 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings } from "lucide-react";
+import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send } from "lucide-react";
 import * as XLSX from 'xlsx';
 import { useToast } from "@/hooks/use-toast";
 import type { TechRequest, Criteria } from "../VendorDiscovery";
 import { useCriteriaGeneration } from "@/hooks/useCriteriaGeneration";
 import { useCriteriaChat } from "@/hooks/useCriteriaChat";
 import { storageService } from "@/services/storageService";
+import aiSummariesData from "@/data/api/aiSummaries.json";
 
 interface CriteriaBuilderProps {
   techRequest: TechRequest;
   onComplete: (criteria: Criteria[]) => void;
   initialCriteria?: Criteria[];
+  projectId: string; // NEW: Project ID for chat isolation
 }
 
-const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaBuilderProps) => {
+const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }: CriteriaBuilderProps) => {
   const [criteria, setCriteria] = useState<Criteria[]>(initialCriteria || []);
   const [newCriterion, setNewCriterion] = useState({
     name: '',
@@ -58,30 +60,149 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaB
     setUserMessage,
     addMessage,
     sendMessage,
-    initializeChat
-  } = useCriteriaChat();
+    initializeChat,
+    hasChatHistory
+  } = useCriteriaChat(projectId); // Pass projectId for chat isolation
 
   // Combined loading state for UI
   const isGenerating = isGeneratingCriteria || isGeneratingChat;
 
-  // Initialize with AI greeting and generate initial criteria
-  useEffect(() => {
-    const initialMessage = {
-      id: '1',
-      role: 'assistant' as const,
-      content: `Hello! I'm analyzing your request for ${techRequest.category} solutions and generating 20 focused criteria to help evaluate vendors. I'll explain why each criterion is important for your specific needs...`,
-      timestamp: new Date()
-    };
-    initializeChat(initialMessage);
+  // Ref for chat container auto-scroll
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-    // Only generate initial criteria if no initial criteria were provided
-    if (!initialCriteria || initialCriteria.length === 0) {
-      generateInitialCriteria(techRequest).then(({ criteria: generatedCriteria, message }) => {
-        setCriteria(generatedCriteria);
-        addMessage(message);
-      });
+  /**
+   * Auto-scroll to latest message when chat messages change
+   * Only scrolls if user is already near the bottom
+   */
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      const container = chatContainerRef.current;
+      // Check if we're near the bottom (within 100px)
+      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+
+      // Only auto-scroll if user is already near bottom or if it's a new chat
+      if (isNearBottom || chatMessages.length <= 2) {
+        setTimeout(() => {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
     }
-  }, [techRequest, initialCriteria]);
+  }, [chatMessages]);
+
+  /**
+   * Highlight key terms in text with pulsating blue styling
+   * Wraps keywords in span elements with animation class
+   */
+  const highlightKeywords = (text: string): JSX.Element => {
+    // Comprehensive list of keywords to highlight
+    const keywords = [
+      // Numbers with context
+      '20 salespeople', '20 seats', '15 people', '30 people', '5 time zones',
+      '100K+ leads', '50K+ daily active users', '10 engineers', '200+ employees',
+      '150 employees', '5000+ SKUs', '15+ sources', '10K+ orders/month', '1M+ predictions/day',
+
+      // Technology/tool names
+      'HubSpot', 'Slack', 'GitHub', 'Microsoft 365', 'AWS', 'Kubernetes',
+      'CRM', 'SQL', 'CI/CD', 'ERP', 'SIEM', 'Python/R',
+
+      // Key technical terms and phrases
+      'mobile-first', 'add-ons', 'Real-Time collaboration', 'agile methodologies',
+      'multi-channel', 'advanced segmentation', 'container orchestration', 'auto-scaling',
+      'multi-region deployment', 'SOC 2', 'GDPR', '99.9% uptime SLA',
+      'real-time dashboards', 'self-service analytics', 'video conferencing',
+      'instant messaging', 'file sharing', 'real-time threat detection',
+      'automated incident response', 'applicant tracking', 'onboarding workflows',
+      'performance management', 'time-off tracking', 'multi-vendor support',
+      'PCI compliance', 'data warehouse', 'data quality monitoring',
+      'automated model training', 'version control', 'real-time inference'
+    ];
+
+    // Sort keywords by length (longest first) to avoid partial matches
+    const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
+
+    // Create regex pattern that matches any keyword (case-insensitive)
+    const pattern = new RegExp(
+      `(${sortedKeywords.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`,
+      'gi'
+    );
+
+    // Split text by keywords and wrap matches
+    const parts = text.split(pattern);
+
+    return (
+      <>
+        {parts.map((part, index) => {
+          // Check if this part matches any keyword (case-insensitive)
+          const isKeyword = sortedKeywords.some(
+            keyword => keyword.toLowerCase() === part.toLowerCase()
+          );
+
+          if (isKeyword) {
+            return (
+              <span
+                key={index}
+                className="font-bold text-brand-blue animate-pulse-blue"
+              >
+                {part}
+              </span>
+            );
+          }
+
+          return <span key={index}>{part}</span>;
+        })}
+      </>
+    );
+  };
+
+  /**
+   * Generate detailed summary from AI summaries data
+   */
+  const generateDetailedSummary = (category: string): string => {
+    // Try to get summary from JSON data
+    const summary = aiSummariesData.summaries[category as keyof typeof aiSummariesData.summaries];
+
+    if (summary) {
+      return summary;
+    }
+
+    return aiSummariesData.default;
+  };
+
+  // Initialize with AI summary message from Technology Exploration step
+  /**
+   * Initialize chat and criteria only if no chat history exists
+   * If chat history exists, the synthesis is automatically loaded by useCriteriaChat
+   */
+  useEffect(() => {
+    // Only initialize if there's no existing chat history
+    if (!hasChatHistory) {
+      // Get the detailed summary for this category (same as shown in Tech Input step)
+      const projectSummary = generateDetailedSummary(techRequest.category);
+
+      const initialMessage = {
+        id: '1',
+        role: 'assistant' as const,
+        content: projectSummary,
+        timestamp: new Date()
+      };
+      initializeChat(initialMessage);
+
+      // Only generate initial criteria if no initial criteria were provided
+      if (!initialCriteria || initialCriteria.length === 0) {
+        generateInitialCriteria(techRequest).then(({ criteria: generatedCriteria, message }) => {
+          setCriteria(generatedCriteria);
+          addMessage(message);
+        });
+      }
+
+      console.log('✅ Initialized new chat for project', { projectId });
+    } else {
+      console.log('✅ Loaded existing chat synthesis for project', { projectId });
+    }
+  }, [techRequest, initialCriteria, hasChatHistory, projectId]);
 
   /**
    * Sync local criteria state when initialCriteria changes
@@ -288,73 +409,94 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaB
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* AI Chat Assistant */}
-      <Card className="h-fit lg:col-span-1">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
-              AI Criteria Assistant
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ScrollArea className="h-64 w-full pr-4">
-            <div className="space-y-3">
-              {chatMessages.map((message) => (
-                <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex gap-2 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <div className={`p-2 rounded-full ${message.role === 'user' ? 'bg-primary' : 'bg-accent'}`}>
-                      {message.role === 'user' ? (
-                        <User className="h-3 w-3 text-primary-foreground" />
-                      ) : (
-                        <Bot className="h-3 w-3 text-accent-foreground" />
-                      )}
+    <div className="space-y-6">
+        {/* AI Chat Interface */}
+        {techRequest && (
+          <Card className="bg-gradient-to-br from-blue-50 to-white border-blue-100">
+            <CardContent className="pt-6 flex flex-col">
+              {/* Chat History - Dynamic Height Container */}
+              <div
+                ref={chatContainerRef}
+                className="overflow-y-auto min-h-24 max-h-96 mb-4"
+                style={{ scrollBehavior: 'smooth' }}
+              >
+                <div className="space-y-4 pr-4">
+                  {chatMessages.map((message) => (
+                    <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`flex gap-2 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${message.role === 'user' ? 'bg-primary' : 'bg-primary/10'}`}>
+                          {message.role === 'user' ? (
+                            <User className="h-5 w-5 text-primary-foreground" />
+                          ) : (
+                            <Bot className="h-5 w-5 text-primary" />
+                          )}
+                        </div>
+                        <div className={`p-3 rounded-lg ${
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-white border border-blue-100'
+                        }`}>
+                          <p className="text-sm leading-relaxed">
+                            {message.role === 'assistant' ? highlightKeywords(message.content) : message.content}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className={`p-3 rounded-lg ${
-                      message.role === 'user' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted'
-                    }`}>
-                      <p className="text-sm">{message.content}</p>
+                  ))}
+
+                  {/* Typing Indicator */}
+                  {isGenerating && (
+                    <div className="flex gap-3">
+                      <div className="flex gap-2">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Bot className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="bg-white border border-blue-100 p-3 rounded-lg">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              ))}
-              {isGenerating && (
+              </div>
+
+              <Separator className="my-4" />
+
+              {/* Input Area - Fixed at bottom */}
+              <div className="space-y-2 flex-shrink-0">
+                <Label className="text-sm font-medium text-gray-700">Would you like to add anything?</Label>
                 <div className="flex gap-2">
-                  <div className="p-2 rounded-full bg-accent">
-                    <Bot className="h-3 w-3 text-accent-foreground" />
-                  </div>
-                  <div className="bg-muted p-3 rounded-lg">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                    </div>
-                  </div>
+                  <Textarea
+                    placeholder="Any additional context, requirements, or specific challenges..."
+                    className="min-h-[80px] resize-none flex-1"
+                    disabled={isGenerating}
+                    value={userMessage}
+                    onChange={(e) => setUserMessage(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={isGenerating || !userMessage.trim()}
+                    size="icon"
+                    className="self-end mb-0.5"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
                 </div>
-              )}
-            </div>
-          </ScrollArea>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-          <div className="flex gap-2">
-            <Input
-              placeholder="Ask about criteria or request suggestions..."
-              value={userMessage}
-              onChange={(e) => setUserMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            />
-            <Button onClick={handleSendMessage} disabled={isGenerating} size="icon">
-              <MessageSquare className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Criteria Management */}
-      <div className="space-y-6 lg:col-span-2">
         {/* Current Criteria - Excel-like Table with Tabs */}
         <Card>
           <CardHeader>
@@ -754,7 +896,6 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria }: CriteriaB
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
-      </div>
     </div>
   );
 };

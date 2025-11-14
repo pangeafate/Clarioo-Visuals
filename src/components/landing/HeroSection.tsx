@@ -21,12 +21,16 @@
  */
 
 import { motion } from 'framer-motion';
+import { ViewToggleButton } from './ViewToggleButton';
 
 interface HeroSectionProps {
-  children?: React.ReactNode; // For RegistrationToggle
+  children?: React.ReactNode; // For RegistrationToggle (SP_011: temporarily disabled)
+  // SP_011: View toggle props
+  currentView?: 'landing' | 'project';
+  onViewToggle?: () => void;
 }
 
-export const HeroSection = ({ children }: HeroSectionProps) => {
+export const HeroSection = ({ children, currentView, onViewToggle }: HeroSectionProps) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -36,6 +40,13 @@ export const HeroSection = ({ children }: HeroSectionProps) => {
     >
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-blue-600/5 pointer-events-none" />
+
+      {/* SP_011: View Toggle Button - Upper left corner */}
+      {currentView && onViewToggle && (
+        <div className="absolute top-4 left-4 z-10">
+          <ViewToggleButton currentView={currentView} onToggle={onViewToggle} />
+        </div>
+      )}
 
       <div className="relative max-w-5xl mx-auto text-center space-y-4">
         {/* Clarioo Brand Badge - Centered */}

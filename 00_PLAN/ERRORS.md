@@ -10,8 +10,8 @@
 
 1. White screen displayed on deployed GitHub Pages site (https://pangeafate.github.io/Clarioo-Visuals/)
 2. Browser console shows 404 errors for JavaScript and CSS assets:
-   - `/Clarioo-Visuals/assets/index-[hash].js` ’ 404
-   - `/Clarioo-Visuals/assets/index-[hash].css` ’ 404
+   - `/Clarioo-Visuals/assets/index-[hash].js` ï¿½ 404
+   - `/Clarioo-Visuals/assets/index-[hash].css` ï¿½ 404
 3. Deployed HTML serves development index.html instead of production build:
    ```html
    <!-- WRONG (Development version): -->
@@ -94,7 +94,7 @@ This forced GitHub Actions to:
    ```
 
 4. **If issue persists, clear GitHub Pages cache:**
-   - Go to repository Settings ’ Pages
+   - Go to repository Settings ï¿½ Pages
    - Temporarily change source branch, save
    - Change back to original branch (`gh-pages` or `main`), save
    - This forces GitHub Pages to rebuild from scratch

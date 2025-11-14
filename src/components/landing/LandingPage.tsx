@@ -54,10 +54,19 @@ import ProjectDashboard from '../ProjectDashboard';
 import VendorDiscovery, { Project } from '../VendorDiscovery';
 import * as projectService from '@/services/mock/projectService';
 
+// SP_011: View mode type definition
+type ViewMode = 'landing' | 'project';
+
 export const LandingPage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [isSignUp, setIsSignUp] = useState(true); // Default to Sign Up mode
+
+  // SP_011: View state management - controls landing vs project view
+  const [currentView, setCurrentView] = useState<ViewMode>('landing');
+
+  // SP_011: Authentication state (temporarily disabled)
+  // const [isSignUp, setIsSignUp] = useState(true); // Default to Sign Up mode
+
   const [companyInput, setCompanyInput] = useState('');
   const [solutionInput, setSolutionInput] = useState('');
 
@@ -66,9 +75,18 @@ export const LandingPage = () => {
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [isCreatingProject, setIsCreatingProject] = useState(false);
 
+  // SP_011: View toggle handler
+  const handleViewToggle = () => {
+    setCurrentView(currentView === 'landing' ? 'project' : 'landing');
+    // Scroll to top when switching views
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // SP_010: Project selection handlers
   const handleSelectProject = (project: Project) => {
     setSelectedProject(project);
+    // SP_011: Switch to project view when selecting a project
+    setCurrentView('project');
     // Smooth scroll to workflow section
     setTimeout(() => {
       const workflowElement = document.getElementById('workflow-section');
@@ -86,6 +104,67 @@ export const LandingPage = () => {
       const projectToSelect = inProgressProject || projects[0];
       setSelectedProject(projectToSelect);
       setProjectsLoaded(true);
+    }
+  };
+
+  /**
+   * SP_011: Create new project from category/example selection
+   * Used by CategoryDropdown and ExamplesBulletPopover
+   */
+  const handleCreateCategoryProject = async (title: string, description: string) => {
+    setIsCreatingProject(true);
+
+    try {
+      const { data, error } = await projectService.createProject({
+        user_id: user?.id || 'user_demo_12345',
+        name: title,
+        description: description,
+        category: 'General',
+        status: 'draft',
+        workflow_state: {
+          current_step: 1,
+          completed_steps: []
+        }
+      });
+
+      if (error) throw new Error(error.message);
+      if (!data) throw new Error('No data returned');
+
+      // Map to Project interface
+      const newProject: Project = {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        status: data.status,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      // SP_011: Select the new project, switch to project view, and scroll to workflow
+      setSelectedProject(newProject);
+      setCurrentView('project'); // Switch to project view
+      setProjectsLoaded(false); // Reset to allow re-loading
+
+      // Scroll to workflow section
+      setTimeout(() => {
+        const workflowElement = document.getElementById('workflow-section');
+        if (workflowElement) {
+          workflowElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+
+      toast({
+        title: "Project created",
+        description: "Your project has been created successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error creating project",
+        description: "Could not create the project. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingProject(false);
     }
   };
 
@@ -131,8 +210,9 @@ export const LandingPage = () => {
         updated_at: data.updated_at
       };
 
-      // Select the new project and scroll to workflow
+      // SP_011: Select the new project, switch to project view, and scroll to workflow
       setSelectedProject(newProject);
+      setCurrentView('project'); // Switch to project view
       setProjectsLoaded(false); // Reset to allow re-loading
 
       // Scroll to workflow section
@@ -159,14 +239,14 @@ export const LandingPage = () => {
   };
 
   /**
-   * FUTURE INTEGRATION: Connect to Auth modal
-   * Currently placeholder - will open auth modal/dialog
+   * SP_011: Authentication temporarily disabled for registration-free experience
+   * FUTURE INTEGRATION: Re-enable when auth is needed
    */
-  const handleOpenAuth = () => {
-    console.log('Opening auth modal:', isSignUp ? 'Sign Up' : 'Sign In');
-    // TODO: Implement auth modal/dialog opening logic
-    // Example: setAuthModalOpen(true);
-  };
+  // const handleOpenAuth = () => {
+  //   console.log('Opening auth modal:', isSignUp ? 'Sign Up' : 'Sign In');
+  //   // TODO: Implement auth modal/dialog opening logic
+  //   // Example: setAuthModalOpen(true);
+  // };
 
   return (
     <motion.div
@@ -176,7 +256,10 @@ export const LandingPage = () => {
       className="min-h-screen bg-gradient-hero-bg"
     >
       {/* Hero Section - Elements 1 & 2 */}
-      <HeroSection />
+      <HeroSection
+        currentView={currentView}
+        onViewToggle={handleViewToggle}
+      />
 
       {/* Element 4 - iPod Navigation: Placeholder for future implementation */}
       {/* TODO: Add iPodNavigation component when ready
@@ -185,13 +268,14 @@ export const LandingPage = () => {
       </section>
       */}
 
-      {/* Registration Toggle - Element 3 (moved above inputs) */}
-      <RegistrationToggle
+      {/* SP_011: Authentication Toggle - TEMPORARILY DISABLED for registration-free experience */}
+      {/* FUTURE: Re-enable when auth is needed */}
+      {/* <RegistrationToggle
         isSignUp={isSignUp}
         onToggle={setIsSignUp}
         onOpenAuth={handleOpenAuth}
         isAuthenticated={!!user}
-      />
+      /> */}
 
       {/* Animated Inputs - Element 5 */}
       <AnimatedInputs
@@ -201,17 +285,18 @@ export const LandingPage = () => {
         onCompanyChange={setCompanyInput}
         onSolutionChange={setSolutionInput}
         onCreateProject={handleCreateProject}
+        onCreateCategoryProject={handleCreateCategoryProject}
       />
 
-      {/* SP_010: PRE-AUTH ONLY - Marketing Content */}
+      {/* SP_011: LANDING VIEW - Marketing Content */}
       <AnimatePresence>
-        {!user && (
+        {currentView === 'landing' && (
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Artifact Visualization - Element 6 (Pre-Auth Only - US-11.1) */}
+            {/* Artifact Visualization - Element 6 */}
             <ArtifactVisualization />
 
             {/* Card Carousel - Element 8 */}
@@ -220,9 +305,9 @@ export const LandingPage = () => {
         )}
       </AnimatePresence>
 
-      {/* SP_010: POST-AUTH ONLY - Scrollable Canvas Workflow */}
+      {/* SP_011: PROJECT VIEW - Scrollable Canvas Workflow */}
       <AnimatePresence>
-        {user && (
+        {currentView === 'project' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
