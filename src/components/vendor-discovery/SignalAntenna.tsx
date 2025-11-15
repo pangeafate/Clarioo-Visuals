@@ -41,7 +41,7 @@ export const SignalAntenna: React.FC<SignalAntennaProps> = ({ importance, classN
 
   return (
     <div
-      className={`flex items-end gap-0.5 ${className}`}
+      className={`flex items-end gap-0.5 opacity-60 ${className}`}
       role="img"
       aria-label={`${importance} importance`}
       title={`Priority: ${importance.charAt(0).toUpperCase() + importance.slice(1)}`}

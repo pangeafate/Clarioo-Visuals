@@ -84,12 +84,12 @@ export const SPACING = {
   landing: {
     // Category selector - Scales proportionally from 350px to desktop
     categorySelector: {
-      // Gradient outline wrapper - thinner on small screens
-      outline: 'p-[0.75px] xs:p-[1px] sm:p-[1.5px] md:p-[2px]',
-      // Text container (left pill) - proportional padding
-      textContainer: 'px-1.5 xs:px-2 sm:px-3 md:px-6 py-1.5 xs:py-2 sm:py-2.5 md:py-4',
-      // Button container (right pill) - proportional padding
-      buttonContainer: 'px-1.5 xs:px-2 sm:px-3 md:px-6 py-1.5 xs:py-2 sm:py-2.5 md:py-4',
+      // Gradient outline wrapper - slightly thicker for better visibility
+      outline: 'p-[1px] xs:p-[1.5px] sm:p-[2px] md:p-[2.5px]',
+      // Text container (left pill) - proportional padding (mobile height +70% total)
+      textContainer: 'px-1.5 xs:px-2 sm:px-3 md:px-6 py-2.5 xs:py-3.5 sm:py-5 md:py-4',
+      // Button container (right pill) - proportional padding (mobile height +70% total)
+      buttonContainer: 'px-1.5 xs:px-2 sm:px-3 md:px-6 py-2.5 xs:py-3.5 sm:py-5 md:py-4',
       // Dropdown panel
       panel: 'px-6 py-4',
     },

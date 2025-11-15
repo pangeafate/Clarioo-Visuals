@@ -15,9 +15,10 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Download } from "lucide-react";
+import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Share2 } from "lucide-react";
 import { AccordionSection } from "./AccordionSection";
 import { CriterionEditSidebar } from "./CriterionEditSidebar";
+import { ShareDialog } from "./ShareDialog";
 import * as XLSX from 'xlsx';
 import { useToast } from "@/hooks/use-toast";
 import type { TechRequest, Criteria } from "../VendorDiscovery";
@@ -58,6 +59,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
   const [newCriterionCategory, setNewCriterionCategory] = useState<string | null>(null);
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const { toast } = useToast();
 
@@ -84,6 +86,10 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
 
   // Ref for chat container auto-scroll
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Ref to track if chat has been initialized for this project
+  const hasInitialized = useRef(false);
+  const previousProjectId = useRef<string>(projectId);
 
   /**
    * Auto-scroll to latest message when chat messages change
@@ -190,34 +196,62 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
   /**
    * Initialize chat and criteria only if no chat history exists
    * If chat history exists, the synthesis is automatically loaded by useCriteriaChat
+   *
+   * Fixed: Uses useRef to prevent re-initialization on hasChatHistory changes
+   * Fixed: Stable dependencies to prevent duplicate messages
    */
   useEffect(() => {
-    // Only initialize if there's no existing chat history
-    if (!hasChatHistory) {
-      // Get the detailed summary for this category (same as shown in Tech Input step)
-      const projectSummary = generateDetailedSummary(techRequest.category);
+    // Reset initialization flag when project changes
+    if (projectId !== previousProjectId.current) {
+      hasInitialized.current = false;
+      previousProjectId.current = projectId;
+    }
 
-      const initialMessage = {
-        id: '1',
-        role: 'assistant' as const,
-        content: projectSummary,
-        timestamp: new Date()
-      };
-      initializeChat(initialMessage);
+    // Only initialize once per project, when there's no chat history
+    if (!hasChatHistory && !hasInitialized.current) {
+      hasInitialized.current = true;
 
       // Only generate initial criteria if no initial criteria were provided
       if (!initialCriteria || initialCriteria.length === 0) {
+        // Get the detailed summary for this category (AI understanding text)
+        const projectSummary = generateDetailedSummary(techRequest.category);
+
         generateInitialCriteria(techRequest).then(({ criteria: generatedCriteria, message }) => {
           setCriteria(generatedCriteria);
-          addMessage(message);
+
+          // Combine AI understanding text with criteria generation message
+          const combinedMessage = {
+            ...message,
+            content: `${projectSummary}\n\n${message.content}`
+          };
+
+          initializeChat(combinedMessage);
         });
+      } else {
+        // If initial criteria provided, just show the AI understanding text
+        const projectSummary = generateDetailedSummary(techRequest.category);
+        const initialMessage = {
+          id: '1',
+          role: 'assistant' as const,
+          content: projectSummary,
+          timestamp: new Date()
+        };
+        initializeChat(initialMessage);
       }
 
       console.log('✅ Initialized new chat for project', { projectId });
-    } else {
+    } else if (hasChatHistory) {
       console.log('✅ Loaded existing chat synthesis for project', { projectId });
     }
-  }, [techRequest, initialCriteria, hasChatHistory, projectId]);
+  }, [
+    projectId,
+    techRequest.category,  // Use stable primitive instead of whole object
+    hasChatHistory,
+    initializeChat,
+    addMessage,
+    generateInitialCriteria,
+    initialCriteria
+  ]);
 
   /**
    * Sync local criteria state when initialCriteria changes
@@ -512,6 +546,18 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
     setNewCategoryName('');
   };
 
+  /**
+   * SP_014: Handle importance change from swipe gestures
+   * Updates criteria state with new importance level and archived status
+   */
+  const handleImportanceChange = (id: string, importance: 'low' | 'medium' | 'high', isArchived: boolean) => {
+    setCriteria(prev => prev.map(c =>
+      c.id === id
+        ? { ...c, importance, isArchived }
+        : c
+    ));
+  };
+
   return (
     <div className="space-y-6">
         {/* AI Chat Interface */}
@@ -618,6 +664,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onToggle={() => toggleSection('feature')}
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
+              onImportanceChange={handleImportanceChange}
             />
 
             {/* Technical Section */}
@@ -628,6 +675,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onToggle={() => toggleSection('technical')}
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
+              onImportanceChange={handleImportanceChange}
             />
 
             {/* Business Section */}
@@ -638,6 +686,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onToggle={() => toggleSection('business')}
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
+              onImportanceChange={handleImportanceChange}
             />
 
             {/* Compliance Section */}
@@ -648,6 +697,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onToggle={() => toggleSection('compliance')}
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
+              onImportanceChange={handleImportanceChange}
             />
 
             {/* Other Types Section - Custom categories */}
@@ -660,6 +710,7 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                 onToggle={() => toggleSection(type)}
                 onEditCriterion={(criterion) => setEditingCriterion(criterion)}
                 onAddCriterion={handleAddCriterion}
+                onImportanceChange={handleImportanceChange}
               />
             ))}
 
@@ -946,18 +997,15 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
         </Card>
         )}
 
-        {/* Download Criteria List Button */}
+        {/* Share with your Team Button */}
         <div className="flex justify-center mb-4">
           <Button
             variant="outline"
-            onClick={() => {
-              // TODO: Implement download functionality
-              console.log('Download criteria list');
-            }}
+            onClick={() => setIsShareDialogOpen(true)}
             className={`${TYPOGRAPHY.button.default} gap-2 min-w-[240px]`}
           >
-            <Download className="h-4 w-4" />
-            Download Criteria List
+            <Share2 className="h-4 w-4" />
+            Share with your Team
           </Button>
         </div>
 
@@ -1026,6 +1074,14 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
           customTypes={customTypes}
           mode={newCriterionCategory !== null ? 'create' : 'edit'}
           defaultCategory={newCriterionCategory || 'feature'}
+        />
+
+        {/* Share Dialog */}
+        <ShareDialog
+          isOpen={isShareDialogOpen}
+          onClose={() => setIsShareDialogOpen(false)}
+          criteria={criteria}
+          projectId={projectId}
         />
     </div>
   );

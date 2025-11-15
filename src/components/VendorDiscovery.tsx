@@ -42,6 +42,7 @@ export interface Criteria {
   explanation: string;
   importance: 'low' | 'medium' | 'high';
   type: string;
+  isArchived?: boolean; // SP_014: Archive state for low-importance criteria
 }
 
 export interface Vendor {

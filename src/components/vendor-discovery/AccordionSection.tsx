@@ -1,5 +1,5 @@
 /**
- * AccordionSection Component - Collapsible Criteria Category
+ * AccordionSection Component - Collapsible Criteria Category with Reordering
  *
  * @purpose Collapsible section for grouping criteria by category
  * @design Vertical accordion with count display and card-based content
@@ -15,17 +15,22 @@
  * │ Criterion Card 2 (High)          │
  * ├──────────────────────────────────┤
  * │ Criterion Card 3 (Medium)        │
+ * ├──────────────────────────────────┤
+ * │ Criterion Card 4 (Low)           │
+ * ├──────────────────────────────────┤
+ * │ [Archived] Card 5 (greyed)       │
  * └──────────────────────────────────┘
  *
  * FEATURES:
  * - Multiple sections can be open simultaneously
- * - Count display: Total - X High, Y Medium
- * - Criteria sorted by priority (High → Medium → Low)
- * - Low-importance criteria hidden
+ * - Count display: Total - X High, Y Medium, Z Low
+ * - Criteria sorted by priority (High → Medium → Low → Archived)
+ * - Smooth card reordering animation (SP_014)
+ * - Archived criteria shown at bottom
  * - Smooth expand/collapse animation
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Plus } from 'lucide-react';
 import { CriterionCard } from './CriterionCard';
@@ -40,6 +45,7 @@ export interface AccordionSectionProps {
   onToggle: () => void;
   onEditCriterion: (criterion: Criteria) => void;
   onAddCriterion: (categoryType: string) => void;
+  onImportanceChange?: (id: string, importance: 'low' | 'medium' | 'high', isArchived: boolean) => void;
 }
 
 export const AccordionSection: React.FC<AccordionSectionProps> = ({
@@ -48,21 +54,34 @@ export const AccordionSection: React.FC<AccordionSectionProps> = ({
   isExpanded,
   onToggle,
   onEditCriterion,
-  onAddCriterion
+  onAddCriterion,
+  onImportanceChange
 }) => {
-  // Filter out low-importance criteria
-  const visibleCriteria = criteria.filter(c => c.importance !== 'low');
+  /**
+   * SP_014: Sort criteria by importance and archived status
+   * Order: High → Medium → Low → Archived
+   */
+  const sortedCriteria = useMemo(() => {
+    // Separate active and archived criteria
+    const active = criteria.filter(c => !c.isArchived);
+    const archived = criteria.filter(c => c.isArchived);
 
-  // Sort by importance: High → Medium
-  const sortedCriteria = [...visibleCriteria].sort((a, b) => {
+    // Sort active by importance
     const importanceOrder = { high: 3, medium: 2, low: 1 };
-    return importanceOrder[b.importance] - importanceOrder[a.importance];
-  });
+    const sortedActive = [...active].sort((a, b) =>
+      importanceOrder[b.importance] - importanceOrder[a.importance]
+    );
 
-  // Count by importance
-  const highCount = visibleCriteria.filter(c => c.importance === 'high').length;
-  const mediumCount = visibleCriteria.filter(c => c.importance === 'medium').length;
-  const totalCount = visibleCriteria.length;
+    // Return active criteria followed by archived
+    return [...sortedActive, ...archived];
+  }, [criteria]);
+
+  // Count by importance (only count active criteria)
+  const activeCriteria = criteria.filter(c => !c.isArchived);
+  const highCount = activeCriteria.filter(c => c.importance === 'high').length;
+  const mediumCount = activeCriteria.filter(c => c.importance === 'medium').length;
+  const lowCount = activeCriteria.filter(c => c.importance === 'low').length;
+  const totalCount = activeCriteria.length;
 
   if (totalCount === 0) {
     return null; // Don't render empty sections
@@ -129,7 +148,7 @@ export const AccordionSection: React.FC<AccordionSectionProps> = ({
         <div className="flex items-center gap-1.5 xs:gap-2">
           <h3 className={TYPOGRAPHY.heading.h6}>{title}</h3>
           <span className={TYPOGRAPHY.muted.small}>
-            {totalCount} - {highCount} High, {mediumCount} Medium
+            {totalCount} - {highCount} High, {mediumCount} Medium, {lowCount} Low
           </span>
         </div>
 
@@ -153,13 +172,33 @@ export const AccordionSection: React.FC<AccordionSectionProps> = ({
             className="overflow-hidden"
           >
             <div className={`${SPACING.vendorDiscovery.accordion.content} ${SPACING.vendorDiscovery.accordion.spacing}`}>
-              {sortedCriteria.map((criterion) => (
-                <CriterionCard
-                  key={criterion.id}
-                  criterion={criterion}
-                  onEdit={onEditCriterion}
-                />
-              ))}
+              {/* SP_014: Animated card list with layout animation for smooth reordering */}
+              <AnimatePresence mode="popLayout">
+                {sortedCriteria.map((criterion) => (
+                  <motion.div
+                    key={criterion.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{
+                      layout: {
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 30
+                      },
+                      opacity: { duration: 0.2 },
+                      y: { duration: 0.2 }
+                    }}
+                  >
+                    <CriterionCard
+                      criterion={criterion}
+                      onEdit={onEditCriterion}
+                      onImportanceChange={onImportanceChange}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
 
               {/* Add New Criterion Button */}
               <button

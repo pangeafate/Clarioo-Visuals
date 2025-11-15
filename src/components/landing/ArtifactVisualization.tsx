@@ -100,11 +100,11 @@ export const ArtifactVisualization = () => {
           >
             {/* Input Card - Circular */}
             <motion.div
-              className="relative bg-white rounded-full w-32 xs:w-40 sm:w-48 md:w-56 h-32 xs:h-40 sm:h-48 md:h-56 shadow-elevated-combined flex items-center justify-center"
+              className="relative bg-white rounded-full w-40 xs:w-52 sm:w-64 md:w-56 h-40 xs:h-52 sm:h-64 md:h-56 shadow-elevated-combined flex items-center justify-center"
               whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
             >
               <div className="flex flex-col items-center text-center px-3 xs:px-4 sm:px-5 md:px-6">
-                <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
+                <div className="w-12 h-12 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-16 md:h-16 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
                   {current.inputIcon}
                 </div>
                 <h3 className={TYPOGRAPHY.label.default + ' mb-0.5 xs:mb-1'}>
@@ -139,12 +139,12 @@ export const ArtifactVisualization = () => {
               }}
               className="block md:hidden -my-2 xs:-my-3 sm:-my-4"
             >
-              <MoveDown className="h-5 w-8 xs:h-6 xs:w-10 sm:h-8 sm:w-12 text-brand-blue" strokeWidth={2.5} />
+              <MoveDown className="h-7 w-10 xs:h-8 xs:w-13 sm:h-10 sm:w-16 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Processing Card - Rounded Square */}
             <motion.div
-              className="relative bg-gradient-button rounded-xl xs:rounded-2xl w-28 xs:w-32 sm:w-36 md:w-44 h-28 xs:h-32 sm:h-36 md:h-44 shadow-button-glow flex items-center justify-center"
+              className="relative bg-gradient-button rounded-xl xs:rounded-2xl w-36 xs:w-42 sm:w-48 md:w-44 h-36 xs:h-42 sm:h-48 md:h-44 shadow-button-glow flex items-center justify-center"
               animate={{
                 boxShadow: [
                   '0 4px 14px rgba(99,102,241,0.4)',
@@ -161,7 +161,7 @@ export const ArtifactVisualization = () => {
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                   className="mb-1 xs:mb-2 sm:mb-2.5 md:mb-3"
                 >
-                  <Brain className="h-6 w-6 xs:h-7 xs:w-7 sm:h-8 sm:w-8 md:h-10 md:w-10" />
+                  <Brain className="h-8 w-8 xs:h-10 xs:w-10 sm:h-11 sm:w-11 md:h-10 md:w-10" />
                 </motion.div>
                 <h3 className={TYPOGRAPHY.label.default + ' mb-0.5 xs:mb-1 !text-white'}>
                   {current.process}
@@ -195,16 +195,16 @@ export const ArtifactVisualization = () => {
               }}
               className="block md:hidden -my-2 xs:-my-3 sm:-my-4"
             >
-              <MoveDown className="h-5 w-8 xs:h-6 xs:w-10 sm:h-8 sm:w-12 text-brand-blue" strokeWidth={2.5} />
+              <MoveDown className="h-7 w-10 xs:h-8 xs:w-13 sm:h-10 sm:w-16 text-brand-blue" strokeWidth={2.5} />
             </motion.div>
 
             {/* Output Card - Circular */}
             <motion.div
-              className="relative bg-white rounded-full w-32 xs:w-40 sm:w-48 md:w-56 h-32 xs:h-40 sm:h-48 md:h-56 shadow-elevated-combined flex items-center justify-center"
+              className="relative bg-white rounded-full w-40 xs:w-52 sm:w-64 md:w-56 h-40 xs:h-52 sm:h-64 md:h-56 shadow-elevated-combined flex items-center justify-center"
               whileHover={{ scale: 1.05, shadow: "0 20px 40px rgba(0,0,0,0.12)" }}
             >
               <div className="flex flex-col items-center text-center px-3 xs:px-4 sm:px-5 md:px-6">
-                <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
+                <div className="w-12 h-12 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-16 md:h-16 rounded-full bg-brand-blueLight/10 flex items-center justify-center text-brand-blueLight mb-1 xs:mb-2 sm:mb-2.5 md:mb-3">
                   {current.outputIcon}
                 </div>
                 <h3 className={TYPOGRAPHY.label.default + ' mb-0.5 xs:mb-1'}>

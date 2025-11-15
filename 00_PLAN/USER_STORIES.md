@@ -274,7 +274,58 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 
 **Implementation:** `src/components/vendor-discovery/CriterionEditSidebar.tsx`
 **Related Feature:** F-029 (Criteria Accordion - Edit Interface)
-**Status:** 📋 Planned (SP_012)
+**Status:** ✅ Implemented (SP_012)
+
+### US-4.8: Swipe to Adjust Criterion Importance
+**As a** Technology Decision Maker (using mobile device)
+**I want to** swipe left or right on criterion cards to adjust importance
+**So that** I can quickly prioritize criteria without opening edit dialogs
+
+**Acceptance Criteria:**
+- Swipe right increases importance (Low → Medium → High)
+- Swipe left decreases importance (High → Medium → Low)
+- Second left swipe on Low importance archives the criterion
+- Visual feedback: pink glow (increase), orange glow (decrease), grey glow (archive)
+- Text overlays during swipe indicate action ("Increase Importance", "Decrease Importance", "Archive", "Maxed out")
+- Card rotates slightly during swipe (±5 degrees) for tactile feel
+- Cards automatically reorder by importance after swipe
+- Archived criteria move to bottom with "Archived" badge and greyed appearance
+- Works with both touch gestures and mouse drag
+- Fast swipes commit at 25-30% threshold, slow swipes at 40-50%
+- Smooth snap-back animation for incomplete swipes
+- Minimum 20px horizontal distance to avoid scroll conflicts
+
+**Implementation:**
+- `src/hooks/useSwipeGesture.ts` - Reusable swipe gesture hook
+- `src/components/vendor-discovery/CriterionCard.tsx` - Swipe integration
+- `src/components/vendor-discovery/AccordionSection.tsx` - Auto-reordering
+
+**Related Feature:** F-031 (Swipe-to-Adjust Importance Gestures)
+**Status:** ✅ Implemented (SP_014)
+
+### US-4.9: Share Criteria with Team
+**As a** Technology Decision Maker
+**I want to** share my criteria list with team members
+**So that** we can collaborate on vendor selection criteria
+
+**Acceptance Criteria:**
+- "Share with your Team" button visible in criteria builder header
+- Modal dialog opens with two sharing options
+- Download criteria as formatted Excel file (.xlsx)
+- Excel includes columns: Criterion, Explanation, Importance, Type, Status
+- Auto-sized columns for readability
+- Timestamped filename (e.g., criteria-list-2024-11-15.xlsx)
+- Share-by-link generates shareable URL with project ID
+- Copy link to clipboard with visual confirmation
+- Toast notifications for success/error feedback
+- Clean, accessible modal UI using shadcn/ui components
+
+**Implementation:**
+- `src/components/vendor-discovery/ShareDialog.tsx` - Share modal component
+- Enhanced `src/components/vendor-discovery/CriteriaBuilder.tsx` - Share button integration
+
+**Related Feature:** F-032 (Team Collaboration - Share Criteria)
+**Status:** ✅ Implemented (SP_014)
 
 ## Epic 5: Vendor Discovery Workflow - Step 3 (Vendor Selection)
 
@@ -537,6 +588,8 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 | Project Management | US-2.1, US-2.2, US-2.3 | P0 | ✅ Implemented |
 | Requirements Input | US-3.1 | P0 | ✅ Implemented |
 | Criteria Generation | US-4.1, US-4.2, US-4.3 | P0 | ✅ Implemented |
+| Criteria Visualization | US-4.7, US-4.8 | P0 | ✅ Implemented |
+| Team Collaboration | US-4.9 | P0 | ✅ Implemented |
 | Vendor Discovery | US-5.1, US-5.2, US-5.3 | P0 | ✅ Implemented |
 | Vendor Comparison | US-6.1, US-6.2 | P0 | ✅ Implemented |
 | Vendor Invitation | US-7.1, US-7.2 | P0 | ✅ Implemented |
@@ -559,8 +612,8 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 
 ---
 
-*Version: 1.3*
+*Version: 1.4*
 *Last Updated: November 15, 2024*
-*Total User Stories: 33*
-*Implemented: 12 | Planned: 11 | Future: 10*
+*Total User Stories: 35*
+*Implemented: 14 | Planned: 11 | Future: 10*
 *Personas: 2 (Technology Decision Maker, Vendor Representative)*

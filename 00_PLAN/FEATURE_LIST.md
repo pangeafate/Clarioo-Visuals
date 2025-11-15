@@ -9,7 +9,7 @@ This document lists all features of the Clarioo Visual Prototype. All features m
 **Current Mode**: Visual Prototype (Sprint 7 + SP_011 Planning)
 **Purpose**: Team alignment and design validation
 **Backend Integration**: Planned for Q1 2025
-**Latest Sprint**: SP_011 - Registration-Free Access & Smart Navigation (Completed November 13, 2024)
+**Latest Sprint**: SP_014 - Swipe-to-Adjust Importance Gestures & Share Dialog (Completed November 15, 2024)
 
 **📊 Gap Analysis**: See [GAP_ANALYSIS.md](../00_IMPLEMENTATION/GAP_ANALYSIS.md) for detailed mapping of user stories to implementation and identified gaps.
 
@@ -1162,31 +1162,56 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
 ---
 
 ### 5.2 Enhanced Criteria Visualization (F-021)
-**Status:** 📅 Planned (SP_007)
+**Status:** ✅ Partially Implemented (SP_012, SP_014)
 **Priority:** P0
 **Implementation Files:**
-- `src/pages/CriteriaBuilder.tsx`
-- `src/components/CriteriaCard.tsx` - NEW - Enhanced criteria display
+- `src/pages/CriteriaBuilder.tsx` - ✅ Enhanced
+- `src/components/vendor-discovery/CriteriaCard.tsx` - ✅ NEW
+- `src/components/vendor-discovery/AccordionSection.tsx` - ✅ NEW
+- `src/components/vendor-discovery/SignalAntenna.tsx` - ✅ NEW
+- `src/components/vendor-discovery/CriterionEditSidebar.tsx` - ✅ NEW
+
+**Implemented Features (SP_012):**
+- **Visual Hierarchy (F-028 - Criteria Hierarchy Visual Indicators)** ✅
+  - Signal antenna visual indicators showing importance levels (1-3 bars)
+  - Color-coded importance: grey (low), yellow (medium), orange (high)
+  - 60% opacity for subtle appearance
+  - Collapsible secondary criteria (F-029 - Criteria Accordion) ✅
+  - Accordion layout with Feature, Technical, Business, Compliance, Other categories
+
+- **Interactive Editing** ✅
+  - AI-powered edit sidebar slides in from right
+  - Edit criterion name, explanation, importance, type
+  - Chat interface for AI refinement (planned connection)
+  - Save/cancel actions
+
+**Implemented Features (SP_014):**
+- **Swipe-to-Adjust Importance (F-031)** ✅
+  - Swipe right increases importance (Low → Medium → High)
+  - Swipe left decreases importance (High → Medium → Low → Archive)
+  - Visual feedback: pink glow (increase), orange glow (decrease), grey glow (archive)
+  - Text overlays during swipe indicate action
+  - Automatic card reordering by importance
+  - Works with touch and mouse gestures
+  - Hybrid threshold system (40-50% + velocity-based 25-30%)
+
+- **Team Collaboration (F-032)** ✅
+  - Share button → Download Excel or Copy Link
+  - Download criteria as formatted Excel (.xlsx) with auto-sized columns
+  - Share-by-link with copy-to-clipboard
+  - Toast notifications for user feedback
+  - "Share with your Team" button replaces old "Download Criteria List"
 
 **Planned Features:**
-- **Visual Hierarchy (F-028 - Criteria Hierarchy Visual Indicators)**
-  - 3-5 key criteria highlighted with color/accent
-  - Secondary criteria in gray/muted colors
-  - Signal antenna visual indicators showing importance levels
-  - Collapsible secondary criteria (F-029 - Criteria Accordion)
-  - Drag to reorder or promote criteria
-
-- **Interactive Tooltips**
+- **Interactive Tooltips** 📅
   - Hover/click tooltips on each criterion
   - Business context explanations
   - Product feature vs. business outcome toggle
   - Examples and use cases
 
-- **Viral Sharing**
-  - Share button → Link or PDF
+- **PDF Export** 📅
   - Beautifully formatted PDF export
-  - Shareable link with preview
-  - Social media optimization
+  - Branded templates
 
 ### 5.3 Vendor Discovery Animation (F-022)
 **Status:** 📅 Planned (SP_007)

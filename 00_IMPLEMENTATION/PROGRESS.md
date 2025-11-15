@@ -3,14 +3,89 @@
 ## Executive Summary
 
 **Project**: Clarioo Vendor Analyst - Visual Prototype
-**Status**: 📋 Sprint 13 Planned - Component Reusability & Code Deduplication
-**Overall Completion**: 100% of core features + landing page + critical UX fixes + enhanced navigation + mobile-optimized criteria UI
-**Current Sprint**: Sprint 13 (SP_013) - 📋 Planned
-**Last Updated**: November 15, 2024 (SP_013 Planning Complete)
+**Status**: ✅ Sprint 14 Complete - Swipe Gestures & Team Sharing
+**Overall Completion**: 100% of core features + landing page + critical UX fixes + enhanced navigation + mobile-optimized criteria UI + swipe gestures + team collaboration
+**Current Sprint**: Sprint 14 (SP_014) - ✅ Complete
+**Last Updated**: November 15, 2024 (SP_014 Complete)
 
 ---
 
 ## 🔧 Current Sprint Status
+
+### Sprint 14: Swipe-to-Adjust Importance Gestures & Share Dialog (SP_014)
+**Duration**: November 15, 2024 (1 day)
+**Status**: ✅ Complete
+**Sprint Goal**: Implement intuitive mobile-first swipe gestures for adjusting criterion importance and add team collaboration features through a share dialog
+
+#### Sprint Objectives
+1. ✅ Create reusable swipe gesture hook for touch and mouse interactions
+2. ✅ Implement left/right swipe to adjust criterion importance levels
+3. ✅ Add visual feedback with edge glows and context-dependent colors
+4. ✅ Implement importance level progression (Low → Medium → High → Archive)
+5. ✅ Add automatic card reordering animation
+6. ✅ Create ShareDialog component for team collaboration
+7. ✅ Implement download criteria as Excel functionality
+8. ✅ Implement share-by-link with copy-to-clipboard
+9. ✅ Replace "Download Criteria List" with "Share with your Team" button
+10. ✅ Make SignalAntenna more subtle (60% opacity)
+11. ✅ Fix spacing between criterion cards and Add button
+
+#### Key Deliverables
+- **useSwipeGesture Hook** (`src/hooks/useSwipeGesture.ts` - 260 lines):
+  - Touch and mouse drag support
+  - Hybrid threshold (40-50%) + velocity-based detection (25-30% for fast swipes)
+  - Real-time swipe progress tracking (0-1)
+  - CSS transform values for smooth animations
+  - Minimum distance check to avoid scroll conflicts
+
+- **Enhanced CriterionCard** (`src/components/vendor-discovery/CriterionCard.tsx`):
+  - Integrated swipe gesture handlers
+  - Visual feedback: pink glow (right swipe/increase), orange glow (left swipe/decrease), grey glow (archive)
+  - Text overlays during swipe: "Increase Importance", "Decrease Importance", "Archive", "Maxed out"
+  - Card rotation during swipe (±5 degrees)
+  - Smooth snap-back animation for incomplete swipes
+  - Importance level state management
+
+- **Enhanced AccordionSection** (`src/components/vendor-discovery/AccordionSection.tsx`):
+  - Automatic card sorting by importance (High → Medium → Low → Archived)
+  - Framer Motion layout animations for smooth reordering
+  - Archived criteria moved to bottom of stack
+  - Smooth position transitions using AnimatePresence
+
+- **ShareDialog Component** (`src/components/vendor-discovery/ShareDialog.tsx` - 202 lines):
+  - Modal UI with two sharing options
+  - Download criteria as Excel (.xlsx) with auto-sized columns
+  - Share-by-link functionality with copy-to-clipboard
+  - Toast notifications for user feedback
+  - Clean, accessible design using shadcn/ui components
+
+- **Enhanced CriteriaBuilder** (`src/components/vendor-discovery/CriteriaBuilder.tsx`):
+  - Replaced "Download Criteria List" button with "Share with your Team" button
+  - Integrated ShareDialog modal
+  - Share button positioned prominently in header
+
+- **Visual Refinements**:
+  - SignalAntenna opacity reduced to 60% for more subtle appearance
+  - Fixed spacing issue between criterion cards and Add button (12px gap)
+  - Context-dependent glow colors match action intent
+
+#### Expected Outcomes
+- ✅ Mobile-first UX with natural touch gestures for 80-90% mobile traffic
+- ✅ Faster workflow: adjust importance without opening edit sidebar
+- ✅ Visual clarity through color glows and smooth animations
+- ✅ Delightful Tinder-style interaction pattern
+- ✅ Team collaboration through easy sharing (download + link)
+- ✅ Professional Excel export with proper formatting
+- ✅ Seamless integration with existing accordion UI
+
+#### Brief Description
+Sprint 14 successfully implemented a mobile-first swipe gesture system for intuitive criterion importance adjustment. Users can now swipe right to increase importance (Low → Medium → High) with pink edge glows, or swipe left to decrease importance (High → Medium → Low) with orange edge glows. A second left swipe on Low importance archives the criterion with grey styling and an "Archived" badge. Cards automatically reorder by importance level with smooth Framer Motion animations. Added comprehensive team collaboration through ShareDialog component with two sharing options: download criteria as Excel file (with auto-sized columns and proper formatting) or copy shareable link to clipboard. The share functionality replaced the previous standalone "Download Criteria List" button with a more comprehensive "Share with your Team" button. Visual refinements include making the SignalAntenna icon more subtle at 60% opacity and fixing the spacing issue between criterion cards and the Add button for better visual balance.
+
+**Sprint Plan**: [SP_014_Criteria_Swipe_Importance.md](./SPRINTS/SP_014_Criteria_Swipe_Importance.md)
+
+---
+
+## 📋 Planned Sprints
 
 ### Sprint 13: Component Reusability & Code Deduplication (SP_013)
 **Duration**: 5-7 days (Planned)

@@ -2,12 +2,11 @@
  * 🎯 CRITERIA CHAT HOOK
  *
  * Purpose: Manages AI chat interaction for criteria refinement.
- * Extracts chat business logic from CriteriaBuilder component.
+ * Built on top of useChat base hook with specialized features.
  *
  * Features:
- * - Chat message state management
- * - Project-specific chat persistence in localStorage
  * - Chat synthesis generation for project switching
+ * - Project-specific chat persistence in localStorage
  * - AI service integration for conversational refinement
  * - Context preparation (category, current criteria)
  * - Error handling with user feedback
@@ -16,19 +15,16 @@
  * @module hooks/useCriteriaChat
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useChat } from './useChat';
+import type { Message } from '@/components/shared/chat';
 import * as aiService from '@/services/mock/aiService';
 import { useToast } from '@/hooks/use-toast';
 
 /**
- * Chat message structure
+ * Chat message structure (exported for compatibility)
  */
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
+export interface ChatMessage extends Message {}
 
 /**
  * Criteria structure for context
@@ -59,8 +55,8 @@ export interface UseCriteriaChatReturn {
   addMessage: (message: ChatMessage) => void;
   sendMessage: (message: string, context: ChatContext) => Promise<void>;
   initializeChat: (initialMessage: ChatMessage) => void;
-  fullChatMessages: ChatMessage[]; // Full chat history (not synthesis)
-  hasChatHistory: boolean; // Whether project has existing chat
+  fullChatMessages: ChatMessage[];
+  hasChatHistory: boolean;
 }
 
 /**
@@ -102,7 +98,7 @@ const generateSynthesis = (messages: ChatMessage[]): string => {
  * Custom hook for AI-powered criteria chat
  *
  * Purpose: Manages conversational AI interaction for criteria refinement.
- * Handles message state, AI service calls, error handling, and persistence.
+ * Built on top of useChat with specialized synthesis and AI integration.
  *
  * @param projectId - Unique project identifier for chat isolation
  * @returns Object with chat state and functions
@@ -146,131 +142,117 @@ const generateSynthesis = (messages: ChatMessage[]): string => {
  * - Loading state can be used to disable input during AI response
  */
 export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [fullChatMessages, setFullChatMessages] = useState<ChatMessage[]>([]);
-  const [hasChatHistory, setHasChatHistory] = useState(false);
-  const [userMessage, setUserMessage] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const { toast } = useToast();
-
   const storageKey = `chat_${projectId}`;
 
+  // Base chat hook for state management
+  const {
+    messages,
+    inputValue: userMessage,
+    setInputValue: setUserMessage,
+    isTyping: isGenerating,
+    setIsTyping: setIsGenerating,
+    addMessage: baseAddMessage,
+  } = useChat({ storageKey });
+
+  const [displayMessages, setDisplayMessages] = useState<ChatMessage[]>([]);
+  const [fullChatMessages, setFullChatMessages] = useState<ChatMessage[]>([]);
+  const [hasChatHistory, setHasChatHistory] = useState(false);
+  const { toast } = useToast();
+
   /**
-   * Load chat history from localStorage on project change
+   * Load chat history and generate synthesis on project change
    */
   useEffect(() => {
-    const loadChat = () => {
-      try {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          const messages: ChatMessage[] = JSON.parse(saved);
-          // Convert timestamp strings back to Date objects
-          const parsed = messages.map(msg => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp)
-          }));
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed: ChatMessage[] = JSON.parse(saved);
+        // Convert timestamp strings back to Date objects
+        const messagesWithDates = parsed.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp || Date.now())
+        }));
 
-          setFullChatMessages(parsed);
-          setHasChatHistory(parsed.length > 0);
+        setFullChatMessages(messagesWithDates);
+        setHasChatHistory(messagesWithDates.length > 0);
 
-          // Display synthesis instead of full history
-          if (parsed.length > 0) {
-            const synthesis = generateSynthesis(parsed);
-            setChatMessages([{
-              id: 'synthesis',
-              role: 'assistant',
-              content: synthesis,
-              timestamp: new Date()
-            }]);
-          }
-
-          console.log('✅ Chat loaded from localStorage', {
-            projectId,
-            messageCount: parsed.length,
-            showingSynthesis: true
-          });
+        // Display synthesis instead of full history
+        if (messagesWithDates.length > 0) {
+          const synthesis = generateSynthesis(messagesWithDates);
+          setDisplayMessages([{
+            id: 'synthesis',
+            role: 'assistant',
+            content: synthesis,
+            timestamp: new Date()
+          }]);
         } else {
-          setFullChatMessages([]);
-          setChatMessages([]);
-          setHasChatHistory(false);
+          setDisplayMessages([]);
         }
-      } catch (error) {
-        console.error('Failed to load chat:', error);
+
+        console.log('✅ Chat loaded from localStorage', {
+          projectId,
+          messageCount: messagesWithDates.length,
+          showingSynthesis: true
+        });
+      } else {
         setFullChatMessages([]);
-        setChatMessages([]);
+        setDisplayMessages([]);
         setHasChatHistory(false);
       }
-    };
-
-    loadChat();
+    } catch (error) {
+      console.error('Failed to load chat:', error);
+      setFullChatMessages([]);
+      setDisplayMessages([]);
+      setHasChatHistory(false);
+    }
   }, [projectId, storageKey]);
 
   /**
-   * Save chat to localStorage when messages change
-   * Only save if we have real messages (not synthesis)
+   * Sync messages with base hook when they change (not synthesis)
    */
   useEffect(() => {
-    if (chatMessages.length > 0 && chatMessages[0].id !== 'synthesis') {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(chatMessages));
-        setFullChatMessages(chatMessages);
-        setHasChatHistory(true);
-        console.log('💾 Chat saved to localStorage', {
-          projectId,
-          messageCount: chatMessages.length
-        });
-      } catch (error) {
-        console.error('Failed to save chat:', error);
-      }
+    if (messages.length > 0 && messages[0].id !== 'synthesis') {
+      setDisplayMessages(messages);
+      setFullChatMessages(messages);
+      setHasChatHistory(true);
+      console.log('💾 Chat saved to localStorage', {
+        projectId,
+        messageCount: messages.length
+      });
     }
-  }, [chatMessages, projectId, storageKey]);
+  }, [messages, projectId]);
 
   /**
    * Initialize chat with a message
-   * Typically used for initial AI greeting
+   * Replaces synthesis with actual conversation
    *
    * @param initialMessage - Initial chat message
    */
-  const initializeChat = (initialMessage: ChatMessage) => {
-    setChatMessages([initialMessage]);
-  };
+  const initializeChat = useCallback((initialMessage: ChatMessage) => {
+    setDisplayMessages([initialMessage]);
+    baseAddMessage(initialMessage);
+  }, [baseAddMessage]);
 
   /**
    * Add a message to chat history
-   * Used to programmatically add messages from criteria generation
    *
    * @param message - Message to add
    */
-  const addMessage = (message: ChatMessage) => {
-    setChatMessages(prev => [...prev, message]);
-  };
+  const addMessage = useCallback((message: ChatMessage) => {
+    setDisplayMessages(prev => [...prev, message]);
+    baseAddMessage(message);
+  }, [baseAddMessage]);
 
   /**
    * Send user message and get AI response
    *
-   * Purpose: Handles complete chat interaction cycle.
-   * Adds user message, calls AI service with context, adds response.
-   *
    * @param message - User's message text
    * @param context - Chat context with category and current criteria
-   *
-   * @example
-   * ```typescript
-   * await sendMessage('Can you add more security criteria?', {
-   *   category: 'CRM Software',
-   *   criteria: currentCriteria
-   * });
-   * ```
-   *
-   * @remarks
-   * - Keeps only last 5 messages in context
-   * - Shows error toast on failure
-   * - Clears input after successful send
    */
-  const sendMessage = async (message: string, context: ChatContext): Promise<void> => {
+  const sendMessage = useCallback(async (message: string, context: ChatContext): Promise<void> => {
     if (!message.trim()) return;
 
-    // Add user message to chat
+    // Add user message
     const userMsg: ChatMessage = {
       id: Date.now().toString(),
       role: 'user',
@@ -278,14 +260,15 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
       timestamp: new Date()
     };
 
-    setChatMessages(prev => [...prev, userMsg]);
+    setDisplayMessages(prev => [...prev, userMsg]);
+    baseAddMessage(userMsg);
     setUserMessage('');
     setIsGenerating(true);
 
     try {
       // Prepare messages for AI service (last 5 messages + current)
-      const messages: aiService.ChatMessage[] = [
-        ...chatMessages.slice(-5).map(msg => ({
+      const aiMessages: aiService.ChatMessage[] = [
+        ...displayMessages.slice(-5).map(msg => ({
           role: msg.role as 'user' | 'assistant' | 'system',
           content: msg.content
         })),
@@ -301,7 +284,7 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
       }));
 
       // Call AI chat service with context
-      const { data: responseContent, error } = await aiService.chat(messages, {
+      const { data: responseContent, error } = await aiService.chat(aiMessages, {
         category: context.category,
         criteria: mappedCriteria
       });
@@ -310,7 +293,7 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
         throw new Error(error?.message || 'Failed to get chat response');
       }
 
-      // Add AI response to chat
+      // Add AI response
       const aiResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -318,7 +301,8 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
         timestamp: new Date()
       };
 
-      setChatMessages(prev => [...prev, aiResponse]);
+      setDisplayMessages(prev => [...prev, aiResponse]);
+      baseAddMessage(aiResponse);
     } catch (error) {
       toast({
         title: 'AI Response Failed',
@@ -329,10 +313,10 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [displayMessages, baseAddMessage, setUserMessage, setIsGenerating, toast]);
 
   return {
-    chatMessages,
+    chatMessages: displayMessages,
     isGenerating,
     userMessage,
     setUserMessage,

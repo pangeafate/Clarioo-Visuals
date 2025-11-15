@@ -190,113 +190,88 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
 
   return (
     <div className="space-y-6">
-      {/* AI Discovery Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              Vendor Discovery
-            </span>
-            <Button onClick={handleDiscoverVendors} variant="default" size="sm" className="gap-2" disabled={isLoading}>
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-              Rediscover
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center p-4 border rounded-lg">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className={`${TYPOGRAPHY.label.small} text-primary`}>🎨 Prototype Mode</span>
+      {/* Rediscover Button */}
+      <div className="flex justify-end">
+        <Button onClick={handleDiscoverVendors} variant="default" size="sm" className="gap-2" disabled={isLoading}>
+          <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          Rediscover
+        </Button>
+      </div>
+
+      {/* Add Vendor Dialog */}
+      <Dialog open={showAddVendor} onOpenChange={setShowAddVendor}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Custom Vendor</DialogTitle>
+            <DialogDescription>
+              Add a vendor to include in the comparison
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="vendor-name">Vendor Name *</Label>
+              <Input
+                id="vendor-name"
+                value={newVendor.name}
+                onChange={(e) => setNewVendor(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Enter vendor name"
+              />
             </div>
-            <p className={TYPOGRAPHY.muted.xs}>Using curated vendor data for {techRequest.category}</p>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-description">Description</Label>
+              <Input
+                id="vendor-description"
+                value={newVendor.description}
+                onChange={(e) => setNewVendor(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Brief description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-website">Website *</Label>
+              <Input
+                id="vendor-website"
+                value={newVendor.website}
+                onChange={(e) => setNewVendor(prev => ({ ...prev, website: e.target.value }))}
+                placeholder="company.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-pricing">Pricing</Label>
+              <Input
+                id="vendor-pricing"
+                value={newVendor.pricing}
+                onChange={(e) => setNewVendor(prev => ({ ...prev, pricing: e.target.value }))}
+                placeholder="$50/month or Contact for pricing"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="vendor-rating">Rating (1-5)</Label>
+              <Input
+                id="vendor-rating"
+                type="number"
+                min="1"
+                max="5"
+                step="0.1"
+                value={newVendor.rating}
+                onChange={(e) => setNewVendor(prev => ({ ...prev, rating: parseFloat(e.target.value) || 4.0 }))}
+              />
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddVendor(false)}>
+              Cancel
+            </Button>
+            <Button onClick={addCustomVendor}>
+              Add Vendor
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Vendor Selection */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Select Vendors for Comparison</span>
-            <div className="flex gap-2">
-              <Dialog open={showAddVendor} onOpenChange={setShowAddVendor}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Vendor
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Add Custom Vendor</DialogTitle>
-                    <DialogDescription>
-                      Add a vendor to include in the comparison
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="vendor-name">Vendor Name *</Label>
-                      <Input
-                        id="vendor-name"
-                        value={newVendor.name}
-                        onChange={(e) => setNewVendor(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Enter vendor name"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="vendor-description">Description</Label>
-                      <Input
-                        id="vendor-description"
-                        value={newVendor.description}
-                        onChange={(e) => setNewVendor(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Brief description"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="vendor-website">Website *</Label>
-                      <Input
-                        id="vendor-website"
-                        value={newVendor.website}
-                        onChange={(e) => setNewVendor(prev => ({ ...prev, website: e.target.value }))}
-                        placeholder="company.com"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="vendor-pricing">Pricing</Label>
-                      <Input
-                        id="vendor-pricing"
-                        value={newVendor.pricing}
-                        onChange={(e) => setNewVendor(prev => ({ ...prev, pricing: e.target.value }))}
-                        placeholder="$50/month or Contact for pricing"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="vendor-rating">Rating (1-5)</Label>
-                      <Input
-                        id="vendor-rating"
-                        type="number"
-                        min="1"
-                        max="5"
-                        step="0.1"
-                        value={newVendor.rating}
-                        onChange={(e) => setNewVendor(prev => ({ ...prev, rating: parseFloat(e.target.value) || 4.0 }))}
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowAddVendor(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={addCustomVendor}>
-                      Add Vendor
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </CardTitle>
+          <CardTitle>Select Vendors for Comparison</CardTitle>
           <CardDescription>
             Found {vendors.length} vendors. Select the ones you want to compare in detail.
           </CardDescription>
@@ -324,7 +299,7 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
                       </Button>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h3 className={TYPOGRAPHY.card.metadata}>{vendor.name}</h3>
@@ -355,6 +330,17 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
                 </CardContent>
               </Card>
             ))}
+
+            {/* Add Vendor Placeholder - Matches vendor card dimensions */}
+            <button
+              onClick={() => setShowAddVendor(true)}
+              className="border border-dashed border-gray-300 rounded-lg bg-white hover:border-primary hover:bg-primary/5 transition-all p-4 flex items-center justify-center min-h-[140px]"
+            >
+              <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-primary group">
+                <Plus className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                <span className={TYPOGRAPHY.button.default}>Add Vendor</span>
+              </div>
+            </button>
           </div>
 
           {vendors.length === 0 && (

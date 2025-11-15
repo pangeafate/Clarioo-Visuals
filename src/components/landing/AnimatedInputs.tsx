@@ -94,7 +94,7 @@ export const AnimatedInputs = ({
       <div className={`grid grid-cols-1 md:grid-cols-2 ${SPACING.landing.inputs.grid}`}>
         {/* Left Input: Company Information */}
         <div className="relative">
-          <Label htmlFor="company-input" className={`${TYPOGRAPHY.label.large} text-gray-800 mb-3 block`}>
+          <Label htmlFor="company-input" className={`${TYPOGRAPHY.label.large} bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-3 block`}>
             Tell me more about your company
           </Label>
 
@@ -111,7 +111,7 @@ export const AnimatedInputs = ({
 
         {/* Right Input: Solution Requirements */}
         <div className="relative">
-          <Label htmlFor="solution-input" className={`${TYPOGRAPHY.label.large} text-gray-800 mb-3 block`}>
+          <Label htmlFor="solution-input" className={`${TYPOGRAPHY.label.large} bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-3 block`}>
             Tell me what solution you're looking for
           </Label>
 
@@ -127,9 +127,9 @@ export const AnimatedInputs = ({
         </div>
       </div>
 
-      {/* New Project Button - Space reserved with larger margin when hidden */}
+      {/* New Project Button */}
       {onCreateProject && (
-        <div className={`flex justify-center ${hasAnyInput ? 'mt-6' : 'mt-9'}`}>
+        <div className="flex justify-center mt-6">
           <AnimatePresence mode="wait">
             {hasAnyInput && (
               <motion.div
@@ -163,7 +163,7 @@ export const AnimatedInputs = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-8 space-y-4"
+          className="mt-6 space-y-4"
         >
           {/* Category Selector - Centered */}
           <div className="flex justify-center">
