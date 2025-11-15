@@ -6,19 +6,20 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 
 ## User Personas
 
-1. **Alex** - Technology Decision Maker (Primary Persona)
+1. **Technology Decision Maker** (Primary Persona)
    - Responsible for evaluating and selecting vendors across all organizational needs
    - Manages the complete vendor discovery journey from requirements to final selection
    - Handles project creation, criteria building, vendor comparison, and stakeholder collaboration
 
-2. **Vendor Representative** - Software/Service provider responding to RFPs
+2. **Vendor Representative**
+   - Software/Service provider responding to RFPs
    - Receives and responds to evaluation invitations
    - Manages company profile and vendor information
 
 ## Epic 1: User Authentication & Profile Management
 
 ### US-1.1: User Registration
-**As** Alex
+**As a** Technology Decision Maker
 **I want to** create an account with my company email
 **So that** I can access the vendor discovery platform securely
 **Acceptance Criteria:**
@@ -32,7 +33,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-1.2: User Login
-**As** Alex
+**As a** Technology Decision Maker
 **I want to** securely log in to my account
 **So that** I can access my saved projects and vendor evaluations
 **Acceptance Criteria:**
@@ -46,7 +47,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-1.3: Profile Management
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** update my profile and company information
 **So that** vendor recommendations are tailored to my organization
 **Acceptance Criteria:**
@@ -61,7 +62,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 2: Project Management
 
 ### US-2.1: Create New Project
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** create a new vendor discovery project
 **So that** I can start evaluating vendors for a specific need
 **Acceptance Criteria:**
@@ -74,7 +75,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-2.2: View Project Dashboard
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** see all my vendor discovery projects in one place
 **So that** I can manage multiple evaluations simultaneously
 **Acceptance Criteria:**
@@ -89,7 +90,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-2.3: Resume Project Workflow
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** resume a project from where I left off
 **So that** I don't lose progress on complex evaluations
 **Acceptance Criteria:**
@@ -105,7 +106,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 3: Vendor Discovery Workflow - Step 1 (Requirements)
 
 ### US-3.1: Input Technology Requirements
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** specify my technology needs and constraints
 **So that** the AI can understand what I'm looking for
 **Acceptance Criteria:**
@@ -119,7 +120,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-3.2: Save Requirements as Template
-**As** Michael, a Procurement Specialist
+**As a** Technology Decision Maker
 **I want to** save requirement templates
 **So that** I can reuse them for similar vendor searches
 **Acceptance Criteria:**
@@ -131,7 +132,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 🔄 Planned
 
 ### US-3.3: Quick Project Creation from Category
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** quickly create a project by selecting a software category
 **So that** I can start vendor discovery without filling detailed forms
 **Acceptance Criteria:**
@@ -146,7 +147,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented (SP_011)
 
 ### US-3.4: Quick Project Creation from Examples
-**As** Jessica, a Startup Founder
+**As a** Technology Decision Maker
 **I want to** create projects from example use cases
 **So that** I can get started without knowing exact requirements
 **Acceptance Criteria:**
@@ -160,7 +161,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented (SP_011)
 
 ### US-3.5: Registration-Free Project Creation
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** create and explore projects without registering first
 **So that** I can evaluate the platform before committing
 **Acceptance Criteria:**
@@ -177,7 +178,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 4: Vendor Discovery Workflow - Step 2 (Criteria)
 
 ### US-4.1: Generate Evaluation Criteria
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** have AI generate comprehensive evaluation criteria
 **So that** I don't miss important factors in vendor selection
 **Acceptance Criteria:**
@@ -191,7 +192,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-4.2: Refine Criteria via Chat
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** refine evaluation criteria through natural language
 **So that** the criteria perfectly match my specific needs
 **Acceptance Criteria:**
@@ -205,7 +206,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-4.3: Import Criteria from Excel
-**As** Michael
+**As a** Technology Decision Maker
 **I want to** import evaluation criteria from our standard Excel templates
 **So that** I can use our company's established evaluation framework
 **Acceptance Criteria:**
@@ -219,7 +220,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-4.4: Assign Criteria Weights
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** assign importance weights to each criterion
 **So that** vendor scoring reflects my priorities
 **Acceptance Criteria:**
@@ -231,7 +232,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 🔄 Planned
 
 ### US-4.5: View Criteria in Accordion Layout
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** view criteria organized by category in an accordion layout
 **So that** I can focus on one category at a time and navigate easily on mobile
 **Acceptance Criteria:**
@@ -246,7 +247,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 📋 Planned (SP_012)
 
 ### US-4.6: Visual Importance Indicators
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** see criterion importance visually represented
 **So that** I can quickly identify high-priority criteria
 **Acceptance Criteria:**
@@ -261,7 +262,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 📋 Planned (SP_012)
 
 ### US-4.7: Edit Criteria with AI Sidebar
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** edit criteria using an AI-powered sidebar
 **So that** I can refine criteria with conversational assistance
 **Acceptance Criteria:**
@@ -278,7 +279,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 5: Vendor Discovery Workflow - Step 3 (Vendor Selection)
 
 ### US-5.1: Discover Relevant Vendors
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** have AI discover vendors that match my requirements
 **So that** I don't miss potential options in the market
 **Acceptance Criteria:**
@@ -292,7 +293,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-5.2: Add Custom Vendors
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** add vendors I already know about
 **So that** they're included in the evaluation
 **Acceptance Criteria:**
@@ -306,7 +307,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-5.3: Remove/Exclude Vendors
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** remove vendors from consideration
 **So that** I only evaluate relevant options
 **Acceptance Criteria:**
@@ -322,7 +323,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 6: Vendor Discovery Workflow - Step 4 (Comparison)
 
 ### US-6.1: View Detailed Vendor Comparison
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** see a detailed comparison of all selected vendors
 **So that** I can make an informed decision
 **Acceptance Criteria:**
@@ -337,7 +338,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-6.2: Export Comparison to Excel
-**As** Michael
+**As a** Technology Decision Maker
 **I want to** export the vendor comparison to Excel
 **So that** I can share it with stakeholders and create reports
 **Acceptance Criteria:**
@@ -351,7 +352,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-6.3: Generate Executive Summary
-**As** David, Operations Director
+**As a** Technology Decision Maker
 **I want to** get an AI-generated executive summary
 **So that** I can quickly understand the recommendation
 **Acceptance Criteria:**
@@ -363,7 +364,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 🔄 Planned
 
 ### US-6.4: Mobile-Optimized Experience
-**As** Sarah (using mobile device)
+**As a** Technology Decision Maker (using mobile device)
 **I want to** access all features on my smartphone or tablet
 **So that** I can work on vendor discovery while on the go
 **Acceptance Criteria:**
@@ -379,7 +380,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented (SP_011)
 
 ### US-6.5: Collaborate on Evaluation
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** share the comparison with my team for input
 **So that** we can make a collective decision
 **Acceptance Criteria:**
@@ -393,7 +394,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 7: Vendor Discovery Workflow - Step 5 (Invitation)
 
 ### US-7.1: Select Vendors for Outreach
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** select which vendors to invite for demos/proposals
 **So that** I can engage with the most promising options
 **Acceptance Criteria:**
@@ -406,7 +407,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-7.2: Generate Invitation Emails
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** have professional invitation emails generated
 **So that** I can quickly reach out to vendors
 **Acceptance Criteria:**
@@ -419,7 +420,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** ✅ Implemented
 
 ### US-7.3: Track Vendor Responses
-**As** Sarah
+**As a** Technology Decision Maker
 **I want to** track which vendors have responded
 **So that** I can manage the evaluation process
 **Acceptance Criteria:**
@@ -459,7 +460,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 9: Analytics and Reporting
 
 ### US-9.1: View Project Analytics
-**As** David
+**As a** Technology Decision Maker
 **I want to** see analytics on our vendor selection process
 **So that** I can improve our procurement efficiency
 **Acceptance Criteria:**
@@ -471,7 +472,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 🔄 Planned
 
 ### US-9.2: Generate Compliance Reports
-**As** Michael
+**As a** Technology Decision Maker
 **I want to** generate audit-ready selection reports
 **So that** we maintain compliance with procurement policies
 **Acceptance Criteria:**
@@ -485,7 +486,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 ## Epic 10: Integration and Automation
 
 ### US-10.1: Integrate with Procurement Systems
-**As** Michael
+**As a** Technology Decision Maker
 **I want to** integrate Clarioo with our ERP system
 **So that** vendor selections flow into our procurement workflow
 **Acceptance Criteria:**
@@ -497,7 +498,7 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Status:** 🔵 Future
 
 ### US-10.2: Automate Vendor Monitoring
-**As** David
+**As a** Technology Decision Maker
 **I want to** receive alerts about vendor changes
 **So that** I stay informed about our vendor ecosystem
 **Acceptance Criteria:**
@@ -558,7 +559,8 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 
 ---
 
-*Version: 1.2*
+*Version: 1.3*
 *Last Updated: November 15, 2024*
 *Total User Stories: 33*
 *Implemented: 12 | Planned: 11 | Future: 10*
+*Personas: 2 (Technology Decision Maker, Vendor Representative)*

@@ -50,6 +50,7 @@ import { RegistrationToggle } from './RegistrationToggle';
 import { AnimatedInputs } from './AnimatedInputs';
 import { ArtifactVisualization } from './ArtifactVisualization';
 import { CardCarousel } from './CardCarousel';
+import { ProjectCreationAnimation } from './ProjectCreationAnimation';
 import ProjectDashboard from '../ProjectDashboard';
 import VendorDiscovery, { Project } from '../VendorDiscovery';
 import * as projectService from '@/services/mock/projectService';
@@ -74,6 +75,8 @@ export const LandingPage = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [isCreatingProject, setIsCreatingProject] = useState(false);
+  const [showCreationAnimation, setShowCreationAnimation] = useState(false);
+  const [pendingProject, setPendingProject] = useState<Project | null>(null);
 
   // SP_011: View toggle handler
   const handleViewToggle = () => {
@@ -122,11 +125,45 @@ export const LandingPage = () => {
   };
 
   /**
+   * Handle animation complete - navigate to newly created project
+   */
+  const handleAnimationComplete = () => {
+    setShowCreationAnimation(false);
+
+    if (pendingProject) {
+      // Select the new project, switch to project view, and scroll to workflow
+      setSelectedProject(pendingProject);
+      setCurrentView('project');
+      setProjectsLoaded(false); // Reset to allow re-loading
+      setPendingProject(null);
+
+      // Scroll to workflow section
+      setTimeout(() => {
+        const workflowElement = document.getElementById('workflow-section');
+        if (workflowElement) {
+          workflowElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  };
+
+  /**
    * SP_011: Create new project from category/example selection
    * Used by CategoryDropdown and ExamplesBulletPopover
    */
   const handleCreateCategoryProject = async (title: string, description: string) => {
     setIsCreatingProject(true);
+
+    // Immediately scroll to projects section and show animation
+    setCurrentView('project');
+    setTimeout(() => {
+      const projectsSection = document.getElementById('projects-section');
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      // Show animation after scroll starts
+      setShowCreationAnimation(true);
+    }, 100);
 
     try {
       const { data, error } = await projectService.createProject({
@@ -154,24 +191,15 @@ export const LandingPage = () => {
         updated_at: data.updated_at
       };
 
-      // SP_011: Select the new project, switch to project view, and scroll to workflow
-      setSelectedProject(newProject);
-      setCurrentView('project'); // Switch to project view
-      setProjectsLoaded(false); // Reset to allow re-loading
-
-      // Scroll to workflow section
-      setTimeout(() => {
-        const workflowElement = document.getElementById('workflow-section');
-        if (workflowElement) {
-          workflowElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+      // Store pending project for animation completion handler
+      setPendingProject(newProject);
 
       toast({
         title: "Project created",
         description: "Your project has been created successfully.",
       });
     } catch (error) {
+      setShowCreationAnimation(false);
       toast({
         title: "Error creating project",
         description: "Could not create the project. Please try again.",
@@ -197,6 +225,17 @@ export const LandingPage = () => {
     }
 
     setIsCreatingProject(true);
+
+    // Immediately scroll to projects section and show animation
+    setCurrentView('project');
+    setTimeout(() => {
+      const projectsSection = document.getElementById('projects-section');
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      // Show animation after scroll starts
+      setShowCreationAnimation(true);
+    }, 100);
 
     try {
       const { data, error } = await projectService.createProject({
@@ -224,24 +263,15 @@ export const LandingPage = () => {
         updated_at: data.updated_at
       };
 
-      // SP_011: Select the new project, switch to project view, and scroll to workflow
-      setSelectedProject(newProject);
-      setCurrentView('project'); // Switch to project view
-      setProjectsLoaded(false); // Reset to allow re-loading
-
-      // Scroll to workflow section
-      setTimeout(() => {
-        const workflowElement = document.getElementById('workflow-section');
-        if (workflowElement) {
-          workflowElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+      // Store pending project for animation completion handler
+      setPendingProject(newProject);
 
       toast({
         title: "Project created",
         description: "Your project has been created successfully.",
       });
     } catch (error) {
+      setShowCreationAnimation(false);
       toast({
         title: "Error creating project",
         description: "Could not create the project. Please try again.",
@@ -359,6 +389,12 @@ export const LandingPage = () => {
 
       {/* Footer Spacer */}
       <div className="h-16" />
+
+      {/* Project Creation Animation */}
+      <ProjectCreationAnimation
+        isOpen={showCreationAnimation}
+        onComplete={handleAnimationComplete}
+      />
     </motion.div>
   );
 };
