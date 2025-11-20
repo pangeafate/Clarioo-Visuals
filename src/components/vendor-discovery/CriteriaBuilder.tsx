@@ -18,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Share2 } from "lucide-react";
 import { AccordionSection } from "./AccordionSection";
 import { CriterionEditSidebar } from "./CriterionEditSidebar";
+import mockAIdata from '@/data/mockAIdata.json';
 import { ShareDialog } from "./ShareDialog";
 import * as XLSX from 'xlsx';
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +26,6 @@ import type { TechRequest, Criteria } from "../VendorDiscovery";
 import { useCriteriaGeneration } from "@/hooks/useCriteriaGeneration";
 import { useCriteriaChat } from "@/hooks/useCriteriaChat";
 import { storageService } from "@/services/storageService";
-import aiSummariesData from "@/data/api/aiSummaries.json";
 import { SPACING } from '@/styles/spacing-config';
 import { TYPOGRAPHY } from '@/styles/typography-config';
 
@@ -183,13 +183,13 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
    */
   const generateDetailedSummary = (category: string): string => {
     // Try to get summary from JSON data
-    const summary = aiSummariesData.summaries[category as keyof typeof aiSummariesData.summaries];
+    const summary = mockAIdata.aiSummaries.summaries[category as keyof typeof mockAIdata.aiSummaries.summaries];
 
     if (summary) {
       return summary;
     }
 
-    return aiSummariesData.default;
+    return mockAIdata.aiSummaries.default;
   };
 
   // Initialize with AI summary message from Technology Exploration step
@@ -329,14 +329,20 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
       return;
     }
 
+    // 🎨 PROTOTYPE MODE: Assign ID from mockAIdata to match vendor score keys
+    // Find the first unused ID from mockAIdata.criteria
+    const usedIds = new Set(criteria.map(c => c.id));
+    const availableId = mockAIdata.criteria.find(c => !usedIds.has(c.id))?.id
+      || `custom-${Date.now()}`; // Fallback to timestamp if all mockAIdata IDs are used
+
     const criterion: Criteria = {
-      id: Date.now().toString(),
+      id: availableId,
       ...newCriterion
     };
 
     setCriteria(prev => [...prev, criterion]);
     setNewCriterion({ name: '', explanation: '', importance: 'medium', type: 'feature' });
-    
+
     toast({
       title: "Criterion added",
       description: `"${criterion.name}" has been added to your evaluation criteria.`
@@ -377,17 +383,26 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
 
         // Parse criteria from Excel
         const uploadedCriteria: Criteria[] = [];
+        // Track used IDs to avoid duplicates
+        const usedIds = new Set(criteria.map(c => c.id));
+
         jsonData.forEach((row: any, index: number) => {
           const name = row['Criterion'] || row['Name'] || row['criterion'] || row['name'];
           const importance = (row['Importance'] || row['importance'] || 'medium').toLowerCase();
           const type = (row['Type'] || row['type'] || 'feature').toLowerCase();
 
           if (name) {
+            // 🎨 PROTOTYPE MODE: Assign ID from mockAIdata to match vendor score keys
+            const availableId = mockAIdata.criteria.find(c => !usedIds.has(c.id))?.id
+              || `uploaded-${index}`; // Fallback if all mockAIdata IDs are used
+            usedIds.add(availableId);
+
             uploadedCriteria.push({
-              id: `uploaded-${index}`,
+              id: availableId,
               name: String(name),
               importance: ['low', 'medium', 'high'].includes(importance) ? importance as 'low' | 'medium' | 'high' : 'medium',
-              type: ['feature', 'technical', 'business', 'compliance'].includes(type) ? type as 'feature' | 'technical' | 'business' | 'compliance' : 'feature'
+              type: ['feature', 'technical', 'business', 'compliance'].includes(type) ? type as 'feature' | 'technical' | 'business' | 'compliance' : 'feature',
+              explanation: row['Explanation'] || row['explanation'] || '' // Also capture explanation if provided
             });
           }
         });

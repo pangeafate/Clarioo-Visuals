@@ -88,12 +88,6 @@ The first impression matters. Our landing page embodies our design philosophy by
 - Clear path to activation without friction
 - No email validation walls or multi-step registration
 
-**3. iPod-Style Navigation Wheel**
-Three exploration paths via circular selector (inspired by classic iPod design):
-- **"Try Now"** → Immediate registration and tool access
-- **"How it Works"** → Interactive explanation of 5-step AI process
-- **"Community Templates"** → Real-world examples from other users
-
 **4. Preview Before Registration**
 Two side-by-side input fields (stacked on mobile) in **inactive state**:
 - **Left:** "Tell me more about your company"

@@ -24,8 +24,11 @@
  * @module services/mock/projectService
  */
 
-import projectsData from '@/data/api/projects.json';
+import mockAIdata from '@/data/mockAIdata.json';
 import { simulateDelay, generateId, getCurrentTimestamp } from '@/utils/mockHelpers';
+
+// Extract projects data from mockAIdata
+const projectsData = mockAIdata.projects;
 import { filterByUserId, filterByStatus } from '@/utils/dataTransformers';
 import type {
   Project,

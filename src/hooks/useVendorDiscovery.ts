@@ -17,6 +17,7 @@
 import { useState } from 'react';
 import * as aiService from '@/services/mock/aiService';
 import { useToast } from '@/hooks/use-toast';
+import mockAIdata from '@/data/mockAIdata.json';
 
 /**
  * Vendor structure returned from discovery
@@ -137,60 +138,35 @@ export const useVendorDiscovery = (): UseVendorDiscoveryReturn => {
     setIsDiscovering(true);
 
     try {
-      // Map criteria to aiService format for context
-      const mappedCriteria: aiService.Criterion[] = criteria.map(c => ({
-        id: c.id,
-        name: c.name,
-        importance: c.importance,
-        type: c.type
-      }));
+      // 🎨 PROTOTYPE MODE: Load vendors directly from mockAIdata.json
+      // In production, this would call AI service or database
 
-      // Extract requirements from description or use provided array
-      const requirements = techRequest.requirements || [];
-      if (!requirements.length && techRequest.description) {
-        // Simple keyword extraction from description
-        const keywords = techRequest.description.toLowerCase().split(/[\s,]+/);
-        requirements.push(...keywords.filter(k => k.length > 3));
-      }
-
-      // Call AI service to discover vendors
-      const { data: discoveredVendors, error } = await aiService.selectVendors(
-        techRequest.category,
-        mappedCriteria,
-        maxVendors
-      );
-
-      if (error || !discoveredVendors || discoveredVendors.length === 0) {
-        throw new Error(error?.message || 'No vendors discovered');
-      }
-
-      // Map AI service vendors to component format
-      const vendors: Vendor[] = discoveredVendors.map(v => ({
+      // Load vendors from mockAIdata.json
+      const vendors: Vendor[] = mockAIdata.vendors.map(v => ({
         id: v.id,
         name: v.name,
-        description: v.description,
-        website: v.website,
-        pricing: v.pricing || 'Contact for pricing',
-        rating: v.match_score / 20, // Convert 0-100 to 0-5
-        criteriaScores: {}, // Will be filled by comparison generation
+        description: v.executiveSummary || '',
+        website: v.website || `${v.name.toLowerCase().replace(/\s+/g, '')}.com`,
+        pricing: 'Contact for pricing', // mockAIdata.json doesn't have pricing field
+        rating: v.matchPercentage / 20, // Convert 0-100 to 0-5 scale
+        criteriaScores: v.scores || {},
         criteriaAnswers: {},
-        features: v.pros || [] // Use pros as features initially
+        features: v.keyFeatures || []
       }));
 
-      return vendors;
+      // Return limited number of vendors
+      return vendors.slice(0, maxVendors);
     } catch (error) {
       console.error('Vendor discovery failed:', error);
 
-      // Fallback to mock vendors from data file
-      const fallbackVendors = await getFallbackVendors(techRequest.category);
-
+      // Fallback to empty array
       toast({
-        title: "Using Curated Data",
-        description: `AI discovery failed. Using curated ${techRequest.category} vendors instead.`,
-        variant: "default"
+        title: "Discovery Failed",
+        description: `Could not load vendors. Please try again.`,
+        variant: "destructive"
       });
 
-      return fallbackVendors.slice(0, maxVendors);
+      return [];
     } finally {
       setIsDiscovering(false);
     }
@@ -200,74 +176,31 @@ export const useVendorDiscovery = (): UseVendorDiscoveryReturn => {
    * Get fallback vendors from mock data
    *
    * Purpose: Provides curated vendor list when AI discovery fails.
-   * Uses category-specific mock data.
+   * Uses vendors from mockAIdata.json.
    *
    * @param category - Software category
    * @returns Promise resolving to array of fallback vendors
    *
    * @remarks
-   * - In prototype mode, uses static mock data
+   * - Loads vendors from mockAIdata.json
    * - In production, this would query database for real vendors
    * - Returns vendors with basic info structure
    */
   const getFallbackVendors = async (category: string): Promise<Vendor[]> => {
-    // 🎨 PROTOTYPE MODE: Using mock vendor data
-    // In production, this would query the vendors database
+    // Load vendors from mockAIdata.json
+    const vendors: Vendor[] = mockAIdata.vendors.map(v => ({
+      id: v.id,
+      name: v.name,
+      description: v.executiveSummary || '',
+      website: v.website || `${v.name.toLowerCase().replace(/\s+/g, '')}.com`,
+      pricing: 'Contact for pricing', // mockAIdata.json doesn't have pricing field
+      rating: v.matchPercentage / 20, // Convert 0-100 to 0-5 scale
+      criteriaScores: v.scores || {},
+      criteriaAnswers: {},
+      features: v.keyFeatures || []
+    }));
 
-    const mockVendors: Vendor[] = [
-      {
-        id: 'vendor-1',
-        name: `${category} Solution A`,
-        description: `Leading ${category.toLowerCase()} platform with comprehensive features`,
-        website: 'solution-a.com',
-        pricing: 'Starting at $50/user/month',
-        rating: 4.5,
-        criteriaScores: {},
-        features: ['Cloud-based', 'Mobile app', 'API integrations', 'Advanced analytics']
-      },
-      {
-        id: 'vendor-2',
-        name: `${category} Solution B`,
-        description: `Enterprise-grade ${category.toLowerCase()} solution for large organizations`,
-        website: 'solution-b.com',
-        pricing: 'Contact for pricing',
-        rating: 4.3,
-        criteriaScores: {},
-        features: ['On-premise option', 'Custom workflows', '24/7 support', 'Compliance tools']
-      },
-      {
-        id: 'vendor-3',
-        name: `${category} Solution C`,
-        description: `Modern ${category.toLowerCase()} platform with intuitive interface`,
-        website: 'solution-c.com',
-        pricing: 'Starting at $30/user/month',
-        rating: 4.2,
-        criteriaScores: {},
-        features: ['Easy setup', 'Drag-and-drop builder', 'Templates', 'Collaboration tools']
-      },
-      {
-        id: 'vendor-4',
-        name: `${category} Solution D`,
-        description: `Cost-effective ${category.toLowerCase()} solution for growing businesses`,
-        website: 'solution-d.com',
-        pricing: 'Starting at $20/user/month',
-        rating: 4.0,
-        criteriaScores: {},
-        features: ['Affordable pricing', 'Essential features', 'Quick implementation', 'Good support']
-      },
-      {
-        id: 'vendor-5',
-        name: `${category} Solution E`,
-        description: `AI-powered ${category.toLowerCase()} platform with automation`,
-        website: 'solution-e.com',
-        pricing: 'Starting at $75/user/month',
-        rating: 4.4,
-        criteriaScores: {},
-        features: ['AI automation', 'Predictive analytics', 'Smart workflows', 'Machine learning']
-      }
-    ];
-
-    return mockVendors;
+    return vendors;
   };
 
   return {

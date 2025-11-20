@@ -24,6 +24,7 @@ export interface Vendor {
   name: string;
   description: string;
   website: string;
+  logo?: string; // URL to vendor logo image
   pricing: string;
   rating: number;
   criteriaScores: Record<string, number>; // Criterion ID -> score (0-10)

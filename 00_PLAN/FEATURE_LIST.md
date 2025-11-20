@@ -380,13 +380,15 @@ projects (
 - "Aha feature" / "Killer feature" display
 
 ### 4.4 Step 4: Vendor Comparison (F-018)
-**Status:** 🎨 Mock Demo (Pre-Generated)
+**Status:** 🔄 Enhanced with Wave Charts (SP_015 Planning Complete - November 16, 2024)
 **Priority:** P0
+**Sprint:** SP_015_Vendor_Comparison_Matrix.md (32-40 hours estimated)
 **Implementation:**
-- `src/pages/Comparison.tsx`
+- `src/pages/Comparison.tsx` - Legacy table-based comparison (to be replaced)
+- `src/components/VendorComparison.tsx` - NEW: Mobile-first wave chart architecture
 - `src/services/mock/aiService.ts`
 
-**Features (Demo):**
+**Current Features (Demo):**
 - Detailed comparison table (from JSON)
 - Criteria-based scoring (pre-calculated)
 - Side-by-side analysis (visual)
@@ -394,13 +396,97 @@ projects (
 - Excel export (✅ FUNCTIONAL)
 - Print-friendly view (working)
 
-**Planned Enhancements (SP_007):**
-- Collapsed/Summary mode by default
-- Match percentage display (not ratings)
-- "Aha feature" / "Killer feature" column
-- Expandable detailed criteria matrix
-- In-matrix AI chat for modifications
-- Enhanced share functionality (link + PDF)
+**SP_015 Enhancements (Planning Complete):**
+
+**Wave Chart Visualization System (15+ Components):**
+- `WaveChart.tsx` - Main container with Catmull-Rom spline interpolation algorithm
+- `VendorWave.tsx` - Individual vendor wave path with smooth curve generation
+- `ChartGrid.tsx` - Visual grid (Y: 0-100% match scale, X: criterion labels)
+- `MatchLegend.tsx` - Match percentage display with color-coded indicators
+- `CriterionMarker.tsx` - X-axis criterion labels with responsive truncation
+- `WaveAnimation.tsx` - Smooth spring-based transition effects (500ms)
+- `ChartControls.tsx` - Pan, zoom, tooltip toggle controls
+- `ChartTooltip.tsx` - Interactive hover tooltips showing criterion scores
+- Additional 7+ micro-components for visual polish and interactions
+
+**Mobile-First Responsive Architecture:**
+- **Mobile (<768px):** Stacked vertical layout with full-width charts, independent vendor controls
+- **Tablet (768-1024px):** Single-column with larger chart area
+- **Desktop (1024-1440px):** Side-by-side dual-column with optional sync toggle
+- **Wide (1440-1920px):** Enhanced spacing and larger visual elements
+- **XL (>1920px):** Maximum chart size with generous padding
+
+**Independent Vendor Navigation:**
+- Each vendor has separate navigation state (ComparisonVendor1, ComparisonVendor2)
+- Cycle through shortlist independently: "1 of 5", "2 of 5", etc.
+- Swipe gestures for mobile vendor switching (left/right)
+- Keyboard shortcuts for desktop (← → arrow keys)
+- Smooth cross-fade animations (300ms) on vendor change
+- Current vendor indicator with visual highlighting
+
+**Criterion Detail Integration:**
+- Sliding drawer from right edge for criterion editing
+- Click criterion marker → drawer slides in with full details
+- Chat interface for AI-powered criterion refinement
+- Edit mode for manual importance/explanation adjustments
+- Synchronized updates: drawer edits → wave chart re-renders
+
+**Technical Implementation:**
+- **Catmull-Rom Spline Algorithm:** Generates smooth curves passing through all criterion points
+- **SVG Path Generation:** Dynamic `<path>` elements with `d` attribute calculated from control points
+- **Framer Motion Animations:** Spring physics (stiffness: 300, damping: 30) for natural transitions
+- **Performance Optimization:** Memoized curve calculations, debounced resize handlers, virtualized criterion lists
+- **Accessibility:** ARIA labels, keyboard navigation, focus management, screen reader support
+
+**New TypeScript Interfaces (src/types/comparison.types.ts):**
+- `ComparisonState` - Vendor1, vendor2, selectedCriterion state
+- `WavePoint` - x, y, criterionId, score, vendor data point
+- `ChartDimensions` - width, height, padding, responsive breakpoints
+- `SplineConfig` - tension, smoothness, interpolation settings
+
+**Mock Data Enhancements:**
+- Pre-calculated wave chart data for 3 example projects
+- Score arrays (0-100) for each vendor across all criteria
+- Match percentage calculations (weighted by criterion importance)
+- Smooth curves with 20+ interpolation points per criterion segment
+
+**Implementation Files (24+ New Files):**
+```
+/src/components/vendor-comparison/
+  ├── VendorComparison.tsx (main refactor)
+  ├── wave-chart/
+  │   ├── WaveChart.tsx
+  │   ├── VendorWave.tsx
+  │   ├── ChartGrid.tsx
+  │   ├── MatchLegend.tsx
+  │   ├── CriterionMarker.tsx
+  │   ├── WaveAnimation.tsx
+  │   ├── ChartControls.tsx
+  │   ├── ChartTooltip.tsx
+  │   └── [7+ additional components]
+  ├── navigation/
+  │   ├── VendorNavigator.tsx
+  │   ├── VendorIndicator.tsx
+  │   └── NavigationControls.tsx
+  └── criterion-detail/
+      ├── CriterionDrawer.tsx
+      ├── CriterionChat.tsx
+      └── CriterionEdit.tsx
+
+/src/types/
+  └── comparison.types.ts
+
+/src/utils/
+  └── splineInterpolation.ts
+
+/src/data/comparisons/
+  └── wave-chart-data.json
+```
+
+**Deferred SP_007 Enhancements:**
+- Collapsed/Summary mode by default (may integrate with wave chart view)
+- "Aha feature" / "Killer feature" highlighting (can be displayed on hover/click)
+- Enhanced share functionality (link + PDF) - to be integrated with wave charts
 
 ### 4.5 Step 5: Vendor Invitation (F-019)
 **Status:** 🎨 Mock Demo (Templates)
@@ -1186,7 +1272,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
   - Save/cancel actions
 
 **Implemented Features (SP_014):**
-- **Swipe-to-Adjust Importance (F-031)** ✅
+- **Swipe-to-Adjust Importance (F-035)** ✅
   - Swipe right increases importance (Low → Medium → High)
   - Swipe left decreases importance (High → Medium → Low → Archive)
   - Visual feedback: pink glow (increase), orange glow (decrease), grey glow (archive)
@@ -1195,7 +1281,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
   - Works with touch and mouse gestures
   - Hybrid threshold system (40-50% + velocity-based 25-30%)
 
-- **Team Collaboration (F-032)** ✅
+- **Team Collaboration (F-036)** ✅
   - Share button → Download Excel or Copy Link
   - Download criteria as formatted Excel (.xlsx) with auto-sized columns
   - Share-by-link with copy-to-clipboard
@@ -1424,7 +1510,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
 - Guest access tokens
 - Expiration controls
 
-### 6.2 Team Workspaces
+### 7.2 Team Workspaces
 **Status:** 🔵 Future (Q3 2025)
 **Priority:** P2 (After Backend)
 **Planned Features:**
@@ -1434,7 +1520,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
 - Shared vendor database
 - Activity feeds
 
-### 6.3 Commenting & Feedback
+### 7.3 Commenting & Feedback
 **Status:** 🔵 Future (Q3 2025)
 **Priority:** P2 (After Backend)
 **Planned Features:**
@@ -1446,7 +1532,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
 
 ---
 
-## 7. Integration Features (Not in Prototype)
+## 8. Integration Features (Not in Prototype)
 
 ### 8.1 API Development (F-037)
 **Status:** 🔵 Future (Q4 2025)
@@ -1480,7 +1566,7 @@ Instead of flat colors, use **layered gradient backgrounds** to create depth:
 
 ---
 
-## 8. Vendor Ecosystem Features (Not in Prototype)
+## 9. Vendor Ecosystem Features (Not in Prototype)
 
 ### 9.1 Vendor Portal (F-040)
 **Status:** 🔵 Future (Q1-Q2 2026)

@@ -138,6 +138,28 @@ export const SPACING = {
   },
 
   /**
+   * VENDOR COMPARISON SECTION
+   * Spacing for vendor comparison workflow components
+   */
+  vendorComparison: {
+    // Vendor card spacing
+    card: {
+      // Main card container padding - minimal for maximum content space
+      container: 'px-2 py-2',
+      // Left side (company info) padding
+      leftSection: 'pr-2',
+      // Right side (killer feature) padding
+      rightSection: 'px-3 py-2',
+    },
+
+    // Navigation arrows
+    navigation: {
+      // Gap between arrows and card
+      gap: 'gap-2',
+    },
+  },
+
+  /**
    * COMMON PATTERNS
    * Reusable spacing patterns used across multiple components
    */

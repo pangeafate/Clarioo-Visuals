@@ -18,7 +18,7 @@ Clarioo is now a **visual prototype** designed for team alignment and demonstrat
 
 ### Phase 0: Visual Prototype (Current - Q4 2024) 🎨 **ACTIVE**
 
-**Status**: In Progress - Sprint 6 → Sprint 7
+**Status**: In Progress - Sprint 14 Complete → Sprint 15 Planning
 **Timeline**: November 2024 - December 2024
 **Purpose**: Team alignment, design validation, architecture improvement
 
@@ -57,10 +57,10 @@ Clarioo is now a **visual prototype** designed for team alignment and demonstrat
   - JSON dummy data storage
   - Mock project state management
 
-#### Current Sprint: SP_006 🔄
+#### Completed Sprint: SP_006 ✅
 **Sprint Name**: MVP to Visual Prototype Conversion
 **Duration**: 1-2 weeks
-**Status**: In Planning
+**Status**: Complete
 
 **Sprint Objectives**:
 1. Remove Supabase integration (archive)
@@ -90,10 +90,10 @@ Clarioo is now a **visual prototype** designed for team alignment and demonstrat
 
 ---
 
-#### Current Sprint: SP_008 🔧
+#### Completed Sprint: SP_008 ✅
 **Sprint Name**: Service Layer and Type System Refactoring
 **Duration**: 3-4 days (November 12-15, 2024)
-**Status**: ✅ Complete
+**Status**: Complete
 
 **Sprint Objectives**:
 1. Consolidate type definitions into centralized `/src/types/` directory
@@ -442,7 +442,99 @@ Clarioo is now a **visual prototype** designed for team alignment and demonstrat
 
 ---
 
-#### Current Sprint: SP_007 🚀
+#### Current Sprint: SP_015 📊
+**Sprint Name**: Vendor Comparison Matrix with Wave Charts
+**Duration**: November 16, 2024 - TBD (32-40 hours estimated)
+**Status**: 📋 Planning Complete
+**Type**: Mobile-First UI Enhancement - Visual Comparison System
+**Priority**: High
+
+**Sprint Objectives**:
+1. Implement mobile-first vendor comparison screen with wave chart visualizations
+2. Create synchronized wave chart showing match levels across evaluation criteria
+3. Implement independent vendor navigation allowing cycling through shortlist
+4. Design mobile-first layout (stacked) vs. desktop layout (side-by-side)
+5. Integrate with VendorSelection for seamless Step 3 → Step 4 transition
+6. Add smooth animations for chart updates and vendor transitions
+7. Enable criterion editing integration via sliding drawer interface
+
+**Key Deliverables**:
+- **VendorComparison.tsx Refactor** (Mobile-First Architecture):
+  - Replace table-based layout with wave chart visualization
+  - Implement independent vendor cycling (ComparisonVendor1, ComparisonVendor2)
+  - Mobile: Stacked vertical layout with independent controls
+  - Desktop: Side-by-side dual-column with synchronized navigation option
+  - 320px-1920px responsive design
+
+- **Wave Chart Visualization** (15+ Components):
+  - WaveChart.tsx: Main container with Catmull-Rom spline interpolation
+  - VendorWave.tsx: Individual wave path with smooth curve generation
+  - ChartGrid.tsx: Visual grid (Y: 0-100%, X: criterion labels)
+  - MatchLegend.tsx: Match percentage display with color coding
+  - CriterionMarker.tsx: X-axis labels with responsive truncation
+  - WaveAnimation.tsx: Smooth transition effects (500ms spring)
+  - ChartControls.tsx: Pan, zoom, tooltip toggle controls
+  - ChartTooltip.tsx: Interactive hover details for criterion scores
+  - Additional 7+ micro-components for visual polish
+
+- **Vendor Navigation System**:
+  - Independent cycling through shortlist (1 of N format)
+  - Swipe gestures for mobile vendor switching
+  - Keyboard shortcuts (← → arrows) for desktop
+  - Smooth cross-fade animations (300ms) on vendor change
+  - Current vendor indicator with visual highlighting
+
+- **Criterion Detail Integration**:
+  - Sliding drawer (right edge) for criterion editing
+  - Click criterion marker → drawer slides in with details
+  - Chat interface for AI-powered criterion refinement
+  - Edit mode for manual adjustment of importance/explanation
+  - Synchronized updates: drawer edits → wave chart re-renders
+
+- **Data Structures & Types**:
+  - ComparisonState interface (vendor1, vendor2, selectedCriterion)
+  - WavePoint interface (x, y, criterionId, score, vendor)
+  - ChartDimensions interface (width, height, padding, responsive)
+  - SplineConfig interface (tension, smoothness, interpolation)
+  - New TypeScript interfaces in /src/types/comparison.types.ts
+
+- **Mock Data Enhancements**:
+  - Pre-calculated wave chart data for 3 example projects
+  - Score arrays (0-100) for each vendor across all criteria
+  - Match percentage calculations (weighted by importance)
+  - Smooth curves with 20+ interpolation points per criterion segment
+
+**Exit Criteria**: ✅ All Met (to be verified)
+- [ ] Wave chart renders with smooth Catmull-Rom curves
+- [ ] Independent vendor cycling functional on mobile and desktop
+- [ ] Mobile layout: stacked vertical with full-width charts
+- [ ] Desktop layout: side-by-side with optional sync toggle
+- [ ] Criterion marker click opens sliding detail drawer
+- [ ] Drawer integrates with AI chat for criterion editing
+- [ ] Chart updates smoothly (500ms animation) when criterion changes
+- [ ] Swipe gestures work for vendor navigation on mobile
+- [ ] Keyboard shortcuts (arrows) work for vendor navigation on desktop
+- [ ] Match percentages calculate correctly (weighted by importance)
+- [ ] Responsive design tested 320px-1920px (5 breakpoints)
+- [ ] All 24 new files created with TypeScript type safety
+- [ ] Mock data pre-populated for 3 example projects
+- [ ] Build successful with 0 TypeScript errors
+- [ ] Documentation updated (PROGRESS.md, PROJECT_ROADMAP.md, FEATURE_LIST.md, USER_STORIES.md)
+
+**Technical Highlights**:
+- **Catmull-Rom Spline Algorithm**: Generates smooth curves passing through all criterion points, superior to linear interpolation
+- **SVG Path Generation**: Dynamic `<path>` elements with `d` attribute calculated from control points
+- **Framer Motion Animations**: Spring physics (stiffness: 300, damping: 30) for natural chart transitions
+- **Independent State Management**: Each vendor has separate navigation state to prevent forced synchronization
+- **Responsive Breakpoints**: Mobile (<768px), Tablet (768-1024px), Desktop (1024-1440px), Wide (1440-1920px), XL (>1920px)
+- **Performance Optimization**: Memoization for curve calculations, debounced resize handlers, virtualized long criterion lists
+- **Accessibility**: ARIA labels, keyboard navigation, focus management, screen reader support
+
+**Sprint Plan**: [SP_015_Vendor_Comparison_Matrix.md](./SPRINTS/SP_015_Vendor_Comparison_Matrix.md)
+
+---
+
+#### Planned Sprint: SP_007 🚀
 **Sprint Name**: Visual Design Enhancement & Mobile-First UI/UX
 **Duration**: 2-3 weeks (November 12 - December 3, 2024)
 **Status**: 🚀 Active - Phase 1 (Foundation & Architecture)
@@ -1263,7 +1355,7 @@ Once prototype is validated, begin backend implementation:
 
 *This roadmap is a living document focused on the prototype phase. Future phases will be refined based on prototype feedback and stakeholder input.*
 
-**Current Phase**: 🎨 Visual Prototype - Frictionless Onboarding (SP_008, SP_009, SP_010 Complete | SP_011 Active)
+**Current Phase**: 🎨 Visual Prototype - Mobile UX Enhancement (SP_008 through SP_014 Complete | SP_015 Planning)
 **Status**: Active Development
-**Next Milestones**: SP_011 (Registration-Free Landing) → SP_007 (Visual Design Enhancement) → Stakeholder feedback
-**Last Updated**: November 13, 2024 (v3.4.0 - Added SP_011 Registration-Free Landing Experience)
+**Next Milestones**: SP_015 (Vendor Comparison Matrix) → Stakeholder feedback
+**Last Updated**: November 15, 2024 (v3.5.0 - SP_014 Complete, SP_015 Planning)

@@ -402,6 +402,121 @@ This document contains comprehensive user stories for the Clarioo platform, orga
 **Library:** `xlsx` package
 **Status:** ✅ Implemented
 
+### US-6.2a: Visualize Vendor Match with Wave Charts (SP_015)
+**As a** Technology Decision Maker
+**I want to** see vendor match levels visualized as smooth wave charts
+**So that** I can quickly understand vendor performance across all criteria at a glance
+**Acceptance Criteria:**
+- Wave chart displays smooth curves (Catmull-Rom spline interpolation) for each vendor
+- Y-axis shows match percentage (0-100%) with visual grid lines
+- X-axis shows all evaluation criteria with truncated labels on mobile
+- Each vendor wave has a distinct color with visual legend
+- Overall match percentage displayed prominently for each vendor
+- Smooth animations (500ms spring) when chart data updates
+- Responsive design: mobile (stacked), tablet (single), desktop (side-by-side)
+- Chart renders without performance issues for up to 20 criteria
+
+**Implementation:**
+- `src/components/VendorComparison.tsx` (refactored)
+- `src/components/vendor-comparison/wave-chart/WaveChart.tsx`
+- `src/components/vendor-comparison/wave-chart/VendorWave.tsx`
+- `src/components/vendor-comparison/wave-chart/ChartGrid.tsx`
+- `src/utils/splineInterpolation.ts`
+- `src/types/comparison.types.ts`
+
+**Technical:** SVG path generation, Framer Motion animations, memoized calculations
+**Status:** 📋 Planned (SP_015)
+
+### US-6.2b: Navigate Vendors Independently (SP_015)
+**As a** Technology Decision Maker
+**I want to** cycle through different vendors independently on each comparison panel
+**So that** I can compare any two vendors from my shortlist without being forced to view them in sequence
+**Acceptance Criteria:**
+- Each comparison panel has independent vendor navigation (left/right arrows)
+- Current vendor indicator shows "1 of 5", "2 of 5", etc.
+- Swipe gestures work on mobile for vendor switching (left/right swipe)
+- Keyboard shortcuts work on desktop (← → arrow keys)
+- Vendor transitions use smooth cross-fade animation (300ms)
+- Can compare Vendor 1 vs Vendor 3, or Vendor 2 vs Vendor 5, etc. (any combination)
+- Selected vendors remain stable unless user explicitly changes them
+- Visual highlighting shows which vendor is currently displayed in each panel
+
+**Implementation:**
+- `src/components/vendor-comparison/navigation/VendorNavigator.tsx`
+- `src/components/vendor-comparison/navigation/VendorIndicator.tsx`
+- `src/components/vendor-comparison/navigation/NavigationControls.tsx`
+- ComparisonState interface with vendor1/vendor2 independent state
+
+**Technical:** Independent state management, swipe gesture detection, keyboard event handlers
+**Status:** 📋 Planned (SP_015)
+
+### US-6.2c: View Criterion Details in Sliding Drawer (SP_015)
+**As a** Technology Decision Maker
+**I want to** click on any criterion marker to see full details in a sliding drawer
+**So that** I can understand scoring rationale, edit importance, or refine with AI chat
+**Acceptance Criteria:**
+- Click criterion marker on X-axis → drawer slides in from right edge
+- Drawer displays: criterion name, explanation, importance level, vendor scores
+- Edit mode allows manual adjustment of importance (Low/Medium/High)
+- Chat interface enables AI-powered criterion refinement
+- Changes in drawer automatically update wave chart visualization
+- Drawer closes via X button, outside click, or ESC key
+- Mobile: drawer occupies full width; Desktop: drawer is 400px from right edge
+- Smooth slide-in animation (300ms) with backdrop overlay
+
+**Implementation:**
+- `src/components/vendor-comparison/criterion-detail/CriterionDrawer.tsx`
+- `src/components/vendor-comparison/criterion-detail/CriterionChat.tsx`
+- `src/components/vendor-comparison/criterion-detail/CriterionEdit.tsx`
+- Integration with existing CriterionEditSidebar pattern from SP_012
+
+**Technical:** Framer Motion slide animations, chat integration, state synchronization
+**Status:** 📋 Planned (SP_015)
+
+### US-6.2d: Interact with Wave Chart Tooltips (SP_015)
+**As a** Technology Decision Maker
+**I want to** hover over wave chart points to see detailed score information
+**So that** I can understand specific vendor performance on individual criteria without cluttering the chart
+**Acceptance Criteria:**
+- Hover over any point on wave → tooltip displays criterion name and score (e.g., "Security: 87%")
+- Tooltip follows cursor with smooth animation
+- Touch on mobile → tap point to toggle tooltip (tap outside to dismiss)
+- Tooltip design: white card with shadow, criterion name (bold), score percentage
+- Multiple tooltips never overlap (intelligent positioning)
+- Tooltip appears within 100ms of hover
+- Chart controls allow toggling all tooltips on/off for cleaner view
+
+**Implementation:**
+- `src/components/vendor-comparison/wave-chart/ChartTooltip.tsx`
+- `src/components/vendor-comparison/wave-chart/ChartControls.tsx`
+- Hover/touch event handlers with position calculations
+
+**Technical:** SVG event handling, tooltip positioning algorithm, touch gesture detection
+**Status:** 📋 Planned (SP_015)
+
+### US-6.2e: Optimize Comparison for Mobile Devices (SP_015)
+**As a** Technology Decision Maker (on mobile)
+**I want to** view vendor comparisons optimized for small screens
+**So that** I can review vendor evaluations on the go without horizontal scrolling or pinch-zooming
+**Acceptance Criteria:**
+- Mobile (<768px): Vendor charts stacked vertically, full width
+- Criterion labels truncated intelligently (e.g., "Security & Compliance" → "Security...")
+- Touch-optimized controls: large tap targets (44x44px minimum)
+- Swipe gestures for vendor navigation work smoothly
+- Match percentages displayed prominently at top of each chart
+- No horizontal scrolling required at any breakpoint (320px-768px)
+- Smooth scroll between vendor 1 chart and vendor 2 chart
+- Chart maintains readability at minimum 320px width
+
+**Implementation:**
+- Responsive CSS in all wave-chart components
+- Tailwind breakpoints: mobile (<768px), tablet (768-1024px), desktop (>1024px)
+- `CriterionMarker.tsx` with text truncation logic
+- Touch gesture handlers with mobile-specific optimizations
+
+**Technical:** CSS Grid/Flexbox responsive layouts, text truncation, touch event optimization
+**Status:** 📋 Planned (SP_015)
+
 ### US-6.3: Generate Executive Summary
 **As a** Technology Decision Maker
 **I want to** get an AI-generated executive summary

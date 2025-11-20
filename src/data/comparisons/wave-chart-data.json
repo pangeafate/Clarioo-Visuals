@@ -1,0 +1,776 @@
+{
+  "projects": [
+    {
+      "id": "project-crm-001",
+      "name": "CRM System Selection",
+      "category": "Customer Relationship Management",
+      "createdAt": "2024-11-10T10:00:00Z",
+      "criteria": [
+        {
+          "id": "crm_1",
+          "name": "Contact Management System",
+          "description": "Robust system for organizing customer data including contact details, company information, and interaction history",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_2",
+          "name": "Sales Pipeline Visualization",
+          "description": "Clear visual representation of sales opportunities through pipeline stages with drag-and-drop functionality",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_3",
+          "name": "Email Integration (Gmail/Outlook)",
+          "description": "Seamless two-way email sync with Gmail and Outlook",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_4",
+          "name": "Mobile App Availability",
+          "description": "Full-featured mobile applications for iOS and Android with offline access",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_5",
+          "name": "Custom Fields & Workflows",
+          "description": "Ability to create custom data fields without coding and design automated workflows for sales processes",
+          "type": "feature",
+          "importance": 3
+        },
+        {
+          "id": "crm_6",
+          "name": "Reporting & Analytics Dashboard",
+          "description": "Pre-built and customizable reports covering sales metrics, pipeline health, team performance, and revenue forecasting",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_7",
+          "name": "Lead Scoring Automation",
+          "description": "Automated lead qualification based on engagement metrics, demographics, and behavior",
+          "type": "feature",
+          "importance": 3
+        },
+        {
+          "id": "crm_8",
+          "name": "Task & Activity Tracking",
+          "description": "Comprehensive task management system with reminders, recurring tasks, and activity history",
+          "type": "feature",
+          "importance": 3
+        },
+        {
+          "id": "crm_9",
+          "name": "API Access for Integrations",
+          "description": "Well-documented RESTful API for custom integrations",
+          "type": "technical",
+          "importance": 3
+        },
+        {
+          "id": "crm_10",
+          "name": "Real-time Synchronization",
+          "description": "Instant data sync across all devices and users without manual refresh",
+          "type": "technical",
+          "importance": 5
+        },
+        {
+          "id": "crm_11",
+          "name": "Data Import/Export Capabilities",
+          "description": "Support for bulk data import from CSV/Excel files with field mapping wizard",
+          "type": "technical",
+          "importance": 3
+        },
+        {
+          "id": "crm_12",
+          "name": "System Performance & Speed",
+          "description": "Page load times under 2 seconds for standard operations",
+          "type": "technical",
+          "importance": 5
+        },
+        {
+          "id": "crm_13",
+          "name": "Multi-user Collaboration",
+          "description": "Support for team selling with shared contact visibility, deal collaboration, and @mentions",
+          "type": "feature",
+          "importance": 5
+        },
+        {
+          "id": "crm_14",
+          "name": "Pricing Model & Affordability",
+          "description": "Transparent pricing with no hidden fees",
+          "type": "business",
+          "importance": 5
+        },
+        {
+          "id": "crm_15",
+          "name": "Customer Support Quality",
+          "description": "Email and chat support during business hours with average first response time under 4 hours",
+          "type": "business",
+          "importance": 5
+        },
+        {
+          "id": "crm_16",
+          "name": "Onboarding & Training Resources",
+          "description": "Comprehensive onboarding program including live training sessions, video tutorials, and documentation",
+          "type": "business",
+          "importance": 3
+        },
+        {
+          "id": "crm_17",
+          "name": "Vendor Reputation & Stability",
+          "description": "Established vendor with proven track record (3+ years in market)",
+          "type": "business",
+          "importance": 3
+        },
+        {
+          "id": "crm_18",
+          "name": "Data Security & Encryption",
+          "description": "AES-256 encryption for data at rest and TLS 1.2+ for data in transit",
+          "type": "compliance",
+          "importance": 5
+        },
+        {
+          "id": "crm_19",
+          "name": "GDPR Compliance",
+          "description": "Full GDPR compliance with data processing agreements, right to deletion, and data portability",
+          "type": "compliance",
+          "importance": 5
+        },
+        {
+          "id": "crm_20",
+          "name": "SOC 2 Certification",
+          "description": "Valid SOC 2 Type II certification demonstrating security, availability, and confidentiality controls",
+          "type": "compliance",
+          "importance": 3
+        }
+      ],
+      "shortlist": [
+        {
+          "id": "crm_vendor_1",
+          "name": "Salesforce",
+          "logo": "https://logo.clearbit.com/salesforce.com",
+          "website": "https://salesforce.com",
+          "killerFeature": "Enterprise-grade customization & AI-powered Einstein",
+          "executiveSummary": "Salesforce is the world's leading cloud-based CRM platform, trusted by enterprises globally. Known for its robust ecosystem and AI-powered Einstein intelligence, it offers unparalleled scalability and customization options for complex sales operations.",
+          "keyFeatures": [
+            "AI-powered Einstein for predictive analytics and insights",
+            "Extensive AppExchange marketplace with 5,000+ integrations",
+            "Advanced workflow automation and process builder",
+            "Enterprise-grade security and compliance",
+            "Multi-cloud solution (Sales, Service, Marketing, Commerce)"
+          ],
+          "matchPercentage": 92,
+          "scores": {
+            "crm_1": 95,
+            "crm_2": 98,
+            "crm_3": 95,
+            "crm_4": 85,
+            "crm_5": 98,
+            "crm_6": 98,
+            "crm_7": 95,
+            "crm_8": 90,
+            "crm_9": 95,
+            "crm_10": 95,
+            "crm_11": 90,
+            "crm_12": 85,
+            "crm_13": 95,
+            "crm_14": 60,
+            "crm_15": 90,
+            "crm_16": 92,
+            "crm_17": 98,
+            "crm_18": 95,
+            "crm_19": 95,
+            "crm_20": 98
+          }
+        },
+        {
+          "id": "crm_vendor_2",
+          "name": "HubSpot",
+          "logo": "https://logo.clearbit.com/hubspot.com",
+          "website": "https://hubspot.com",
+          "killerFeature": "All-in-one marketing automation with free tier",
+          "executiveSummary": "HubSpot combines CRM, marketing, and sales tools in an intuitive platform perfect for growing businesses. With a generous free tier and scalable paid plans, it excels at inbound marketing and customer relationship management while maintaining exceptional ease of use.",
+          "keyFeatures": [
+            "Free CRM with unlimited users and contacts",
+            "Integrated marketing automation and email campaigns",
+            "Comprehensive analytics dashboard and custom reporting",
+            "Native integration with 1,000+ apps and services",
+            "Award-winning customer support and HubSpot Academy training"
+          ],
+          "matchPercentage": 89,
+          "scores": {
+            "crm_1": 95,
+            "crm_2": 95,
+            "crm_3": 90,
+            "crm_4": 90,
+            "crm_5": 85,
+            "crm_6": 88,
+            "crm_7": 90,
+            "crm_8": 92,
+            "crm_9": 88,
+            "crm_10": 88,
+            "crm_11": 85,
+            "crm_12": 90,
+            "crm_13": 85,
+            "crm_14": 85,
+            "crm_15": 92,
+            "crm_16": 95,
+            "crm_17": 90,
+            "crm_18": 88,
+            "crm_19": 90,
+            "crm_20": 85
+          }
+        },
+        {
+          "id": "crm_vendor_3",
+          "name": "Pipedrive",
+          "logo": "https://logo.clearbit.com/pipedrive.com",
+          "website": "https://pipedrive.com",
+          "killerFeature": "Visual sales pipeline with activity-based selling",
+          "executiveSummary": "Pipedrive is designed by salespeople, for salespeople. Its visual pipeline management and activity-based selling methodology help sales teams stay focused on revenue-generating activities. The platform's simplicity and affordability make it ideal for small to medium-sized businesses.",
+          "keyFeatures": [
+            "Intuitive visual pipeline with drag-and-drop interface",
+            "Activity and goal tracking to keep teams focused",
+            "Smart contact data with automated enrichment",
+            "Mobile app for iOS and Android with full CRM access",
+            "Customizable sales process and reporting dashboards"
+          ],
+          "matchPercentage": 87,
+          "scores": {
+            "crm_1": 90,
+            "crm_2": 98,
+            "crm_3": 85,
+            "crm_4": 88,
+            "crm_5": 80,
+            "crm_6": 82,
+            "crm_7": 85,
+            "crm_8": 92,
+            "crm_9": 78,
+            "crm_10": 85,
+            "crm_11": 82,
+            "crm_12": 92,
+            "crm_13": 85,
+            "crm_14": 90,
+            "crm_15": 82,
+            "crm_16": 80,
+            "crm_17": 85,
+            "crm_18": 80,
+            "crm_19": 82,
+            "crm_20": 78
+          }
+        },
+        {
+          "id": "crm_vendor_4",
+          "name": "Zoho CRM",
+          "logo": "https://logo.clearbit.com/zoho.com",
+          "website": "https://zoho.com/crm",
+          "killerFeature": "Best value with deep Zoho ecosystem integration",
+          "executiveSummary": "Zoho CRM delivers enterprise-grade features at SMB-friendly prices. As part of the comprehensive Zoho suite, it integrates seamlessly with 45+ Zoho applications for sales, marketing, support, and finance. It's an excellent choice for cost-conscious businesses seeking powerful functionality.",
+          "keyFeatures": [
+            "Exceptional value with feature-rich plans at low cost",
+            "Deep integration with entire Zoho ecosystem (Books, Desk, Campaigns)",
+            "AI-powered sales assistant Zia for predictions and automation",
+            "Multi-channel communication (email, phone, social, live chat)",
+            "Extensive customization with custom modules and layouts"
+          ],
+          "matchPercentage": 84,
+          "scores": {
+            "crm_1": 88,
+            "crm_2": 85,
+            "crm_3": 82,
+            "crm_4": 70,
+            "crm_5": 90,
+            "crm_6": 85,
+            "crm_7": 88,
+            "crm_8": 82,
+            "crm_9": 85,
+            "crm_10": 82,
+            "crm_11": 88,
+            "crm_12": 78,
+            "crm_13": 80,
+            "crm_14": 95,
+            "crm_15": 75,
+            "crm_16": 78,
+            "crm_17": 88,
+            "crm_18": 82,
+            "crm_19": 85,
+            "crm_20": 80
+          }
+        },
+        {
+          "id": "crm_vendor_5",
+          "name": "monday.com CRM",
+          "logo": "https://logo.clearbit.com/monday.com",
+          "website": "https://monday.com",
+          "killerFeature": "Highly customizable workflows with no-code automation",
+          "executiveSummary": "monday.com brings its renowned Work OS flexibility to CRM with an ultra-customizable platform that adapts to any sales process. The colorful, intuitive interface and powerful no-code automation make it perfect for teams wanting complete control without technical complexity.",
+          "keyFeatures": [
+            "Fully customizable boards and workflows without coding",
+            "Visual automations builder with 200+ pre-built recipes",
+            "Beautiful, color-coded interface loved by users",
+            "Seamless collaboration with team communication features",
+            "200+ integrations including Slack, Gmail, and Outlook"
+          ],
+          "matchPercentage": 85,
+          "scores": {
+            "crm_1": 85,
+            "crm_2": 92,
+            "crm_3": 80,
+            "crm_4": 92,
+            "crm_5": 95,
+            "crm_6": 80,
+            "crm_7": 75,
+            "crm_8": 90,
+            "crm_9": 82,
+            "crm_10": 85,
+            "crm_11": 80,
+            "crm_12": 88,
+            "crm_13": 95,
+            "crm_14": 78,
+            "crm_15": 88,
+            "crm_16": 85,
+            "crm_17": 82,
+            "crm_18": 85,
+            "crm_19": 80,
+            "crm_20": 78
+          }
+        },
+        {
+          "id": "crm_vendor_6",
+          "name": "Freshsales",
+          "logo": "https://logo.clearbit.com/freshworks.com",
+          "website": "https://freshworks.com/crm",
+          "killerFeature": "AI-powered lead scoring with built-in phone & email",
+          "executiveSummary": "Freshsales by Freshworks combines AI-driven insights with built-in phone and email capabilities for a complete sales solution. Its Freddy AI assistant helps prioritize deals and predict outcomes, while the unified communication tools eliminate the need for third-party integrations.",
+          "keyFeatures": [
+            "Freddy AI for intelligent lead scoring and deal insights",
+            "Built-in phone (VoIP) and email with conversation tracking",
+            "Visual sales pipeline with customizable deal stages",
+            "Auto-profile enrichment from social and public data",
+            "Unified inbox for managing all customer communications"
+          ],
+          "matchPercentage": 82,
+          "scores": {
+            "crm_1": 85,
+            "crm_2": 88,
+            "crm_3": 90,
+            "crm_4": 75,
+            "crm_5": 78,
+            "crm_6": 82,
+            "crm_7": 92,
+            "crm_8": 85,
+            "crm_9": 80,
+            "crm_10": 82,
+            "crm_11": 78,
+            "crm_12": 85,
+            "crm_13": 80,
+            "crm_14": 88,
+            "crm_15": 85,
+            "crm_16": 80,
+            "crm_17": 78,
+            "crm_18": 82,
+            "crm_19": 80,
+            "crm_20": 75
+          }
+        },
+        {
+          "id": "crm_vendor_7",
+          "name": "Insightly",
+          "logo": "https://logo.clearbit.com/insightly.com",
+          "website": "https://insightly.com",
+          "killerFeature": "Project management built into CRM for complex sales",
+          "executiveSummary": "Insightly uniquely combines CRM and project management in a single platform, perfect for businesses with complex, project-based sales cycles. Track deals from lead to delivery with integrated project workflows, making it ideal for agencies, consultancies, and professional services.",
+          "keyFeatures": [
+            "Integrated project management with milestones and tasks",
+            "Relationship linking to map complex organizational structures",
+            "Workflow automation with conditional logic",
+            "Business card scanning with mobile app",
+            "Custom branded customer portal for project collaboration"
+          ],
+          "matchPercentage": 78,
+          "scores": {
+            "crm_1": 82,
+            "crm_2": 80,
+            "crm_3": 75,
+            "crm_4": 70,
+            "crm_5": 85,
+            "crm_6": 75,
+            "crm_7": 72,
+            "crm_8": 88,
+            "crm_9": 75,
+            "crm_10": 75,
+            "crm_11": 80,
+            "crm_12": 78,
+            "crm_13": 82,
+            "crm_14": 85,
+            "crm_15": 78,
+            "crm_16": 75,
+            "crm_17": 75,
+            "crm_18": 75,
+            "crm_19": 72,
+            "crm_20": 70
+          }
+        },
+        {
+          "id": "crm_vendor_8",
+          "name": "Copper",
+          "logo": "https://logo.clearbit.com/copper.com",
+          "website": "https://copper.com",
+          "killerFeature": "Native Google Workspace integration for Gmail users",
+          "executiveSummary": "Copper is the CRM built specifically for Google Workspace users, living directly inside Gmail, Calendar, and Drive. It automatically captures relationship data from emails and meetings, making it the most frictionless CRM for teams already living in the Google ecosystem.",
+          "keyFeatures": [
+            "Seamless integration with Gmail, Calendar, Docs, and Sheets",
+            "Automatic contact and activity capture from Google Workspace",
+            "Chrome extension for managing CRM without leaving Gmail",
+            "Pipeline management with drag-and-drop Kanban view",
+            "Smart relationship intelligence and duplicate detection"
+          ],
+          "matchPercentage": 80,
+          "scores": {
+            "crm_1": 88,
+            "crm_2": 85,
+            "crm_3": 98,
+            "crm_4": 85,
+            "crm_5": 72,
+            "crm_6": 75,
+            "crm_7": 70,
+            "crm_8": 82,
+            "crm_9": 72,
+            "crm_10": 88,
+            "crm_11": 80,
+            "crm_12": 85,
+            "crm_13": 80,
+            "crm_14": 82,
+            "crm_15": 80,
+            "crm_16": 78,
+            "crm_17": 75,
+            "crm_18": 78,
+            "crm_19": 75,
+            "crm_20": 72
+          }
+        },
+        {
+          "id": "crm_vendor_9",
+          "name": "Zendesk Sell",
+          "logo": "https://logo.clearbit.com/zendesk.com",
+          "website": "https://zendesk.com/sell",
+          "killerFeature": "Seamless customer support & sales in unified platform",
+          "executiveSummary": "Zendesk Sell (formerly Base) offers a sales CRM that integrates perfectly with Zendesk Support, creating a unified platform for sales and service teams. This tight integration ensures seamless handoffs and complete customer context, ideal for companies prioritizing customer experience.",
+          "keyFeatures": [
+            "Native integration with Zendesk Support for unified customer view",
+            "Built-in calling, SMS, and email with automatic activity logging",
+            "Mobile-first design with offline mode for field sales",
+            "Real-time sales analytics and forecasting dashboards",
+            "Prospector tool for finding and enriching leads"
+          ],
+          "matchPercentage": 84,
+          "scores": {
+            "crm_1": 88,
+            "crm_2": 82,
+            "crm_3": 85,
+            "crm_4": 95,
+            "crm_5": 75,
+            "crm_6": 80,
+            "crm_7": 78,
+            "crm_8": 85,
+            "crm_9": 85,
+            "crm_10": 82,
+            "crm_11": 80,
+            "crm_12": 88,
+            "crm_13": 82,
+            "crm_14": 75,
+            "crm_15": 95,
+            "crm_16": 88,
+            "crm_17": 88,
+            "crm_18": 88,
+            "crm_19": 85,
+            "crm_20": 82
+          }
+        },
+        {
+          "id": "crm_vendor_10",
+          "name": "Close",
+          "logo": "https://logo.clearbit.com/close.com",
+          "website": "https://close.com",
+          "killerFeature": "Built-in calling & SMS optimized for inside sales teams",
+          "executiveSummary": "Close is purpose-built for inside sales teams who spend their days on calls and emails. With built-in power dialer, SMS, and email automation, it maximizes rep productivity while providing deep visibility into communication patterns and sales performance.",
+          "keyFeatures": [
+            "Built-in power dialer with local presence and call recording",
+            "Integrated SMS messaging for text-based outreach",
+            "Email sequences with A/B testing and tracking",
+            "Predictive dialer for high-volume outbound calling",
+            "Advanced reporting on call, email, and SMS activities"
+          ],
+          "matchPercentage": 86,
+          "scores": {
+            "crm_1": 85,
+            "crm_2": 88,
+            "crm_3": 92,
+            "crm_4": 78,
+            "crm_5": 75,
+            "crm_6": 85,
+            "crm_7": 80,
+            "crm_8": 90,
+            "crm_9": 88,
+            "crm_10": 85,
+            "crm_11": 82,
+            "crm_12": 90,
+            "crm_13": 80,
+            "crm_14": 92,
+            "crm_15": 88,
+            "crm_16": 82,
+            "crm_17": 80,
+            "crm_18": 85,
+            "crm_19": 82,
+            "crm_20": 78
+          }
+        }
+      ]
+    },
+    {
+      "id": "project-hr-002",
+      "name": "HR Management Platform",
+      "category": "Human Resources",
+      "createdAt": "2024-11-12T14:30:00Z",
+      "criteria": [
+        {
+          "id": "crit-hr-1",
+          "name": "Payroll",
+          "type": "feature",
+          "importance": 5,
+          "description": "Payroll processing capabilities"
+        },
+        {
+          "id": "crit-hr-2",
+          "name": "Benefits Admin",
+          "type": "feature",
+          "importance": 4,
+          "description": "Benefits management features"
+        },
+        {
+          "id": "crit-hr-3",
+          "name": "Recruitment",
+          "type": "feature",
+          "importance": 4,
+          "description": "Applicant tracking and hiring tools"
+        },
+        {
+          "id": "crit-hr-4",
+          "name": "Onboarding",
+          "type": "feature",
+          "importance": 3,
+          "description": "Employee onboarding workflows"
+        },
+        {
+          "id": "crit-hr-5",
+          "name": "Performance",
+          "type": "feature",
+          "importance": 4,
+          "description": "Performance management and reviews"
+        },
+        {
+          "id": "crit-hr-6",
+          "name": "Compliance",
+          "type": "compliance",
+          "importance": 5,
+          "description": "Legal and regulatory compliance"
+        }
+      ],
+      "shortlist": [
+        {
+          "id": "vendor-bamboohr",
+          "name": "BambooHR",
+          "logo": "https://logo.clearbit.com/bamboohr.com",
+          "website": "https://bamboohr.com",
+          "matchPercentage": 88,
+          "scores": {
+            "crit-hr-1": 85,
+            "crit-hr-2": 90,
+            "crit-hr-3": 92,
+            "crit-hr-4": 95,
+            "crit-hr-5": 88,
+            "crit-hr-6": 82
+          }
+        },
+        {
+          "id": "vendor-workday",
+          "name": "Workday",
+          "logo": "https://logo.clearbit.com/workday.com",
+          "website": "https://workday.com",
+          "matchPercentage": 92,
+          "scores": {
+            "crit-hr-1": 95,
+            "crit-hr-2": 92,
+            "crit-hr-3": 88,
+            "crit-hr-4": 90,
+            "crit-hr-5": 95,
+            "crit-hr-6": 98
+          }
+        },
+        {
+          "id": "vendor-rippling",
+          "name": "Rippling",
+          "logo": "https://logo.clearbit.com/rippling.com",
+          "website": "https://rippling.com",
+          "matchPercentage": 90,
+          "scores": {
+            "crit-hr-1": 98,
+            "crit-hr-2": 95,
+            "crit-hr-3": 85,
+            "crit-hr-4": 92,
+            "crit-hr-5": 88,
+            "crit-hr-6": 90
+          }
+        }
+      ]
+    },
+    {
+      "id": "project-marketing-003",
+      "name": "Marketing Automation Tool",
+      "category": "Marketing Automation",
+      "createdAt": "2024-11-14T09:15:00Z",
+      "criteria": [
+        {
+          "id": "crit-mkt-1",
+          "name": "Email Marketing",
+          "type": "feature",
+          "importance": 5,
+          "description": "Email campaign creation and automation"
+        },
+        {
+          "id": "crit-mkt-2",
+          "name": "Landing Pages",
+          "type": "feature",
+          "importance": 4,
+          "description": "Landing page builder quality"
+        },
+        {
+          "id": "crit-mkt-3",
+          "name": "Analytics",
+          "type": "feature",
+          "importance": 5,
+          "description": "Campaign analytics and ROI tracking"
+        },
+        {
+          "id": "crit-mkt-4",
+          "name": "Lead Scoring",
+          "type": "feature",
+          "importance": 4,
+          "description": "Lead qualification and scoring"
+        },
+        {
+          "id": "crit-mkt-5",
+          "name": "Social Media",
+          "type": "feature",
+          "importance": 3,
+          "description": "Social media management integration"
+        },
+        {
+          "id": "crit-mkt-6",
+          "name": "CRM Integration",
+          "type": "technical",
+          "importance": 5,
+          "description": "Integration with CRM systems"
+        },
+        {
+          "id": "crit-mkt-7",
+          "name": "Templates",
+          "type": "feature",
+          "importance": 3,
+          "description": "Pre-built templates and designs"
+        },
+        {
+          "id": "crit-mkt-8",
+          "name": "A/B Testing",
+          "type": "feature",
+          "importance": 4,
+          "description": "Split testing capabilities"
+        },
+        {
+          "id": "crit-mkt-9",
+          "name": "Segmentation",
+          "type": "feature",
+          "importance": 4,
+          "description": "Audience segmentation features"
+        }
+      ],
+      "shortlist": [
+        {
+          "id": "vendor-marketo",
+          "name": "Marketo",
+          "logo": "https://logo.clearbit.com/marketo.com",
+          "website": "https://marketo.com",
+          "matchPercentage": 89,
+          "scores": {
+            "crit-mkt-1": 92,
+            "crit-mkt-2": 85,
+            "crit-mkt-3": 95,
+            "crit-mkt-4": 90,
+            "crit-mkt-5": 80,
+            "crit-mkt-6": 95,
+            "crit-mkt-7": 82,
+            "crit-mkt-8": 88,
+            "crit-mkt-9": 92
+          }
+        },
+        {
+          "id": "vendor-mailchimp",
+          "name": "Mailchimp",
+          "logo": "https://logo.clearbit.com/mailchimp.com",
+          "website": "https://mailchimp.com",
+          "matchPercentage": 84,
+          "scores": {
+            "crit-mkt-1": 95,
+            "crit-mkt-2": 90,
+            "crit-mkt-3": 85,
+            "crit-mkt-4": 75,
+            "crit-mkt-5": 88,
+            "crit-mkt-6": 82,
+            "crit-mkt-7": 95,
+            "crit-mkt-8": 85,
+            "crit-mkt-9": 80
+          }
+        },
+        {
+          "id": "vendor-activecampaign",
+          "name": "ActiveCampaign",
+          "logo": "https://logo.clearbit.com/activecampaign.com",
+          "website": "https://activecampaign.com",
+          "matchPercentage": 86,
+          "scores": {
+            "crit-mkt-1": 90,
+            "crit-mkt-2": 88,
+            "crit-mkt-3": 88,
+            "crit-mkt-4": 85,
+            "crit-mkt-5": 82,
+            "crit-mkt-6": 90,
+            "crit-mkt-7": 85,
+            "crit-mkt-8": 82,
+            "crit-mkt-9": 88
+          }
+        },
+        {
+          "id": "vendor-pardot",
+          "name": "Pardot",
+          "logo": "https://logo.clearbit.com/salesforce.com",
+          "website": "https://pardot.com",
+          "matchPercentage": 87,
+          "scores": {
+            "crit-mkt-1": 88,
+            "crit-mkt-2": 82,
+            "crit-mkt-3": 92,
+            "crit-mkt-4": 88,
+            "crit-mkt-5": 78,
+            "crit-mkt-6": 98,
+            "crit-mkt-7": 80,
+            "crit-mkt-8": 85,
+            "crit-mkt-9": 90
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,7 @@
 
 import { useState } from 'react';
 import * as aiService from '@/services/mock/aiService';
+import mockAIdata from '@/data/mockAIdata.json';
 
 /**
  * Criteria structure for component use
@@ -73,28 +74,15 @@ export interface UseCriteriaGenerationReturn {
  * - Generic but comprehensive coverage
  */
 const createFallbackCriteria = (request: TechRequest): Criteria[] => {
-  return [
-    { id: '1', name: 'User Interface Design', explanation: 'The software must have an intuitive, modern user interface that requires minimal training for new users. Should support drag-and-drop functionality and customizable dashboards.', importance: 'high', type: 'feature' },
-    { id: '2', name: 'Core Functionality', explanation: 'Must deliver all essential features required for primary use cases. The system should handle standard workflows efficiently without requiring workarounds or third-party tools.', importance: 'high', type: 'feature' },
-    { id: '3', name: 'Performance Speed', explanation: 'System must respond to user actions within 2 seconds for standard operations. Page load times should not exceed 3 seconds, even with large datasets.', importance: 'high', type: 'technical' },
-    { id: '4', name: 'Mobile Compatibility', explanation: 'Full-featured mobile applications (iOS and Android) or responsive web design that provides comparable functionality to desktop version. Touch-optimized interface required.', importance: 'high', type: 'feature' },
-    { id: '5', name: 'Integration Capabilities', explanation: 'Must integrate seamlessly with existing enterprise tools including email, calendar, file storage, and CRM systems. RESTful API required for custom integrations.', importance: 'high', type: 'technical' },
-    { id: '6', name: 'Customization Options', explanation: 'Ability to customize fields, workflows, and user interface elements without coding. Support for custom reports and automated workflows based on business rules.', importance: 'medium', type: 'feature' },
-    { id: '7', name: 'Reporting & Analytics', explanation: 'Built-in reporting tools with ability to create custom reports and dashboards. Real-time analytics with export capabilities to PDF, Excel, and CSV formats.', importance: 'medium', type: 'feature' },
-    { id: '8', name: 'API Documentation', explanation: 'Comprehensive, up-to-date API documentation with code examples and use cases. Must include authentication guides, rate limits, and version history.', importance: 'medium', type: 'technical' },
-    { id: '9', name: 'Data Export Options', explanation: 'Support for bulk data export in multiple formats (CSV, Excel, JSON, XML). Scheduled exports and API-based data retrieval for backup and migration purposes.', importance: 'medium', type: 'feature' },
-    { id: '10', name: 'Workflow Automation', explanation: 'Built-in automation capabilities for recurring tasks. Support for conditional logic, scheduled triggers, and multi-step workflows without requiring coding expertise.', importance: 'medium', type: 'feature' },
-    { id: '11', name: 'Real-time Updates', explanation: 'Changes made by one user should be immediately visible to other users without page refresh. WebSocket or similar technology for live collaboration features.', importance: 'medium', type: 'technical' },
-    { id: '12', name: 'Multi-user Support', explanation: 'Concurrent user support with role-based access control. Ability to handle at least 50 simultaneous users without performance degradation.', importance: 'high', type: 'feature' },
-    { id: '13', name: 'Backup & Recovery', explanation: 'Automated daily backups with point-in-time recovery options. Maximum acceptable data loss window of 24 hours. Clear restore procedures documented.', importance: 'high', type: 'technical' },
-    { id: '14', name: 'Scalability', explanation: 'System must scale to support growing data volumes and user counts. Architecture should handle 3x current requirements without requiring platform migration.', importance: 'medium', type: 'technical' },
-    { id: '15', name: 'Pricing Model', explanation: 'Transparent, predictable pricing structure with no hidden fees. Flexible licensing options (per-user, per-feature, or enterprise). Annual contract discounts available.', importance: 'high', type: 'business' },
-    { id: '16', name: 'Customer Support Quality', explanation: 'Email and phone support during business hours (minimum). Average response time under 4 hours for standard queries. Dedicated account manager for enterprise plans.', importance: 'high', type: 'business' },
-    { id: '17', name: 'Training Resources', explanation: 'Comprehensive onboarding materials including video tutorials, documentation, and live training sessions. Self-service knowledge base with search functionality.', importance: 'medium', type: 'business' },
-    { id: '18', name: 'Vendor Reputation', explanation: 'Established vendor with proven track record in the industry. Positive customer reviews and case studies from similar organizations. Financial stability indicators.', importance: 'medium', type: 'business' },
-    { id: '19', name: 'Data Security', explanation: 'Enterprise-grade security with encryption at rest and in transit (minimum TLS 1.2). SOC 2 Type II certification required. Regular security audits and penetration testing.', importance: 'high', type: 'compliance' },
-    { id: '20', name: 'GDPR Compliance', explanation: 'Full compliance with GDPR requirements including data processing agreements, right to deletion, data portability, and breach notification procedures.', importance: 'medium', type: 'compliance' }
-  ];
+  // 🎨 PROTOTYPE MODE: Load criteria from mockAIdata.json
+  // This ensures criterion IDs match the score keys in vendor data
+  return mockAIdata.criteria.map(c => ({
+    id: c.id, // Use exact IDs from mockAIdata (crm_1, crm_2, etc.)
+    name: c.name,
+    explanation: c.description,
+    importance: c.importance >= 4 ? 'high' : c.importance >= 3 ? 'medium' : 'low',
+    type: c.type || 'other'
+  }));
 };
 
 /**
@@ -154,8 +142,9 @@ export const useCriteriaGeneration = (): UseCriteriaGenerationReturn => {
       }
 
       // Map to component's Criteria type
+      // 🎨 PROTOTYPE MODE: Use mockAIdata IDs to match vendor score keys
       const aiCriteria: Criteria[] = generatedCriteria.map((c, index) => ({
-        id: `ai-${index + 1}`,
+        id: mockAIdata.criteria[index]?.id || `ai-${index + 1}`, // Use mockAIdata IDs (crm_1, crm_2, etc.)
         name: c.name,
         explanation: c.explanation || c.description || '', // Use explanation or description from AI, fallback to empty string
         importance: c.importance,

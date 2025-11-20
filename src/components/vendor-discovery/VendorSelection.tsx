@@ -15,9 +15,9 @@ import {
   RefreshCw,
   Sparkles,
   Plus,
-  Star,
   ExternalLink,
-  Trash2
+  Trash2,
+  Building2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { TechRequest, Criteria, Vendor } from "../VendorDiscovery";
@@ -66,7 +66,7 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
       const discoveredVendors = await discoverVendorsFromHook(
         techRequest,
         criteria,
-        8 // maxVendors
+        10 // maxVendors - aligned with CRM mock data (10 vendors)
       );
 
       setVendors(discoveredVendors);
@@ -301,20 +301,29 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
                   </div>
 
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className={TYPOGRAPHY.card.metadata}>{vendor.name}</h3>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-warning text-warning" />
-                        <span className={TYPOGRAPHY.body.xs}>{vendor.rating}</span>
-                      </div>
+                    {/* Vendor logo and name - inline */}
+                    <div className="flex items-center gap-2">
+                      {vendor.logo ? (
+                        <img
+                          src={vendor.logo}
+                          alt={`${vendor.name} logo`}
+                          className="h-5 w-5 object-contain rounded"
+                          onError={(e) => {
+                            // Fallback to placeholder icon if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      <Building2 className={`h-5 w-5 text-muted-foreground ${vendor.logo ? 'hidden' : ''}`} />
+                      <h3 className={`${TYPOGRAPHY.body.small} font-bold`}>{vendor.name}</h3>
                     </div>
 
                     <p className={`${TYPOGRAPHY.card.metadata} leading-tight`}>
                       {vendor.description}
                     </p>
 
-                    <div className={`flex items-center justify-between ${TYPOGRAPHY.body.xs}`}>
-                      <span className={TYPOGRAPHY.muted.xs}>{vendor.pricing}</span>
+                    <div className={`flex items-center justify-end ${TYPOGRAPHY.body.xs}`}>
                       <a
                         href={`https://${vendor.website}`}
                         target="_blank"
@@ -354,8 +363,8 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
       {/* Summary & Continue */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="space-y-1 text-center md:text-left">
               <p className={TYPOGRAPHY.body.default}>
                 {selectedVendorIds.size} of {vendors.length} vendors selected
               </p>
@@ -363,7 +372,7 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
                 Ready to proceed with detailed comparison analysis
               </p>
             </div>
-            <Button onClick={handleComplete} disabled={selectedVendorIds.size === 0}>
+            <Button onClick={handleComplete} disabled={selectedVendorIds.size === 0} className="w-full md:w-auto">
               Continue to Comparison
             </Button>
           </div>

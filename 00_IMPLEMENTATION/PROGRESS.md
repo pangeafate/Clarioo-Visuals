@@ -12,6 +12,15 @@
 
 ## 🔧 Current Sprint Status
 
+### Sprint 15: Vendor Comparison Matrix with Wave Charts (SP_015)
+**Duration**: November 16, 2024 - TBD (32-40 hours estimated)
+**Status**: 📋 Planning Complete
+**Sprint Goal**: Implement mobile-first vendor comparison screen with wave chart visualizations showing match levels across evaluation criteria
+
+---
+
+## 📋 Completed Sprints
+
 ### Sprint 14: Swipe-to-Adjust Importance Gestures & Share Dialog (SP_014)
 **Duration**: November 15, 2024 (1 day)
 **Status**: ✅ Complete

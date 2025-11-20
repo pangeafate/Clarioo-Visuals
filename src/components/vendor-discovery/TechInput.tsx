@@ -7,8 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowRight, Bot } from "lucide-react";
 import type { TechRequest } from "../VendorDiscovery";
 import { useToast } from "@/hooks/use-toast";
-import aiSummariesData from "@/data/api/aiSummaries.json";
-import projectsData from "@/data/api/projects.json";
+import mockAIdata from '@/data/mockAIdata.json';
 import { TYPOGRAPHY } from '@/styles/typography-config';
 
 interface TechInputProps {
@@ -30,7 +29,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState<string>('');
-  const [headerText, setHeaderText] = useState<string>(aiSummariesData.default);
+  const [headerText, setHeaderText] = useState<string>(mockAIdata.aiSummaries.default);
 
   /**
    * Load project data based on projectId
@@ -40,7 +39,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
    */
   useEffect(() => {
     if (projectId) {
-      const project = projectsData.find(p => p.id === projectId);
+      const project = mockAIdata.projects.find(p => p.id === projectId);
       if (project && project.category) {
         // Pre-fill category from project data
         setFormData(prev => ({
@@ -119,7 +118,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
       const summary = generateDetailedSummary(formData.category, additionalNotes);
       setHeaderText(summary);
     } else {
-      setHeaderText(aiSummariesData.default);
+      setHeaderText(mockAIdata.aiSummaries.default);
     }
   }, [formData.category, additionalNotes]);
 
@@ -187,7 +186,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
    */
   const generateDetailedSummary = (category: string, userInput: string): string => {
     // Try to get summary from JSON data
-    const summary = aiSummariesData.summaries[category as keyof typeof aiSummariesData.summaries];
+    const summary = mockAIdata.aiSummaries.summaries[category as keyof typeof mockAIdata.aiSummaries.summaries];
 
     if (summary) {
       return summary;
@@ -198,7 +197,7 @@ const TechInput = ({ onSubmit, initialData, projectId }: TechInputProps) => {
       return `Based on your description: "${userInput}", we'll help you find the right technology solutions that match your specific requirements. Our AI will analyze your needs and suggest the most suitable vendors in the market.`;
     }
 
-    return aiSummariesData.default;
+    return mockAIdata.aiSummaries.default;
   };
 
   /**

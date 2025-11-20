@@ -33,8 +33,7 @@
  * @module services/mock/aiService
  */
 
-import criteriaData from '@/data/api/criteria.json';
-import vendorsData from '@/data/api/vendors.json';
+import mockAIdata from '@/data/mockAIdata.json';
 import { simulateAIDelay } from '@/utils/mockHelpers';
 import { normalizeString } from '@/utils/dataTransformers';
 import type { Criterion, Vendor, ApiError } from '@/types';
@@ -61,13 +60,20 @@ export interface ChatMessage {
  * for a given software category.
  *
  * @param category - Software category key (e.g., "crm", "marketing")
- * @returns Array of criteria for the category, or default criteria if not found
+ * @returns Array of criteria for the category (currently returns CRM criteria for all categories)
  *
  * @internal
  */
 const getCriteriaForCategory = (category: string): Criterion[] => {
-  const categoryKey = category as keyof typeof criteriaData;
-  return criteriaData[categoryKey] || criteriaData.default;
+  // 🎨 PROTOTYPE MODE: Return CRM criteria from mockAIdata for all categories
+  // In production, this would fetch category-specific criteria from database
+  return mockAIdata.criteria.map(c => ({
+    id: c.id,
+    name: c.name,
+    description: c.description,
+    importance: c.importance >= 4 ? 'high' : c.importance >= 3 ? 'medium' : 'low',
+    type: c.type || 'other',
+  })) as unknown as Criterion[];
 };
 
 /**
@@ -82,8 +88,12 @@ const getCriteriaForCategory = (category: string): Criterion[] => {
  * @internal
  */
 const getVendorsForCategory = (category: string): Vendor[] => {
-  const categoryKey = category as keyof typeof vendorsData;
-  return vendorsData[categoryKey] || vendorsData.default;
+  const categoryKey = category as keyof typeof mockAIdata.vendorsByCategory;
+  const vendors = mockAIdata.vendorsByCategory[categoryKey];
+  if (!vendors) {
+    throw new Error(`No vendors found for category: ${category}. Available categories: ${Object.keys(mockAIdata.vendorsByCategory).join(', ')}`);
+  }
+  return vendors;
 };
 
 /**

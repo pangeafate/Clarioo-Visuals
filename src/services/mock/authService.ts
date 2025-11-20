@@ -20,8 +20,11 @@
  * @module services/mock/authService
  */
 
-import authData from '@/data/api/auth.json';
+import mockAIdata from '@/data/mockAIdata.json';
 import { simulateDelay, getCurrentTimestamp } from '@/utils/mockHelpers';
+
+// Extract auth data from mockAIdata
+const authData = mockAIdata.auth;
 import type {
   User,
   Session,

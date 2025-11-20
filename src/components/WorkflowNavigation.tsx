@@ -112,7 +112,7 @@ export const WorkflowNavigation = ({
           {WORKFLOW_STEPS.map((step, index) => {
             const StepIcon = step.icon;
             const isActive = step.id === currentStep;
-            const isCompleted = index < currentStepIndex;
+            const isReached = index <= maxStepReached; // Has this step been reached?
             const isAccessible = index <= maxStepReached;
             const isLast = index === WORKFLOW_STEPS.length - 1;
 
@@ -125,9 +125,9 @@ export const WorkflowNavigation = ({
                     relative flex items-center justify-center
                     w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full border-2 transition-all duration-300 flex-shrink-0
                     ${isActive ? 'bg-primary border-primary text-primary-foreground shadow-lg' : ''}
-                    ${isCompleted && !isActive ? 'bg-white border-primary text-primary' : ''}
-                    ${!isActive && !isCompleted ? 'bg-white border-gray-300 text-gray-400' : ''}
-                    ${isAccessible ? 'cursor-pointer hover:scale-110' : 'cursor-pointer opacity-50'}
+                    ${isReached && !isActive ? 'bg-white border-primary text-primary' : ''}
+                    ${!isActive && !isReached ? 'bg-white border-gray-300 text-gray-400' : ''}
+                    ${isAccessible ? 'cursor-pointer' : 'cursor-pointer opacity-50'}
                   `}
                   aria-label={step.title}
                   aria-current={isActive ? 'step' : undefined}
@@ -139,7 +139,7 @@ export const WorkflowNavigation = ({
                 {!isLast && (
                   <div className={`
                     h-0.5 w-8 xs:w-9 sm:w-10 md:w-12 lg:w-16
-                    ${index < currentStepIndex ? 'bg-primary' : 'bg-gray-200'}
+                    ${index < maxStepReached ? 'bg-primary' : 'bg-gray-200'}
                   `} />
                 )}
               </div>

@@ -9,10 +9,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import CriteriaBuilder from "./vendor-discovery/CriteriaBuilder";
 import VendorSelection from "./vendor-discovery/VendorSelection";
-import VendorTable from "./vendor-discovery/VendorTable";
+import { VendorComparison } from "./VendorComparison";
 import VendorInvite from "./vendor-discovery/VendorInvite";
 import { WorkflowNavigation, WORKFLOW_STEPS, type Step } from "./WorkflowNavigation";
-import criteriaData from '@/data/api/criteria.json';
+import mockAIdata from '@/data/mockAIdata.json';
 import { SPACING } from '@/styles/spacing-config';
 import { TYPOGRAPHY } from '@/styles/typography-config';
 
@@ -52,7 +52,7 @@ export interface Vendor {
   website: string;
   pricing: string;
   rating: number;
-  criteriaScores: Record<string, number>;
+  criteriaScores: Record<string, 'yes' | 'no' | 'unknown' | 'star'>;
   criteriaAnswers: Record<string, { yesNo: 'yes' | 'no' | 'partial'; comment: string; }>;
   features: string[];
 }
@@ -73,22 +73,19 @@ export interface VendorDiscoveryProps {
 }
 
 /**
- * Helper function to backfill missing explanations from criteria.json
- * Searches all categories in criteria.json to find matching criterion by name
+ * Helper function to backfill missing explanations from mockAIdata.json
+ * Searches criteria in mockAIdata to find matching criterion by name
  */
 const backfillExplanation = (criterion: Criteria): string => {
   if (criterion.explanation && criterion.explanation.trim() !== '') {
     return criterion.explanation; // Already has explanation
   }
 
-  // Search all categories in criteriaData for matching criterion by name
-  const allCategories = Object.values(criteriaData);
-  for (const categoryData of allCategories) {
-    const match = categoryData.find((c: any) => c.name === criterion.name);
-    if (match && match.explanation) {
-      console.log(`✅ Found explanation for "${criterion.name}"`);
-      return match.explanation;
-    }
+  // Search mockAIdata.criteria for matching criterion by name
+  const match = mockAIdata.criteria.find((c: any) => c.name === criterion.name);
+  if (match && match.description) {
+    console.log(`✅ Found explanation for "${criterion.name}"`);
+    return match.description;
   }
 
   // No match found - return empty string
@@ -125,6 +122,24 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
         const savedState = localStorage.getItem(storageKey);
         if (savedState) {
           const state: WorkflowState = JSON.parse(savedState);
+
+          // 🐛 BUGFIX: Auto-detect and clear old AI-generated criterion IDs
+          // Check if criteria have old 'ai-X' format instead of 'crm_X' format
+          if (state.criteria && state.criteria.length > 0) {
+            const hasOldAIIds = state.criteria.some(c => c.id.startsWith('ai-'));
+            if (hasOldAIIds) {
+              console.warn('⚠️ Detected old AI-generated criterion IDs (ai-X format). Clearing localStorage and forcing fresh start with crm-X IDs...');
+              localStorage.removeItem(storageKey);
+              toast({
+                title: "🔄 Workflow Reset Required",
+                description: "Old data format detected. Please restart the workflow from the beginning.",
+                variant: "destructive",
+                duration: 5000,
+              });
+              setIsLoading(false);
+              return; // Don't restore old state
+            }
+          }
 
           // GAP-5: Handle legacy data with 'tech-input' step (removed in this update)
           // If currentStep is 'tech-input', default to 'criteria' instead
@@ -388,7 +403,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
                   />
                 )}
                 {currentStep === 'vendor-comparison' && selectedVendors.length > 0 && (
-                  <VendorTable
+                  <VendorComparison
                     vendors={selectedVendors}
                     criteria={criteria}
                     techRequest={techRequest!}

@@ -127,37 +127,31 @@ export const AnimatedInputs = ({
         </div>
       </div>
 
-      {/* New Project Button */}
+      {/* New Project Button - Always visible */}
       {onCreateProject && (
         <div className="flex justify-center mt-6">
-          <AnimatePresence mode="wait">
-            {hasAnyInput && (
-              <motion.div
-                key="button-visible"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Button
-                  onClick={onCreateProject}
-                  disabled={!hasEnoughCharacters}
-                  className={`${TYPOGRAPHY.button.default} flex items-center gap-2 transition-all duration-300 ${
-                    !hasEnoughCharacters
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
-                      : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-                  }`}
-                >
-                  <Plus className="h-4 w-4" />
-                  New Project
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Button
+              onClick={onCreateProject}
+              disabled={!hasEnoughCharacters}
+              className={`${TYPOGRAPHY.button.default} flex items-center gap-2 transition-all duration-300 ${
+                !hasEnoughCharacters
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
+                  : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
+              }`}
+            >
+              <Plus className="h-4 w-4" />
+              New Project
+            </Button>
+          </motion.div>
         </div>
       )}
 
-      {/* SP_011: Category Selector and Examples */}
+      {/* SP_011: Category Selector and Examples - COMMENTED OUT
       {onCreateCategoryProject && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -165,22 +159,15 @@ export const AnimatedInputs = ({
           transition={{ delay: 0.6 }}
           className="mt-6 space-y-4"
         >
-          {/* Category Selector - Centered */}
           <div className="flex justify-center">
             <CategorySelector
               onCreateProject={onCreateCategoryProject}
               hasInputValues={hasInputValues}
             />
-            {/* Commented out: Question mark icon
-            <div>
-              <ExamplesBulletPopover
-                onCreateProject={onCreateCategoryProject}
-              />
-            </div>
-            */}
           </div>
         </motion.div>
       )}
+      */}
     </motion.section>
   );
 };
