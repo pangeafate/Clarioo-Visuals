@@ -226,15 +226,26 @@ export const CriterionCard: React.FC<CriterionCardProps> = ({
     >
       <Card
         className={cn(
-          'transition-shadow relative overflow-hidden',
+          'transition-shadow relative',
           !swipeState.isSwiping && 'hover:shadow-md',
-          criterion.isArchived && 'opacity-60 grayscale'
+          criterion.isArchived && 'opacity-60 grayscale cursor-pointer'
         )}
+        onClick={() => {
+          // Clicking on archived criterion restores it to low importance
+          if (criterion.isArchived && onImportanceChange) {
+            onImportanceChange(criterion.id, 'low', false);
+            toast({
+              title: 'Criterion restored',
+              description: `"${criterion.name}" restored with low priority`,
+              duration: 2000
+            });
+          }
+        }}
       >
         {/* Side Edge Gradient Glow */}
         {getSideGlowStyle() && (
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg"
             style={{
               background: getSideGlowStyle()
             }}
@@ -280,8 +291,29 @@ export const CriterionCard: React.FC<CriterionCardProps> = ({
             </h4>
 
             <div className="flex items-center gap-1.5 xs:gap-2 flex-shrink-0">
-              {/* Signal Antenna - Priority Indicator */}
-              <SignalAntenna importance={criterion.importance} />
+              {/* Signal Antenna - Priority Indicator with +/- controls */}
+              <SignalAntenna
+                importance={criterion.importance}
+                isInteractive={!criterion.isArchived && !!onImportanceChange}
+                onImportanceChange={(newImportance) => {
+                  if (!onImportanceChange) return;
+                  if (newImportance === 'archive') {
+                    onImportanceChange(criterion.id, criterion.importance, true);
+                    toast({
+                      title: 'Criterion archived',
+                      description: `"${criterion.name}" moved to archive`,
+                      duration: 2000
+                    });
+                  } else {
+                    onImportanceChange(criterion.id, newImportance, false);
+                    toast({
+                      title: 'Importance updated',
+                      description: `"${criterion.name}" set to ${newImportance} priority`,
+                      duration: 2000
+                    });
+                  }
+                }}
+              />
 
               {/* AI Edit Button */}
               <Button
