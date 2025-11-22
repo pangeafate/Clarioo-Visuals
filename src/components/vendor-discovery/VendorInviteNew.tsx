@@ -256,16 +256,22 @@ const VendorInviteNew: React.FC<VendorInviteNewProps> = ({
   // Generate email body
   const generateEmailBody = (vendorName: string) => {
     const activeCriteria = criteria.filter(c => !c.isArchived);
-    const highImportance = activeCriteria.filter(c => c.importance === 'high');
-    const mediumImportance = activeCriteria.filter(c => c.importance === 'medium');
+    // Sort by importance: high first, then medium, then low
+    const sortedCriteria = [...activeCriteria].sort((a, b) => {
+      const order = { high: 0, medium: 1, low: 2 };
+      return order[a.importance] - order[b.importance];
+    });
 
-    return `Dear ${vendorName} Team,
+    // Take top 5 criteria
+    const topCriteria = sortedCriteria.slice(0, 5);
+    const hasMore = sortedCriteria.length > 5;
+
+    return `Dear [Recipient's name will populate automatically],
 
 We are currently evaluating solutions for ${techRequest.description || projectName} and would like to invite you to present your offering.
 
 ${techRequest.companyInfo ? `About Us: ${techRequest.companyInfo}\n\n` : ''}Key Requirements:
-${highImportance.map(c => `• ${c.name} (High Priority)`).join('\n')}
-${mediumImportance.length > 0 ? `\nAdditional Criteria:\n${mediumImportance.map(c => `• ${c.name}`).join('\n')}` : ''}
+${topCriteria.map(c => `• ${c.name} (${c.importance.charAt(0).toUpperCase() + c.importance.slice(1)} Priority)`).join('\n')}${hasMore ? '\n• etc.' : ''}
 
 We look forward to learning more about how your solution can address our needs.
 
