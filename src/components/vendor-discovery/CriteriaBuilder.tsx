@@ -15,7 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Share2 } from "lucide-react";
+import { ArrowRight, MessageSquare, Plus, Trash2, Bot, User, Star, Upload, Settings, Send, Share2, ArrowUpDown } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { AccordionSection } from "./AccordionSection";
 import { CriterionEditSidebar } from "./CriterionEditSidebar";
 import mockAIdata from '@/data/mockAIdata.json';
@@ -28,6 +29,7 @@ import { useCriteriaChat } from "@/hooks/useCriteriaChat";
 import { storageService } from "@/services/storageService";
 import { SPACING } from '@/styles/spacing-config';
 import { TYPOGRAPHY } from '@/styles/typography-config';
+import { useCriteriaOrder } from '@/hooks/useCriteriaOrder';
 
 interface CriteriaBuilderProps {
   techRequest: TechRequest;
@@ -62,6 +64,22 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const { toast } = useToast();
+
+  // Use criteria ordering hook
+  const {
+    isSortedByImportance,
+    toggleSorting,
+    getOrderedCriteria,
+    updateOrder,
+    saveCurrentOrder
+  } = useCriteriaOrder(projectId);
+
+  // Handle sorting toggle
+  // Note: Custom order is already saved on each drag via updateOrder in AccordionSection
+  // No need to call saveCurrentOrder here - it would overwrite custom order with original order
+  const handleSortingToggle = () => {
+    toggleSorting();
+  };
 
   // Use custom hooks for business logic
   const {
@@ -665,9 +683,27 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
         {/* SP_012: Current Criteria - Accordion View */}
         <Card>
           <CardHeader className={SPACING.vendorDiscovery.criteria.header}>
-            <CardTitle className={`${TYPOGRAPHY.card.title} flex items-center justify-between`}>
-              Evaluation Criteria ({criteria.length})
-              <Badge variant="secondary">{criteria.filter(c => c.importance === 'high').length} High Priority</Badge>
+            <CardTitle className={`${TYPOGRAPHY.card.title} flex items-start sm:items-center justify-between gap-2 sm:gap-3`}>
+              <span>Evaluation Criteria ({criteria.length})</span>
+              <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-3">
+                <Badge variant="secondary" className="whitespace-nowrap">
+                  {criteria.filter(c => c.importance === 'high').length} High Priority
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={isSortedByImportance}
+                    onCheckedChange={handleSortingToggle}
+                    id="sorting-toggle"
+                  />
+                  <label
+                    htmlFor="sorting-toggle"
+                    className={`${TYPOGRAPHY.muted.small} cursor-pointer flex items-center gap-1 whitespace-nowrap`}
+                  >
+                    <ArrowUpDown className="h-3 w-3" />
+                    Sort by Importance
+                  </label>
+                </div>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className={`space-y-2 ${SPACING.vendorDiscovery.criteria.content}`}>
@@ -680,6 +716,9 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
               onImportanceChange={handleImportanceChange}
+              isSortedByImportance={isSortedByImportance}
+              getOrderedCriteria={getOrderedCriteria}
+              onOrderChange={(orderedIds) => updateOrder('feature', orderedIds)}
             />
 
             {/* Technical Section */}
@@ -691,6 +730,9 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
               onImportanceChange={handleImportanceChange}
+              isSortedByImportance={isSortedByImportance}
+              getOrderedCriteria={getOrderedCriteria}
+              onOrderChange={(orderedIds) => updateOrder('technical', orderedIds)}
             />
 
             {/* Business Section */}
@@ -702,6 +744,9 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
               onImportanceChange={handleImportanceChange}
+              isSortedByImportance={isSortedByImportance}
+              getOrderedCriteria={getOrderedCriteria}
+              onOrderChange={(orderedIds) => updateOrder('business', orderedIds)}
             />
 
             {/* Compliance Section */}
@@ -713,6 +758,9 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
               onEditCriterion={(criterion) => setEditingCriterion(criterion)}
               onAddCriterion={handleAddCriterion}
               onImportanceChange={handleImportanceChange}
+              isSortedByImportance={isSortedByImportance}
+              getOrderedCriteria={getOrderedCriteria}
+              onOrderChange={(orderedIds) => updateOrder('compliance', orderedIds)}
             />
 
             {/* Other Types Section - Custom categories */}
@@ -726,6 +774,9 @@ const CriteriaBuilder = ({ techRequest, onComplete, initialCriteria, projectId }
                 onEditCriterion={(criterion) => setEditingCriterion(criterion)}
                 onAddCriterion={handleAddCriterion}
                 onImportanceChange={handleImportanceChange}
+                isSortedByImportance={isSortedByImportance}
+                getOrderedCriteria={getOrderedCriteria}
+                onOrderChange={(orderedIds) => updateOrder(type, orderedIds)}
               />
             ))}
 

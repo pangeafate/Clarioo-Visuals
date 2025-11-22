@@ -77,7 +77,8 @@ const VendorSelection = ({ criteria, techRequest, onComplete }: VendorSelectionP
 
       toast({
         title: "Vendors discovered!",
-        description: `Found ${discoveredVendors.length} vendors for your ${techRequest.category} needs.`
+        description: `Found ${discoveredVendors.length} vendors for your ${techRequest.category} needs.`,
+        duration: 2000
       });
     } catch (error) {
       console.error('Vendor discovery failed:', error);

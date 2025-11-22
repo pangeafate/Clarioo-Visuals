@@ -157,12 +157,17 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
   const [displayMessages, setDisplayMessages] = useState<ChatMessage[]>([]);
   const [fullChatMessages, setFullChatMessages] = useState<ChatMessage[]>([]);
   const [hasChatHistory, setHasChatHistory] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
 
   /**
    * Load chat history and generate synthesis on project change
+   * Only runs once per project change
    */
   useEffect(() => {
+    // Reset initialization flag on project change
+    setIsInitialized(false);
+
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
@@ -209,18 +214,18 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
 
   /**
    * Sync messages with base hook when they change (not synthesis)
+   * Only syncs after initialization to prevent duplicate messages
    */
   useEffect(() => {
+    // Skip sync if not yet initialized by initializeChat
+    if (!isInitialized) return;
+
     if (messages.length > 0 && messages[0].id !== 'synthesis') {
       setDisplayMessages(messages);
       setFullChatMessages(messages);
       setHasChatHistory(true);
-      console.log('💾 Chat saved to localStorage', {
-        projectId,
-        messageCount: messages.length
-      });
     }
-  }, [messages, projectId]);
+  }, [messages, isInitialized]);
 
   /**
    * Initialize chat with a message
@@ -231,6 +236,7 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
   const initializeChat = useCallback((initialMessage: ChatMessage) => {
     setDisplayMessages([initialMessage]);
     baseAddMessage(initialMessage);
+    setIsInitialized(true);
   }, [baseAddMessage]);
 
   /**
@@ -241,7 +247,11 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
   const addMessage = useCallback((message: ChatMessage) => {
     setDisplayMessages(prev => [...prev, message]);
     baseAddMessage(message);
-  }, [baseAddMessage]);
+    // Ensure sync effect is enabled after first message is added
+    if (!isInitialized) {
+      setIsInitialized(true);
+    }
+  }, [baseAddMessage, isInitialized]);
 
   /**
    * Send user message and get AI response
@@ -264,6 +274,10 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
     baseAddMessage(userMsg);
     setUserMessage('');
     setIsGenerating(true);
+    // Ensure sync effect is enabled
+    if (!isInitialized) {
+      setIsInitialized(true);
+    }
 
     try {
       // Prepare messages for AI service (last 5 messages + current)
@@ -313,7 +327,7 @@ export const useCriteriaChat = (projectId: string): UseCriteriaChatReturn => {
     } finally {
       setIsGenerating(false);
     }
-  }, [displayMessages, baseAddMessage, setUserMessage, setIsGenerating, toast]);
+  }, [displayMessages, baseAddMessage, setUserMessage, setIsGenerating, toast, isInitialized]);
 
   return {
     chatMessages: displayMessages,

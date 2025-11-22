@@ -322,30 +322,33 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
   const handleCriteriaComplete = async (newCriteria: Criteria[]) => {
     setCriteria(newCriteria);
     setCurrentStep('vendor-selection');
-    await saveProjectState('vendor-selection', { 
-      techRequest, 
-      criteria: newCriteria, 
-      selectedVendors 
+    await saveProjectState('vendor-selection', {
+      techRequest,
+      criteria: newCriteria,
+      selectedVendors
     });
+    scrollToSectionTitle();
   };
 
   const handleVendorSelectionComplete = async (vendors: Vendor[]) => {
     setSelectedVendors(vendors);
     setCurrentStep('vendor-comparison');
-    await saveProjectState('vendor-comparison', { 
-      techRequest, 
-      criteria, 
-      selectedVendors: vendors 
+    await saveProjectState('vendor-comparison', {
+      techRequest,
+      criteria,
+      selectedVendors: vendors
     });
+    scrollToSectionTitle();
   };
 
   const handleComparisonComplete = async () => {
     setCurrentStep('invite-pitch');
-    await saveProjectState('invite-pitch', { 
-      techRequest, 
-      criteria, 
-      selectedVendors 
+    await saveProjectState('invite-pitch', {
+      techRequest,
+      criteria,
+      selectedVendors
     });
+    scrollToSectionTitle();
   };
 
   const handleVendorsGenerated = async (newVendors: Vendor[]) => {
@@ -362,6 +365,26 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
     // State will auto-save via useEffect dependency
   };
 
+  /**
+   * Scroll to section title with offset for sticky navigation
+   */
+  const scrollToSectionTitle = () => {
+    setTimeout(() => {
+      const sectionTitle = document.getElementById('workflow-section-title');
+      if (sectionTitle) {
+        // Get the sticky navigation height (approximately 60-80px)
+        const navHeight = 80;
+        const elementPosition = sectionTitle.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100); // Small delay to ensure DOM is updated
+  };
+
   const handleStepClick = async (stepId: Step) => {
     // GAP-2 FIX: Navigation handled by WorkflowNavigation component
     // This allows bidirectional navigation - users can go back and then forward again
@@ -371,6 +394,9 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
       criteria,
       selectedVendors
     });
+
+    // Scroll to section title
+    scrollToSectionTitle();
   };
 
   return (
@@ -388,7 +414,7 @@ const VendorDiscovery = ({ project, onBackToProjects, isEmbedded = false }: Vend
           <div className="w-full">
             {/* Step Content */}
             <Card className="shadow-large">
-              <CardHeader>
+              <CardHeader id="workflow-section-title">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div>
                     <CardTitle className="flex items-center gap-2">

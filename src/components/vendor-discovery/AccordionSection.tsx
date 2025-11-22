@@ -30,13 +30,14 @@
  * - Smooth expand/collapse animation
  */
 
-import React, { useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Plus } from 'lucide-react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { ChevronDown, Plus, GripVertical } from 'lucide-react';
 import { CriterionCard } from './CriterionCard';
 import type { Criteria } from '../VendorDiscovery';
 import { SPACING } from '@/styles/spacing-config';
 import { TYPOGRAPHY } from '@/styles/typography-config';
+import { cn } from '@/lib/utils';
 
 export interface AccordionSectionProps {
   title: string;
@@ -46,6 +47,10 @@ export interface AccordionSectionProps {
   onEditCriterion: (criterion: Criteria) => void;
   onAddCriterion: (categoryType: string) => void;
   onImportanceChange?: (id: string, importance: 'low' | 'medium' | 'high', isArchived: boolean) => void;
+  // SP_014: Sorting and drag-and-drop props
+  isSortedByImportance?: boolean;
+  getOrderedCriteria?: (criteria: Criteria[], category: string) => Criteria[];
+  onOrderChange?: (orderedIds: string[]) => void;
 }
 
 export const AccordionSection: React.FC<AccordionSectionProps> = ({
@@ -55,26 +60,56 @@ export const AccordionSection: React.FC<AccordionSectionProps> = ({
   onToggle,
   onEditCriterion,
   onAddCriterion,
-  onImportanceChange
+  onImportanceChange,
+  isSortedByImportance = true,
+  getOrderedCriteria,
+  onOrderChange
 }) => {
+  // Track which item is being dragged for visual feedback
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+
   /**
-   * SP_014: Sort criteria by importance and archived status
-   * Order: High → Medium → Low → Archived
+   * SP_014: Get ordered criteria based on sorting mode
+   * - When sorted: High → Medium → Low → Archived
+   * - When manual: Use saved custom order from getOrderedCriteria
    */
-  const sortedCriteria = useMemo(() => {
-    // Separate active and archived criteria
+  const orderedCriteria = useMemo(() => {
+    // If getOrderedCriteria is provided and we're in manual mode, use it
+    if (getOrderedCriteria && !isSortedByImportance) {
+      return getOrderedCriteria(criteria, title.toLowerCase());
+    }
+
+    // Default: Sort by importance (existing behavior)
     const active = criteria.filter(c => !c.isArchived);
     const archived = criteria.filter(c => c.isArchived);
 
-    // Sort active by importance
     const importanceOrder = { high: 3, medium: 2, low: 1 };
     const sortedActive = [...active].sort((a, b) =>
       importanceOrder[b.importance] - importanceOrder[a.importance]
     );
 
-    // Return active criteria followed by archived
     return [...sortedActive, ...archived];
-  }, [criteria]);
+  }, [criteria, isSortedByImportance, getOrderedCriteria, title]);
+
+  // Local state for drag-and-drop reordering
+  const [localOrder, setLocalOrder] = useState<Criteria[]>(orderedCriteria);
+
+  // Sync local order with orderedCriteria when it changes (e.g., mode switch, criteria update)
+  useEffect(() => {
+    setLocalOrder(orderedCriteria);
+  }, [orderedCriteria]);
+
+  /**
+   * Handle reorder during drag - update local state immediately
+   */
+  const handleReorder = (newOrder: Criteria[]) => {
+    setLocalOrder(newOrder);
+    // Persist the new order to parent
+    if (onOrderChange) {
+      const orderedIds = newOrder.map(c => c.id);
+      onOrderChange(orderedIds);
+    }
+  };
 
   // Count by importance (only count active criteria)
   const activeCriteria = criteria.filter(c => !c.isArchived);
@@ -172,33 +207,76 @@ export const AccordionSection: React.FC<AccordionSectionProps> = ({
             className="overflow-hidden"
           >
             <div className={`${SPACING.vendorDiscovery.accordion.content} ${SPACING.vendorDiscovery.accordion.spacing}`}>
-              {/* SP_014: Animated card list with layout animation for smooth reordering */}
-              <AnimatePresence mode="popLayout">
-                {sortedCriteria.map((criterion) => (
-                  <motion.div
-                    key={criterion.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{
-                      layout: {
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 30
-                      },
-                      opacity: { duration: 0.2 },
-                      y: { duration: 0.2 }
-                    }}
-                  >
-                    <CriterionCard
-                      criterion={criterion}
-                      onEdit={onEditCriterion}
-                      onImportanceChange={onImportanceChange}
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              {/* SP_014: Drag-and-drop mode when sorting is off */}
+              {!isSortedByImportance && onOrderChange ? (
+                <Reorder.Group
+                  axis="y"
+                  values={localOrder}
+                  onReorder={handleReorder}
+                  className="space-y-3"
+                >
+                  {localOrder.map((criterion) => (
+                    <Reorder.Item
+                      key={criterion.id}
+                      value={criterion}
+                      onDragStart={() => setDraggingId(criterion.id)}
+                      onDragEnd={() => setDraggingId(null)}
+                      className={cn(
+                        'relative',
+                        draggingId === criterion.id && 'z-50'
+                      )}
+                      whileDrag={{
+                        scale: 1.02,
+                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+                        cursor: 'grabbing'
+                      }}
+                    >
+                      <div className="flex items-stretch gap-2">
+                        {/* Drag Handle */}
+                        <div className="flex items-center justify-center px-1 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors">
+                          <GripVertical className="h-5 w-5" />
+                        </div>
+                        {/* Criterion Card */}
+                        <div className="flex-1">
+                          <CriterionCard
+                            criterion={criterion}
+                            onEdit={onEditCriterion}
+                            onImportanceChange={onImportanceChange}
+                          />
+                        </div>
+                      </div>
+                    </Reorder.Item>
+                  ))}
+                </Reorder.Group>
+              ) : (
+                /* SP_014: Sorted mode - animated card list with layout animation */
+                <AnimatePresence mode="popLayout">
+                  {orderedCriteria.map((criterion) => (
+                    <motion.div
+                      key={criterion.id}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{
+                        layout: {
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 30
+                        },
+                        opacity: { duration: 0.2 },
+                        y: { duration: 0.2 }
+                      }}
+                    >
+                      <CriterionCard
+                        criterion={criterion}
+                        onEdit={onEditCriterion}
+                        onImportanceChange={onImportanceChange}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              )}
 
               {/* Add New Criterion Button */}
               <button
