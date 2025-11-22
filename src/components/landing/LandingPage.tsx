@@ -43,6 +43,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { HeroSection } from './HeroSection';
@@ -70,6 +72,9 @@ export const LandingPage = () => {
 
   const [companyInput, setCompanyInput] = useState('');
   const [solutionInput, setSolutionInput] = useState('');
+
+  // State to track if inputs are expanded in project view
+  const [inputsExpanded, setInputsExpanded] = useState(false);
 
   // SP_010: Project workflow state management (pattern from Index.tsx)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -334,15 +339,43 @@ export const LandingPage = () => {
       /> */}
 
       {/* Animated Inputs - Element 5 */}
-      <AnimatedInputs
-        isAuthenticated={!!user}
-        companyInput={companyInput}
-        solutionInput={solutionInput}
-        onCompanyChange={setCompanyInput}
-        onSolutionChange={setSolutionInput}
-        onCreateProject={handleCreateProject}
-        onCreateCategoryProject={handleCreateCategoryProject}
-      />
+      {/* In landing view: always show inputs */}
+      {/* In project view: show "+ New Project" button that expands inputs */}
+      {currentView === 'project' && !inputsExpanded && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex justify-center py-6"
+        >
+          <Button
+            onClick={() => setInputsExpanded(true)}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            New Project
+          </Button>
+        </motion.div>
+      )}
+
+      {(currentView === 'landing' || inputsExpanded) && (
+        <AnimatedInputs
+          isAuthenticated={!!user}
+          companyInput={companyInput}
+          solutionInput={solutionInput}
+          onCompanyChange={setCompanyInput}
+          onSolutionChange={setSolutionInput}
+          onCreateProject={() => {
+            handleCreateProject();
+            // Collapse inputs after project creation in project view
+            if (currentView === 'project') {
+              setInputsExpanded(false);
+              setCompanyInput('');
+              setSolutionInput('');
+            }
+          }}
+          onCreateCategoryProject={handleCreateCategoryProject}
+        />
+      )}
 
       {/* SP_011: LANDING VIEW - Marketing Content */}
       <AnimatePresence>

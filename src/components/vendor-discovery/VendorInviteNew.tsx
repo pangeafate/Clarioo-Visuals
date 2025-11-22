@@ -75,7 +75,7 @@ interface VendorWithEmail extends Vendor {
 
 interface SenderInfo {
   name: string;
-  title: string;
+  email: string;
   company: string;
 }
 
@@ -132,7 +132,7 @@ const VendorInviteNew: React.FC<VendorInviteNewProps> = ({
   // Sender information
   const [senderInfo, setSenderInfo] = useState<SenderInfo>({
     name: '',
-    title: '',
+    email: '',
     company: '',
   });
 
@@ -277,14 +277,14 @@ We look forward to learning more about how your solution can address our needs.
 
 Best regards,
 ${senderInfo.name || '[Your Name]'}
-${senderInfo.title || '[Your Title]'}
-${senderInfo.company || '[Your Company]'}`;
+${senderInfo.company || '[Your Company]'}
+${senderInfo.email || '[Your Email]'}`;
   };
 
   // Update email body when sender info changes
   useEffect(() => {
     setEmailBody(generateEmailBody('[Vendor Name]'));
-  }, [senderInfo.name, senderInfo.title, senderInfo.company, criteria, techRequest]);
+  }, [senderInfo.name, senderInfo.email, senderInfo.company, criteria, techRequest]);
 
   // Validate form
   const validateForm = (): boolean => {
@@ -293,8 +293,10 @@ ${senderInfo.company || '[Your Company]'}`;
     if (!senderInfo.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    if (!senderInfo.title.trim()) {
-      newErrors.title = 'Title is required';
+    if (!senderInfo.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderInfo.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
     if (!senderInfo.company.trim()) {
       newErrors.company = 'Company is required';
@@ -546,20 +548,21 @@ ${senderInfo.company || '[Your Company]'}`;
               )}
             </div>
             <div>
-              <Label htmlFor="title" className={TYPOGRAPHY.label.default}>
-                Your Title *
+              <Label htmlFor="email" className={TYPOGRAPHY.label.default}>
+                Email for Vendor Responses *
               </Label>
               <Input
-                id="title"
-                value={senderInfo.title}
+                id="email"
+                type="email"
+                value={senderInfo.email}
                 onChange={e =>
-                  setSenderInfo(prev => ({ ...prev, title: e.target.value }))
+                  setSenderInfo(prev => ({ ...prev, email: e.target.value }))
                 }
-                placeholder="Product Manager"
-                className={errors.title ? 'border-red-500' : ''}
+                placeholder="you@company.com"
+                className={errors.email ? 'border-red-500' : ''}
               />
-              {errors.title && (
-                <p className="text-xs text-red-500 mt-1">{errors.title}</p>
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">{errors.email}</p>
               )}
             </div>
             <div>
